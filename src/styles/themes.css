@@ -1,0 +1,92 @@
+/* DataForge Three-Theme Token System */
+
+:root {
+  /* Dark Mode (Default) */
+  --bg-primary: #0D1117;
+  --bg-secondary: #161B22;
+  --bg-tertiary: #21262D;
+  --bg-canvas: #090D13;
+  --border-color: #30363D;
+  --border-subtle: #21262D;
+  --text-primary: #F0F6FC;
+  --text-secondary: #8B949E;
+  --text-muted: #6E7681;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+
+  /* Track Colors */
+  --track-sql: #3B82F6;
+  --track-python: #84CC16;
+  --track-pyspark: #F97316;
+  --track-warehousing: #14B8A6;
+  --track-architecture: #A855F7;
+  --track-dsa: #EC4899;
+  --track-azure: #0EA5E9;
+  --track-behavioral: #EAB308;
+}
+
+/* Light Mode */
+html.theme-light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F6F8FA;
+  --bg-tertiary: #EAEEF2;
+  --bg-canvas: #F0F3F6;
+  --border-color: #D0D7DE;
+  --border-subtle: #E1E4E8;
+  --text-primary: #1F2328;
+  --text-secondary: #57606A;
+  --text-muted: #6E7781;
+  --accent-glow: rgba(37, 99, 235, 0.12);
+
+  /* Adjusted track colors for high-contrast on white */
+  --track-sql: #1D4ED8;
+  --track-python: #4D7C0F;
+  --track-pyspark: #C2410C;
+  --track-warehousing: #0F766E;
+  --track-architecture: #7E22CE;
+  --track-dsa: #BE185D;
+  --track-azure: #0369A1;
+  --track-behavioral: #A16207;
+}
+
+/* Focus / Learner Mode (Warm Sepia / Reduced Blue Light for deep study) */
+html.theme-focus {
+  --bg-primary: #FAF5EB;
+  --bg-secondary: #F2E8D5;
+  --bg-tertiary: #E8DCBF;
+  --bg-canvas: #EDE3CA;
+  --border-color: #D8C7A5;
+  --border-subtle: #DFCFB0;
+  --text-primary: #2D271E;
+  --text-secondary: #6B5D4D;
+  --text-muted: #8A7A68;
+  --accent-glow: rgba(180, 83, 9, 0.12);
+
+  /* Warm tuned track colors */
+  --track-sql: #2563EB;
+  --track-python: #65A30D;
+  --track-pyspark: #EA580C;
+  --track-warehousing: #0D9488;
+  --track-architecture: #9333EA;
+  --track-dsa: #DB2777;
+  --track-azure: #0284C7;
+  --track-behavioral: #CA8A04;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
