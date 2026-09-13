@@ -195,3 +195,213 @@ export interface UserProgress {
   activityLog: Record<string, number>; // YYYY-MM-DD -> count
   badges: string[];
 }
+
+// ==========================================
+// UNIFIED DATA ARCHITECTURE & PROGRESS MODEL
+// ==========================================
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+  email: string;
+  joinedDate: string;
+  streak: number;
+  streakDays?: number;
+  lastActiveDate: string;
+  totalXp: number;
+  xp?: number;
+}
+
+export interface ContentRef {
+  type: 'track_module' | 'library_chapter' | 'roadmap_node' | 'book_page' | 'track_capstone' | 'general';
+  id: string;
+  title: string;
+  label?: string;
+  trackId?: string;
+  bookId?: string;
+  chapterNumber?: number;
+  nodeId?: string;
+  moduleId?: string;
+}
+
+export interface LinkedRef {
+  type: 'track' | 'module' | 'book' | 'roadmap_node' | 'url';
+  id: string;
+  title: string;
+  label?: string;
+  trackId?: string;
+  bookId?: string;
+  targetId?: string;
+  url?: string;
+}
+
+export interface NoteItem {
+  id: string;
+  userId: string;
+  body: string;
+  tags: string[];
+  contentRef?: ContentRef;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TodoItem {
+  id: string;
+  userId: string;
+  text: string;
+  done: boolean;
+  completed?: boolean;
+  dueDate?: string; // YYYY-MM-DD
+  urgency?: 'today' | 'overdue' | 'upcoming';
+  linkedRef?: LinkedRef;
+  createdAt: string;
+}
+
+export interface CertificateItem {
+  id: string; // e.g. DF-CERT-SQL-849201
+  userId: string;
+  userName: string;
+  trackId: string;
+  trackTitle: string;
+  issuedAt: string;
+  averageScore: number;
+  verificationUrl?: string;
+}
+
+export interface BadgeItem {
+  id: string;
+  name: string;
+  title?: string;
+  description: string;
+  iconName: string;
+  category: 'tracks' | 'vault' | 'streak' | 'general';
+  earned: boolean;
+  unlocked?: boolean;
+  earnedAt?: string;
+  progressCurrent?: number;
+  progressTarget?: number;
+}
+
+export interface TrackModuleQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface TrackModuleTest {
+  id: string;
+  title: string;
+  description: string;
+  passingScore: number; // default 70
+  questions: TrackModuleQuestion[];
+}
+
+export interface TrackModule {
+  id: string;
+  tierId: string;
+  trackId: string;
+  title: string;
+  order: number;
+  durationMinutes: number;
+  learnContent: {
+    overview: string;
+    keyConcepts: {
+      title: string;
+      description: string;
+      codeSnippet?: string;
+    }[];
+    seniorTip: string;
+    antiPattern: string;
+  };
+  test: TrackModuleTest;
+}
+
+export interface TierCapstone {
+  id: string;
+  tierId: string;
+  trackId: string;
+  title: string;
+  description: string;
+  businessScenario: string;
+  deliverables: string[];
+  rubricItems: {
+    id: string;
+    criterion: string;
+    weightPercent: number;
+    guidance: string;
+  }[];
+}
+
+export interface TrackTier {
+  id: string;
+  trackId: string;
+  tierNumber: 1 | 2 | 3;
+  name: 'Foundation' | 'Applied' | 'Mastery';
+  description: string;
+  modules: TrackModule[];
+  capstone: TierCapstone;
+}
+
+export interface TrackDefinition {
+  id: string;
+  slug: string;
+  name: string;
+  shortDesc: string;
+  iconName: string;
+  accentColor: string;
+  tiers: TrackTier[];
+  placementDiagnostic: {
+    title: string;
+    description: string;
+    questions: TrackModuleQuestion[];
+    qualifyAppliedScore: number; // e.g. 70
+    qualifyMasteryScore: number; // e.g. 90
+  };
+}
+
+export interface ModuleProgressRecord {
+  moduleId: string;
+  learned: boolean;
+  testPassed: boolean;
+  score: number;
+  attempts: number;
+  lastAttemptedAt?: string;
+}
+
+export interface CapstoneProgressRecord {
+  capstoneId: string;
+  passed: boolean;
+  rubricChecks: Record<string, boolean>;
+  submissionNote?: string;
+  submittedAt?: string;
+}
+
+export interface TrackProgressRecord {
+  trackId: string;
+  diagnosticTaken: boolean;
+  diagnosticScore?: number;
+  unlockedTier: 1 | 2 | 3; // 1 = Foundation, 2 = Applied, 3 = Mastery
+  currentTier?: 1 | 2 | 3;
+  completedModules: string[];
+  completedCapstones?: string[];
+  moduleRecords: Record<string, ModuleProgressRecord>;
+  capstoneRecords: Record<string, CapstoneProgressRecord>;
+}
+
+export interface LibraryCheckpointAttempt {
+  id: string;
+  bookId: string;
+  chapterNumber: number;
+  checkpointType: 'single' | 'mid' | 'end';
+  score: number;
+  passed: boolean;
+  skipped: boolean;
+  attemptedAt: string;
+}
+
+export * from './learning';
+export * from './career';
+

@@ -25,15 +25,17 @@ import {
   ChevronRight,
   ShieldCheck,
   Lock,
-  ListOrdered
+  ListOrdered,
+  Plus
 } from 'lucide-react';
-import { BookReference } from '../../types';
+import { BookReference, ContentRef } from '../../types';
 import { 
   saveReadingProgress, 
   getReadingProgress, 
   toggleChapterBookmark, 
   getBookmarkedChapters 
 } from '../../lib/libraryStorage';
+import { useUserStore } from '../../lib/userStore';
 
 export type ReaderTheme = 'dark' | 'sepia' | 'oled' | 'slate';
 export type ReaderFont = 'serif' | 'sans' | 'mono';
@@ -43,6 +45,7 @@ interface BookReaderProps {
   initialChapterId?: string;
   onBackToLibrary?: () => void;
   onNavigatePractice?: (practiceId: string) => void;
+  onOpenQuickNote?: (ref?: ContentRef) => void;
 }
 
 export const BookReader: React.FC<BookReaderProps> = ({
@@ -50,6 +53,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
   initialChapterId,
   onBackToLibrary,
   onNavigatePractice,
+  onOpenQuickNote,
 }) => {
   // Reading state
   const [currentChapterId, setCurrentChapterId] = useState<string>(
@@ -57,6 +61,27 @@ export const BookReader: React.FC<BookReaderProps> = ({
   );
   const currentChapter = book.chapters.find(c => c.id === currentChapterId) || book.chapters[0];
   const currentChapterIndex = book.chapters.findIndex(c => c.id === currentChapterId);
+
+  // User store hook
+  let storeSetLastActive: any = null;
+  try {
+    const store = useUserStore();
+    storeSetLastActive = store.setLastActive;
+  } catch {
+    // outside provider
+  }
+
+  useEffect(() => {
+    if (storeSetLastActive && currentChapter) {
+      storeSetLastActive({
+        type: 'library_chapter',
+        id: `${book.id}-${currentChapter.id}`,
+        title: book.title,
+        subtitle: `Chapter ${currentChapter.number}: ${currentChapter.title}`,
+        bookId: book.id
+      });
+    }
+  }, [book.id, book.title, currentChapter, storeSetLastActive]);
 
   // Appearance controls
   const [readerTheme, setReaderTheme] = useState<ReaderTheme>('dark');

@@ -21,563 +21,669 @@ import {
   ShieldCheck, 
   CheckCheck,
   Compass,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  Activity,
+  DollarSign,
+  Network,
+  Share2,
+  ShieldAlert,
+  FileText
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { TrackType, CheckpointStatus } from '../../types';
 import { FOUNDATIONAL_BOOKS } from '../../content/books';
+import { ContentRef } from '../../types';
 
-export interface RoadCheckpoint {
+export interface LeveledNode {
   id: string;
-  stepNumber: number;
+  level: 1 | 2 | 3 | 4;
   title: string;
-  example: string;
-  track: TrackType;
-  trackColor: string;
+  subtitle: string;
   icon: React.ElementType;
-  x: number; // Percentage horizontal position (0 to 100)
-  y: number; // Vertical position along the road (pixels)
-  description: string;
+  accentColor: string;
+  trackTarget: {
+    trackId: string;
+    tierNumber: 1 | 2 | 3;
+    tierName: string;
+  };
   sourceBookId: string;
-  linkedPracticeChallenge?: string;
-  syllabus: string[];
+  competencies: string[];
+  interviewTraps: string[];
+  description: string;
 }
 
-export const ROAD_CHECKPOINTS: RoadCheckpoint[] = [
+export const LEVELED_ROADMAP: {
+  level: 1 | 2 | 3 | 4;
+  levelTitle: string;
+  levelSubtitle: string;
+  targetRole: string;
+  accentColor: string;
+  nodes: LeveledNode[];
+}[] = [
   {
-    id: 'cp-1',
-    stepNumber: 1,
-    title: 'Linux & Shell Scripting',
-    example: '(e.g. Bash, cron, process signals, pipes)',
-    track: 'architecture',
-    trackColor: 'var(--track-architecture)',
-    icon: Terminal,
-    x: 20,
-    y: 60,
-    description: 'Master the operating system foundation upon which all Docker containers, Kubernetes pods, and Airflow workers run.',
-    sourceBookId: 'book-6',
-    linkedPracticeChallenge: 'sql-kimball-scd2',
-    syllabus: ['Process monitoring with htop/lsof', 'Bash stream redirection & pipes', 'cron scheduling & log rotation', 'SSH tunneling & keys']
+    level: 1,
+    levelTitle: 'Level 1 — Associate Data Engineer',
+    levelSubtitle: 'Core CS fundamentals, scripting, source control, and tabular data manipulation',
+    targetRole: 'Junior / Associate DE ($90k - $125k)',
+    accentColor: '#38bdf8',
+    nodes: [
+      {
+        id: 'node-linux',
+        level: 1,
+        title: 'Linux & Shell Scripting',
+        subtitle: 'Bash, pipes, cron, signals, process management',
+        icon: Terminal,
+        accentColor: '#38bdf8',
+        trackTarget: { trackId: 'python', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-6',
+        competencies: ['Process monitoring with htop/lsof', 'Bash stream redirection & pipes', 'cron scheduling & log rotation', 'SSH tunneling & permissions'],
+        interviewTraps: ['Not knowing the exit code 0 vs non-zero in Bash scripts within Docker containers', 'Using grep without understanding regex memory cost on huge text streams'],
+        description: 'The operating system foundation upon which all containers, Kubernetes worker pods, and Airflow runners operate.'
+      },
+      {
+        id: 'node-git',
+        level: 1,
+        title: 'Git & Version Control',
+        subtitle: 'Trunk-based development, semantic commits, CI/CD pipelines',
+        icon: GitBranch,
+        accentColor: '#38bdf8',
+        trackTarget: { trackId: 'python', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-6',
+        competencies: ['Feature branch workflows', 'Resolving merge conflicts in SQL models', 'Automated testing in GitHub Actions', 'Semantic version tagging'],
+        interviewTraps: ['Force-pushing to main in production shared repositories', 'Committing plaintext database passwords in git history'],
+        description: 'Collaborative pipeline engineering standards, automated pull request tests, and continuous deployment.'
+      },
+      {
+        id: 'node-sql-fund',
+        level: 1,
+        title: 'SQL Fundamentals',
+        subtitle: 'Relational algebra, multi-table joins, aggregations',
+        icon: Database,
+        accentColor: '#38bdf8',
+        trackTarget: { trackId: 'sql', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-10',
+        competencies: ['Order of logical query execution', 'Three-valued logic (NULL handling)', 'Left Anti-Join pattern', 'GROUP BY vs HAVING filtering'],
+        interviewTraps: ['Using WHERE col = NULL instead of IS NULL', 'Using SELECT * in production queries, creating schema-drift breakages'],
+        description: 'The foundation of data manipulation. Master logical query evaluation order, safe grouping, and anti-joins.'
+      },
+      {
+        id: 'node-python-de',
+        level: 1,
+        title: 'Python for Data Engineering',
+        subtitle: 'Data structures, file I/O, streaming generators',
+        icon: Code2,
+        accentColor: '#4ade80',
+        trackTarget: { trackId: 'python', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-11',
+        competencies: ['O(1) set/dict lookups vs O(N) lists', 'Constant-memory generators with yield', 'Dead Letter Queue (DLQ) logging', 'Itertools chunking'],
+        interviewTraps: ['Calling f.readlines() on a 50GB file, crashing with an OutOfMemoryError', 'Iterating over DataFrames row-by-row in pure Python'],
+        description: 'Writing scalable, memory-efficient data parsers that process gigabytes of dirty inputs in constant RAM.'
+      },
+      {
+        id: 'node-basic-etl',
+        level: 1,
+        title: 'Basic ETL & Data Ingestion',
+        subtitle: 'Batch loaders, CSV/JSON sanitization, error isolation',
+        icon: Layers,
+        accentColor: '#4ade80',
+        trackTarget: { trackId: 'python', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-6',
+        competencies: ['Extract-Transform-Load pipelines', 'Handling malformed rows with DLQ', 'Atomic temporary file writing', 'Idempotent batch loads'],
+        interviewTraps: ['Appending to production tables without deduplication keys, corrupting analytics with duplicates on re-runs'],
+        description: 'Building resilient ingest scripts that withstand schema anomalies and network timeouts.'
+      }
+    ]
   },
   {
-    id: 'cp-2',
-    stepNumber: 2,
-    title: 'Version Control & Git',
-    example: '(e.g. Git, GitHub Actions, CI/CD)',
-    track: 'architecture',
-    trackColor: 'var(--track-architecture)',
-    icon: GitBranch,
-    x: 48,
-    y: 160,
-    description: 'Trunk-based development, semantic versioning, and automated CI/CD validation to prevent broken data pipelines in production.',
-    sourceBookId: 'book-6',
-    syllabus: ['Feature branch workflows', 'Resolving merge conflicts in SQL models', 'Automated testing in GitHub Actions', 'Semantic release tags']
+    level: 2,
+    levelTitle: 'Level 2 — Mid-Level Data Engineer',
+    levelSubtitle: 'Dimensional modeling, relational engines, distributed compute with Spark, and cloud data warehouses',
+    targetRole: 'Data Engineer II ($125k - $160k)',
+    accentColor: '#fb923c',
+    nodes: [
+      {
+        id: 'node-data-modeling',
+        level: 2,
+        title: 'Data Modeling & Normalization',
+        subtitle: '3NF vs Dimensional design, entity-relationship diagrams',
+        icon: Database,
+        accentColor: '#fb923c',
+        trackTarget: { trackId: 'sql', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-1',
+        competencies: ['1NF, 2NF, 3NF normalization rules', 'OLTP transaction normalization', 'Denormalization for analytical read speed', 'Primary and surrogate key design'],
+        interviewTraps: ['Using 3NF normalized schemas for multi-terabyte analytical queries, resulting in 20-table slow joins'],
+        description: 'Structuring schemas for transactional consistency (OLTP) versus high-performance analytical retrieval (OLAP).'
+      },
+      {
+        id: 'node-relational-engines',
+        level: 2,
+        title: 'Relational Stores (Postgres / MySQL)',
+        subtitle: 'B-Trees, WAL logs, MVCC, index strategies, vacuuming',
+        icon: Server,
+        accentColor: '#fb923c',
+        trackTarget: { trackId: 'sql', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-2',
+        competencies: ['B-Tree vs BRIN indexes', 'EXPLAIN ANALYZE cost profiling', 'Write-Ahead Logs (WAL)', 'Multi-Version Concurrency Control (MVCC)'],
+        interviewTraps: ['Wrapping indexed columns in functions (e.g. WHERE DATE(created_at) = ...), invalidating index seeks'],
+        description: 'Mastering the storage engines, disk buffers, and locking semantics of production relational databases.'
+      },
+      {
+        id: 'node-warehousing',
+        level: 2,
+        title: 'Data Warehousing (Kimball)',
+        subtitle: 'Star schemas, fact tables, conformed dimensions, SCD',
+        icon: Layers,
+        accentColor: '#fb923c',
+        trackTarget: { trackId: 'sql', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-1',
+        competencies: ['Grain declaration and business facts', 'Conformed dimensions and data bus', 'SCD Type 1, 2, 3 patterns', 'Star vs Snowflake schemas'],
+        interviewTraps: ['Mixing grains inside a single fact table (e.g. order line items mixed with invoice headers)'],
+        description: 'The industry-standard Kimball dimensional lifecycle: designing clean, business-intuitive star schemas.'
+      },
+      {
+        id: 'node-spark-distributed',
+        level: 2,
+        title: 'Spark & Distributed Big Data',
+        subtitle: 'Catalyst optimizer, DAGs, partitions, broadcast joins',
+        icon: Zap,
+        accentColor: '#fb923c',
+        trackTarget: { trackId: 'pyspark', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-3',
+        competencies: ['Driver vs Executor architecture', 'Narrow vs Wide dependencies', 'Broadcast Hash Join optimization', 'Handling data skew via salting'],
+        interviewTraps: ['Calling df.collect() on a 100-million row DataFrame, causing instant Driver out-of-memory crash'],
+        description: 'Harnessing distributed compute across clusters with Apache Spark, eliminating memory spills and shuffle bottlenecks.'
+      },
+      {
+        id: 'node-cloud-platforms',
+        level: 2,
+        title: 'Cloud Platforms Basics (AWS / Azure / GCP)',
+        subtitle: 'S3/ADLS/GCS object storage, IAM roles, serverless compute',
+        icon: Cloud,
+        accentColor: '#ec4899',
+        trackTarget: { trackId: 'databricks', tierNumber: 1, tierName: 'Foundation' },
+        sourceBookId: 'book-6',
+        competencies: ['Cloud storage lifecycle policies', 'Least-privilege IAM roles and service accounts', 'Private VPC subnets and endpoints', 'Serverless pricing tiers'],
+        interviewTraps: ['Using permanent root access keys in scripts instead of temporary STS assumed IAM role tokens'],
+        description: 'Deploying scalable data lakes and managed compute services on top of major public cloud providers.'
+      }
+    ]
   },
   {
-    id: 'cp-3',
-    stepNumber: 3,
-    title: 'SQL Masterclass',
-    example: '(e.g. Window functions, recursive CTEs)',
-    track: 'sql',
-    trackColor: 'var(--track-sql)',
-    icon: Database,
-    x: 78,
-    y: 270,
-    description: 'The lingua franca of data. Master advanced window calculations, Snowflake QUALIFY, and query execution plan analysis.',
-    sourceBookId: 'book-10',
-    linkedPracticeChallenge: 'sql-snowflake-qualify',
-    syllabus: ['DENSE_RANK vs RANK vs ROW_NUMBER', 'LEAD / LAG with default offsets', 'Snowflake QUALIFY syntax', 'Gaps and Islands streak detection']
+    level: 3,
+    levelTitle: 'Level 3 — Senior Data Engineer',
+    levelSubtitle: 'Real-time event streaming, orchestration DAGs, NoSQL topologies, and pipeline observability',
+    targetRole: 'Senior Data Engineer ($160k - $210k)',
+    accentColor: '#a855f7',
+    nodes: [
+      {
+        id: 'node-data-integration',
+        level: 3,
+        title: 'Data Integration & ELT',
+        subtitle: 'Modern data stack, dbt, incremental models, zero-copy cloning',
+        icon: Layers,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'sql', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-6',
+        competencies: ['dbt incremental materializations', 'Idempotent MERGE statement generation', 'Schema evolution and testing', 'Data contract enforcement'],
+        interviewTraps: ['Running full table refreshes on 5-billion row tables instead of incremental watermarked MERGEs'],
+        description: 'Building automated ELT transformations that scale with business data growth using dbt and modern warehouses.'
+      },
+      {
+        id: 'node-streaming-kafka',
+        level: 3,
+        title: 'Streaming & Kafka',
+        subtitle: 'Event brokers, partition consumer groups, exactly-once, watermarks',
+        icon: Radio,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'pyspark', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-5',
+        competencies: ['Log-structured broker internals', 'Consumer group rebalancing & offsets', 'Watermarking late-arriving events', 'Exactly-once semantics (EOS)'],
+        interviewTraps: ['Omitting a watermark on stateful streaming queries, causing internal RocksDB state stores to grow indefinitely'],
+        description: 'Building low-latency event processing architectures with Apache Kafka and Spark Structured Streaming.'
+      },
+      {
+        id: 'node-orchestration',
+        level: 3,
+        title: 'Workflow Orchestration (Airflow)',
+        subtitle: 'Directed Acyclic Graphs (DAGs), sensors, backfills, dynamic task mapping',
+        icon: Cpu,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'python', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-12',
+        competencies: ['Idempotent historical backfills', 'Celery and Kubernetes executors', 'Airflow Pools and concurrency limits', 'Dynamic Task Mapping in Airflow 2'],
+        interviewTraps: ['Making top-level database queries or API calls in the global DAG definition file, starving the Airflow scheduler'],
+        description: 'Orchestrating complex enterprise dependency graphs with Apache Airflow and Databricks Workflows.'
+      },
+      {
+        id: 'node-data-quality',
+        level: 3,
+        title: 'Data Quality & Quarantine',
+        subtitle: 'Automated expectations, Great Expectations, DLT rules, drift detection',
+        icon: CheckCheck,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'databricks', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-6',
+        competencies: ['Delta Live Tables expectations', 'Quarantine routing without pipeline crashes', 'Statistical distribution drift alerts', 'Schema assertion contracts'],
+        interviewTraps: ['Using fail-stop validations on external dirty feeds instead of soft quarantine isolation'],
+        description: 'Implementing automated data quality firewalls that quarantine bad data without halting critical pipelines.'
+      },
+      {
+        id: 'node-nosql',
+        level: 3,
+        title: 'NoSQL & Non-Relational Stores',
+        subtitle: 'Cassandra, MongoDB, DynamoDB, wide-column & document tradeoffs',
+        icon: Database,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'architecture', tierNumber: 2, tierName: 'Applied' },
+        sourceBookId: 'book-2',
+        competencies: ['Consistent hashing & partition keys', 'CAP theorem trade-offs (CP vs AP)', 'Query-driven modeling in Cassandra', 'LSM-Trees vs B-Trees'],
+        interviewTraps: ['Querying Cassandra without partition keys, forcing slow full-cluster scatter-gather scans'],
+        description: 'Selecting and tuning non-relational distributed databases for high-throughput, low-latency workloads.'
+      },
+      {
+        id: 'node-observability',
+        level: 3,
+        title: 'Observability & Pipeline SLAs',
+        subtitle: 'Data lineage, freshness telemetry, Datadog/Prometheus, alerting',
+        icon: Activity,
+        accentColor: '#a855f7',
+        trackTarget: { trackId: 'architecture', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-6',
+        competencies: ['SLI/SLO definitions for pipeline freshness', 'OpenTelemetry metrics integration', 'Automated lineage tracking via OpenLineage', 'Silent data failure detection'],
+        interviewTraps: ['Only alerting on hard pipeline crashes, failing to detect silent zero-byte record drops'],
+        description: 'Monitoring distributed data systems for freshness, volume anomalies, and schema drift.'
+      }
+    ]
   },
   {
-    id: 'cp-4',
-    stepNumber: 4,
-    title: 'Data Management Systems',
-    example: '(e.g. PostgreSQL, MySQL, B-Trees)',
-    track: 'architecture',
-    trackColor: 'var(--track-architecture)',
-    icon: Server,
-    x: 52,
-    y: 390,
-    description: 'Understanding relational storage engine primitives: Write-Ahead Logs (WAL), B-Tree page splits, and transaction isolation levels.',
-    sourceBookId: 'book-2',
-    syllabus: ['B-Trees vs LSM-Trees', 'ACID transactions & MVCC in Postgres', 'Index selectivity & composite keys', 'Connection pooling with PgBouncer']
-  },
-  {
-    id: 'cp-5',
-    stepNumber: 5,
-    title: 'Python for Production Pipelines',
-    example: '(e.g. Generators, NumPy, Arrow, Pydantic)',
-    track: 'python',
-    trackColor: 'var(--track-python)',
-    icon: Zap,
-    x: 22,
-    y: 510,
-    description: 'Writing deterministic, memory-efficient Python. Stream chunking with generators to process multi-gigabyte files without OOM.',
-    sourceBookId: 'book-11',
-    syllabus: ['Memory-safe stream generators', 'Schema enforcement with Pydantic', 'Fast in-memory hash joins', 'Apache Arrow vectorized processing']
-  },
-  {
-    id: 'cp-6',
-    stepNumber: 6,
-    title: 'Data Modeling & Dimensional Design',
-    example: '(e.g. Kimball Star Schema, Facts, SCD2)',
-    track: 'warehousing',
-    trackColor: 'var(--track-warehousing)',
-    icon: Layers,
-    x: 48,
-    y: 630,
-    description: 'Transforming messy relational OLTP data into Kimball dimensional models with conformed dimensions and Slowly Changing Dimensions.',
-    sourceBookId: 'book-1',
-    linkedPracticeChallenge: 'sql-kimball-scd2',
-    syllabus: ['Grain declaration & Fact types', 'Conformed dimensions & Bus Architecture', 'SCD Type 1, 2, 3, 6 implementation', 'Surrogate key generation']
-  },
-  {
-    id: 'cp-7',
-    stepNumber: 7,
-    title: 'Data Warehousing & Cloud OLAP',
-    example: '(e.g. Snowflake, BigQuery, ClickHouse)',
-    track: 'warehousing',
-    trackColor: 'var(--track-warehousing)',
-    icon: Cloud,
-    x: 80,
-    y: 750,
-    description: 'Serverless columnar warehouses. Separation of storage and compute, micro-partitioning, and FinOps query cost governance.',
-    sourceBookId: 'book-1',
-    syllabus: ['Columnar storage & Dictionary encoding', 'Micro-partition clustering keys', 'Snowflake Time Travel & Zero-copy clones', 'Partition pruning mechanics']
-  },
-  {
-    id: 'cp-8',
-    stepNumber: 8,
-    title: 'Distributed Compute with Apache Spark',
-    example: '(e.g. Catalyst, Tungsten, Data Skew)',
-    track: 'pyspark',
-    trackColor: 'var(--track-pyspark)',
-    icon: Cpu,
-    x: 50,
-    y: 870,
-    description: 'Scale beyond a single machine. Deep dive into Catalyst optimizer plans, Tungsten bytecode generation, and salting skewed keys.',
-    sourceBookId: 'book-3',
-    syllabus: ['Narrow vs Wide transformations', 'Shuffle partition tuning', 'Broadcast Hash Join optimization', 'Key salting for skewed joins']
-  },
-  {
-    id: 'cp-9',
-    stepNumber: 9,
-    title: 'Modern Lakehouse Architecture',
-    example: '(e.g. Delta Lake, Apache Iceberg)',
-    track: 'warehousing',
-    trackColor: 'var(--track-warehousing)',
-    icon: Layers,
-    x: 18,
-    y: 990,
-    description: 'ACID transactions directly on cloud object storage. Delta transaction log (_delta_log JSON/checkpoints), time travel, and Z-ORDERING.',
-    sourceBookId: 'book-4',
-    syllabus: ['Atomic commits with Optimistic Concurrency Control', 'Time travel & audit rollbacks', 'Compaction (OPTIMIZE) and Z-ORDERING', 'Delta MERGE INTO for CDC']
-  },
-  {
-    id: 'cp-10',
-    stepNumber: 10,
-    title: 'Streaming & Distributed Event Logs',
-    example: '(e.g. Apache Kafka, Flink, Watermarks)',
-    track: 'architecture',
-    trackColor: 'var(--track-architecture)',
-    icon: Radio,
-    x: 48,
-    y: 1110,
-    description: 'Sub-second real-time streaming architectures. Kafka partition assignment, cooperative sticky assignors, and event-time watermarking.',
-    sourceBookId: 'book-5',
-    syllabus: ['Topic partitions & consumer group rebalancing', 'Exactly-Once Semantics (EOS)', 'Event time vs Processing time', 'Watermarking for late-arriving data']
-  },
-  {
-    id: 'cp-11',
-    stepNumber: 11,
-    title: 'Pipeline Orchestration & DataOps',
-    example: '(e.g. Apache Airflow, dbt, Great Expectations)',
-    track: 'architecture',
-    trackColor: 'var(--track-architecture)',
-    icon: Compass,
-    x: 80,
-    y: 1230,
-    description: 'Deterministic workflow management. Designing idempotent DAGs, sensor pitfalls, dynamic task generation, and automated data contracts.',
-    sourceBookId: 'book-12',
-    syllabus: ['Idempotent DAG backfilling', 'Sensors vs Hooks vs TaskFlow API', 'dbt modular SQL transformations', 'Automated data contracts & quality gates']
-  },
-  {
-    id: 'cp-12',
-    stepNumber: 12,
-    title: 'Data Mesh & Enterprise Governance',
-    example: '(e.g. Unity Catalog, Domain Ownership)',
-    track: 'warehousing',
-    trackColor: 'var(--track-warehousing)',
-    icon: ShieldCheck,
-    x: 50,
-    y: 1350,
-    description: 'Decentralized analytical architecture. Treating data as a product with federated computational governance and automated lineage.',
-    sourceBookId: 'book-9',
-    syllabus: ['Domain-oriented data products', 'Self-serve platform infrastructure', 'Federated computational governance', 'Automated cross-table lineage']
+    level: 4,
+    levelTitle: 'Level 4 — Principal / Staff Data Architect',
+    levelSubtitle: 'Enterprise data mesh, fine-grained security governance, IaC, and platform system design',
+    targetRole: 'Staff / Principal Data Architect ($210k - $350k+)',
+    accentColor: '#10b981',
+    nodes: [
+      {
+        id: 'node-governance-security',
+        level: 4,
+        title: 'Data Governance & Access Control',
+        subtitle: 'Unity Catalog ABAC, dynamic column masking, row filtering, lineage',
+        icon: Shield,
+        accentColor: '#10b981',
+        trackTarget: { trackId: 'databricks', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-4',
+        competencies: ['Attribute-Based Access Control (ABAC)', 'SQL UDF dynamic column masking', 'Row-level security filter functions', 'Automated end-to-end data lineage'],
+        interviewTraps: ['Cloning tables into separate sanitized schemas instead of using dynamic column masking on base tables'],
+        description: 'Enforcing fine-grained access control, PII anonymization, and regulatory compliance across the enterprise.'
+      },
+      {
+        id: 'node-system-design-patterns',
+        level: 4,
+        title: 'System Design Patterns for Data',
+        subtitle: 'Lambda vs Kappa vs Delta Lakehouse, Change Data Capture (CDC)',
+        icon: Compass,
+        accentColor: '#10b981',
+        trackTarget: { trackId: 'architecture', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-8',
+        competencies: ['Log-centric Kappa architecture', 'Debezium database CDC to Kafka', 'ACID transaction logs on cloud storage', 'Multi-region disaster recovery'],
+        interviewTraps: ['Building separate batch and streaming pipelines (Lambda) without shared business logic, leading to permanent code drift'],
+        description: 'Architecting resilient, multi-petabyte data platforms that unify streaming and batch processing.'
+      },
+      {
+        id: 'node-iac-terraform',
+        level: 4,
+        title: 'Infrastructure as Code (Terraform)',
+        subtitle: 'Declarative cloud provisioning, state management, modular blueprints',
+        icon: Server,
+        accentColor: '#10b981',
+        trackTarget: { trackId: 'architecture', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-6',
+        competencies: ['Terraform state locking with S3 & DynamoDB', 'Reusable modules for data pipelines', 'IAM least-privilege automation', 'CI/CD Terraform plans'],
+        interviewTraps: ['Clicking through the cloud web console to configure production infrastructure without code tracking'],
+        description: 'Automating the provisioning of compute clusters, storage buckets, and networking through versioned code.'
+      },
+      {
+        id: 'node-finops',
+        level: 4,
+        title: 'FinOps & Cost Optimization',
+        subtitle: 'DBU auditing, serverless right-sizing, liquid clustering, storage tiering',
+        icon: DollarSign,
+        accentColor: '#10b981',
+        trackTarget: { trackId: 'databricks', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-4',
+        competencies: ['Analyzing `system.billing.usage` telemetry', 'Photon acceleration cost-benefit analysis', 'S3 Intelligent-Tiering and compaction', 'Auto-termination enforcement'],
+        interviewTraps: ['Allowing un-compacted millions of tiny Parquet files to accumulate, inflating cloud metadata costs by 10x'],
+        description: 'Monitoring and slashing cloud data warehouse spend while accelerating query response times.'
+      },
+      {
+        id: 'node-data-mesh',
+        level: 4,
+        title: 'Data Mesh & Domain Products',
+        subtitle: 'Domain-oriented ownership, self-serve data platforms, federated governance',
+        icon: Network,
+        accentColor: '#10b981',
+        trackTarget: { trackId: 'architecture', tierNumber: 3, tierName: 'Mastery' },
+        sourceBookId: 'book-9',
+        competencies: ['Data as a Product principles', 'Decentralized domain ownership', 'Self-serve platform infrastructure', 'Federated computational governance'],
+        interviewTraps: ['Trying to implement Data Mesh in a 10-person startup where a central team is vastly more efficient'],
+        description: 'Transitioning from monolithic central data teams to decentralized, domain-driven data products.'
+      }
+    ]
   }
 ];
 
 export const WindingRoadmap: React.FC<{
-  completedIds: string[];
-  bookmarkedIds: string[];
-  onToggleComplete: (id: string) => void;
-  onToggleBookmark: (id: string) => void;
-  onNavigatePractice?: (id: string) => void;
+  completedIds?: string[];
+  bookmarkedIds?: string[];
+  onToggleComplete?: (id: string) => void;
+  onToggleBookmark?: (id: string) => void;
+  onNavigateTrack?: (trackId: string, tierNumber?: number) => void;
   onNavigateBook?: (bookId: string) => void;
+  onOpenQuickNote?: (ref: ContentRef) => void;
 }> = ({
-  completedIds = [],
-  bookmarkedIds = [],
+  completedIds = ['node-linux', 'node-git', 'node-sql-fund'],
+  bookmarkedIds = ['node-spark-distributed'],
   onToggleComplete,
   onToggleBookmark,
-  onNavigatePractice,
-  onNavigateBook
+  onNavigateTrack,
+  onNavigateBook,
+  onOpenQuickNote
 }) => {
-  const [activeCheckpoint, setActiveCheckpoint] = useState<RoadCheckpoint | null>(ROAD_CHECKPOINTS[0]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<LeveledNode | null>(null);
+  const [activeLevelFilter, setActiveLevelFilter] = useState<number | 'all'>('all');
 
-  // Furthest completed index for character sprite
-  const completedIndices = ROAD_CHECKPOINTS.map((cp, idx) => completedIds.includes(cp.id) ? idx : -1).filter(i => i !== -1);
-  const characterIndex = completedIndices.length > 0 ? Math.min(ROAD_CHECKPOINTS.length - 1, Math.max(...completedIndices) + 1) : 0;
-  const currentCheckpoint = ROAD_CHECKPOINTS[characterIndex] || ROAD_CHECKPOINTS[0];
-
-  const handleNodeClick = (cp: RoadCheckpoint) => {
-    setActiveCheckpoint(cp);
-    setDrawerOpen(true);
+  const handleSelectNode = (node: LeveledNode) => {
+    setSelectedNode(node);
   };
 
-  const handleNodeComplete = (cp: RoadCheckpoint) => {
-    onToggleComplete(cp.id);
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  };
-
-  // Generate SVG road curve path connecting checkpoints with smooth bezier switchbacks
-  const generateRoadPath = () => {
-    const points = ROAD_CHECKPOINTS.map(cp => ({
-      x: (cp.x / 100) * 800, // mapped to 800px width viewBox
-      y: cp.y
-    }));
-
-    if (points.length < 2) return '';
-
-    let d = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 0; i < points.length - 1; i++) {
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const midY = (p1.y + p2.y) / 2;
-      d += ` C ${p1.x} ${midY}, ${p2.x} ${midY}, ${p2.x} ${p2.y}`;
-    }
-    return d;
-  };
-
-  const roadSvgPath = generateRoadPath();
-
-  // Find book for active checkpoint
-  const linkedBook = activeCheckpoint ? FOUNDATIONAL_BOOKS.find(b => b.id === activeCheckpoint.sourceBookId) : null;
+  const totalNodesCount = LEVELED_ROADMAP.reduce((acc, lvl) => acc + lvl.nodes.length, 0);
+  const completedCount = completedIds.length;
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto px-4 py-12 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 font-sans">
       
-      {/* Roadmap Header */}
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forge-card border border-forge-border text-xs font-mono text-forge-text">
-          <Compass className="w-3.5 h-3.5 text-track-sql animate-spin-slow" />
-          <span>The Winding Data Engineer Expedition</span>
-          <span className="text-forge-muted">•</span>
-          <span className="text-track-python font-bold">{completedIds.length} of {ROAD_CHECKPOINTS.length} Checkpoints Cleared</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-forge-text tracking-tight">
-          The Illustrated Journey from Zero to{' '}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-track-sql via-track-warehousing to-track-architecture">
-            Principal Architect
-          </span>
-        </h1>
-        <p className="text-xs sm:text-sm text-forge-secondary leading-relaxed">
-          Follow the switchback trail. Each checkpoint is forged from foundational engineering texts, equipped with real-world failure modes, interview pearls, and live coding arenas.
-        </p>
-      </div>
-
-      {/* Main Interactive Illustrated Canvas */}
-      <div className="relative rounded-3xl bg-forge-canvas border border-forge-border shadow-2xl overflow-hidden py-12 px-4 sm:px-12 min-h-[1480px]">
-        
-        {/* Subtle grid pattern background */}
-        <div 
-          className="absolute inset-0 opacity-[0.07] pointer-events-none"
-          style={{ 
-            backgroundImage: 'radial-gradient(var(--border-color) 1px, transparent 1px)', 
-            backgroundSize: '32px 32px' 
-          }}
-        />
-
-        {/* SVG Winding Road Surface & Dashed Centerline */}
-        <svg 
-          viewBox="0 0 800 1440" 
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          preserveAspectRatio="none"
-        >
-          {/* Paved Road Shoulder */}
-          <path
-            d={roadSvgPath}
-            fill="none"
-            stroke="var(--border-subtle)"
-            strokeWidth="56"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.8"
-          />
-
-          {/* Road Surface */}
-          <path
-            d={roadSvgPath}
-            fill="none"
-            stroke="var(--bg-secondary)"
-            strokeWidth="48"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Dashed Center Highway Stripe */}
-          <path
-            d={roadSvgPath}
-            fill="none"
-            stroke="var(--border-color)"
-            strokeWidth="3"
-            strokeDasharray="10,14"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-
-        {/* Checkpoint Pins Along the Winding Path */}
-        <div className="relative w-full h-[1420px]">
-          {ROAD_CHECKPOINTS.map((cp, index) => {
-            const isCompleted = completedIds.includes(cp.id);
-            const isUnlocked = index <= characterIndex;
-            const isBookmarked = bookmarkedIds.includes(cp.id);
-            const Icon = cp.icon;
-
-            return (
-              <div
-                key={cp.id}
-                style={{
-                  left: `${cp.x}%`,
-                  top: `${cp.y}px`,
-                  transform: 'translate(-50%, -50%)',
-                }}
-                className="absolute z-10 flex items-center group cursor-pointer"
-                onClick={() => handleNodeClick(cp)}
-              >
-                {/* Checkpoint Circular Badge with Sequence Number Pin */}
-                <div className="relative">
-                  
-                  {/* Sequence Number Pin (1, 2, 3...) */}
-                  <div 
-                    style={{ backgroundColor: cp.trackColor }}
-                    className="absolute -top-2 -left-2 w-5 h-5 rounded-full text-[10px] font-mono font-extrabold text-white flex items-center justify-center shadow-md border-2 border-forge-bg z-20"
-                  >
-                    {cp.stepNumber}
-                  </div>
-
-                  {/* Circular Icon Badge */}
-                  <div 
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-300 shadow-xl ${
-                      isCompleted 
-                        ? 'bg-forge-card border-emerald-500 text-emerald-400 scale-105' 
-                        : isUnlocked 
-                          ? 'bg-forge-card border-forge-text text-forge-text hover:scale-110 hover:border-track-sql' 
-                          : 'bg-forge-surface border-forge-border text-forge-muted opacity-60'
-                    }`}
-                    style={isUnlocked && !isCompleted ? { borderColor: cp.trackColor } : {}}
-                  >
-                    {isCompleted ? (
-                      <CheckCircle2 className="w-7 h-7 text-emerald-400" />
-                    ) : isUnlocked ? (
-                      <Icon className="w-6 h-6" />
-                    ) : (
-                      <Lock className="w-5 h-5 text-forge-muted" />
-                    )}
-                  </div>
-
-                  {/* Bookmark Affordance Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleBookmark(cp.id);
-                    }}
-                    className={`absolute -bottom-1 -right-1 p-1 rounded-full border bg-forge-card transition-all ${
-                      isBookmarked 
-                        ? 'text-track-pyspark border-track-pyspark' 
-                        : 'text-forge-muted border-forge-border hover:text-forge-text'
-                    }`}
-                    title="Save checkpoint for later"
-                  >
-                    <Bookmark className="w-3 h-3" />
-                  </button>
-                </div>
-
-                {/* Topic Label and Parenthetical Example Beside Badge */}
-                <div 
-                  className={`ml-4 p-3 rounded-xl bg-forge-card/90 backdrop-blur-sm border border-forge-border transition-all max-w-[260px] ${
-                    isUnlocked ? 'group-hover:border-track-sql shadow-lg' : 'opacity-70'
-                  }`}
-                >
-                  <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase font-bold text-forge-secondary">
-                    <span>Sequence #{cp.stepNumber}</span>
-                    <span>•</span>
-                    <span style={{ color: cp.trackColor }}>{cp.track}</span>
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-forge-text leading-tight group-hover:text-track-sql transition-colors">
-                    {cp.title}
-                  </h3>
-                  <p className="text-[11px] text-forge-muted leading-snug mt-0.5 font-sans">
-                    {cp.example}
-                  </p>
-                </div>
-
-              </div>
-            );
-          })}
-
-          {/* Animated Avatar / Character Sprite sitting at furthest completed checkpoint */}
-          <div
-            style={{
-              left: `${currentCheckpoint.x}%`,
-              top: `${currentCheckpoint.y - 48}px`,
-              transform: 'translate(-50%, -100%)',
-              transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
-            className="absolute z-30 flex flex-col items-center pointer-events-none animate-bounce"
-          >
-            <div className="px-2.5 py-1 rounded-full bg-forge-card border border-track-sql text-[10px] font-mono font-bold text-track-sql shadow-xl whitespace-nowrap mb-1">
-              🚶‍♂️ You Are Here
-            </div>
-            <div className="w-8 h-8 rounded-full bg-track-sql/20 border-2 border-track-sql flex items-center justify-center text-sm shadow-lg shadow-blue-500/30">
-              🧭
-            </div>
+      {/* 1. Header Banner */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-forge-border pb-6">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded bg-forge-card border border-forge-border text-forge-secondary">
+              Career Roadmap
+            </span>
+            <span className="text-xs text-forge-secondary font-mono">
+              4-Tiered Journey • Associate → Mid-Level → Senior → Staff Architect
+            </span>
           </div>
-
+          <h1 className="text-2xl font-black text-forge-text tracking-tight mt-1">Data Engineering Career Path</h1>
+          <p className="text-xs text-forge-secondary font-mono mt-0.5">
+            Every node maps directly to a Skill Track tier and foundational Vault textbook
+          </p>
         </div>
 
+        <div className="flex items-center gap-3 font-mono text-xs">
+          <div className="px-3.5 py-1.5 rounded-xl bg-forge-card border border-forge-border flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-track-python" />
+            <span className="text-forge-text font-bold">{completedCount} / {totalNodesCount} Topics Mastered</span>
+          </div>
+        </div>
       </div>
 
-      {/* Checkpoint Slide-Over Side Drawer on Click */}
-      {drawerOpen && activeCheckpoint && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg bg-forge-card border-l border-forge-border h-full overflow-y-auto p-6 space-y-6 shadow-2xl flex flex-col justify-between">
-            
-            <div className="space-y-6">
+      {/* 2. Level Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+        <button
+          onClick={() => setActiveLevelFilter('all')}
+          className={`px-3 py-1.5 rounded-xl border font-semibold transition-all ${
+            activeLevelFilter === 'all'
+              ? 'bg-forge-surface text-track-sql border-track-sql shadow-sm'
+              : 'bg-forge-card text-forge-secondary border-forge-border hover:text-forge-text'
+          }`}
+        >
+          All 4 Levels
+        </button>
+        {LEVELED_ROADMAP.map((lvl) => (
+          <button
+            key={lvl.level}
+            onClick={() => setActiveLevelFilter(lvl.level)}
+            className={`px-3 py-1.5 rounded-xl border font-semibold transition-all ${
+              activeLevelFilter === lvl.level
+                ? 'bg-forge-surface border-track-sql text-track-sql shadow-sm'
+                : 'bg-forge-card text-forge-secondary border-forge-border hover:text-forge-text'
+            }`}
+          >
+            L{lvl.level}: {lvl.levelTitle.split('—')[1]?.trim()}
+          </button>
+        ))}
+      </div>
+
+      {/* 3. The 4 Leveled Legs */}
+      <div className="space-y-10">
+        {LEVELED_ROADMAP.filter(lvl => activeLevelFilter === 'all' || activeLevelFilter === lvl.level).map((lvl) => {
+          const completedInLevel = lvl.nodes.filter(n => completedIds.includes(n.id)).length;
+
+          return (
+            <div key={lvl.level} className="rounded-3xl bg-forge-card border border-forge-border p-6 sm:p-8 space-y-6 shadow-md relative overflow-hidden">
               
-              {/* Drawer Top Bar */}
-              <div className="flex items-center justify-between border-b border-forge-border pb-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 font-mono text-xs">
+              {/* Level Decorative Background Accent */}
+              <div 
+                className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-5 pointer-events-none"
+                style={{ backgroundColor: lvl.accentColor }}
+              />
+
+              {/* Level Title Header */}
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-forge-border pb-4">
+                <div>
+                  <div className="flex items-center gap-2">
                     <span 
-                      style={{ color: activeCheckpoint.trackColor }}
-                      className="font-bold uppercase px-2 py-0.5 rounded bg-forge-surface border border-forge-border"
+                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase border"
+                      style={{
+                        backgroundColor: `${lvl.accentColor}15`,
+                        borderColor: `${lvl.accentColor}40`,
+                        color: lvl.accentColor
+                      }}
                     >
-                      Step #{activeCheckpoint.stepNumber} • {activeCheckpoint.track}
+                      {lvl.targetRole}
+                    </span>
+                    <span className="text-xs font-mono text-forge-secondary">
+                      {completedInLevel} / {lvl.nodes.length} Complete
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold text-forge-text tracking-tight">
-                    {activeCheckpoint.title}
-                  </h2>
-                  <p className="text-xs text-forge-muted">{activeCheckpoint.example}</p>
-                </div>
-
-                <button 
-                  onClick={() => setDrawerOpen(false)}
-                  className="p-1 rounded-lg text-forge-secondary hover:text-forge-text hover:bg-forge-surface"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-forge-secondary leading-relaxed bg-forge-bg p-4 rounded-xl border border-forge-border">
-                {activeCheckpoint.description}
-              </p>
-
-              {/* Syllabus Topics */}
-              <div className="space-y-2">
-                <span className="text-xs font-mono font-bold uppercase text-forge-text tracking-wider">
-                  Checkpoint Engineering Syllabus:
-                </span>
-                <div className="grid grid-cols-1 gap-2">
-                  {activeCheckpoint.syllabus.map((s, idx) => (
-                    <div key={idx} className="p-3 rounded-lg bg-forge-bg border border-forge-border flex items-center gap-2.5 text-xs text-forge-secondary">
-                      <div className="w-1.5 h-1.5 rounded-full bg-track-sql shrink-0" />
-                      <span>{s}</span>
-                    </div>
-                  ))}
+                  <h2 className="text-lg font-black text-forge-text mt-1">{lvl.levelTitle}</h2>
+                  <p className="text-xs text-forge-secondary">{lvl.levelSubtitle}</p>
                 </div>
               </div>
 
-              {/* Linked Source Book Reference */}
-              {linkedBook && (
-                <div className="p-4 rounded-xl bg-forge-bg border border-forge-border space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-track-warehousing uppercase">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    Foundational Text Reference
-                  </div>
-                  <h4 className="text-xs font-bold text-forge-text">{linkedBook.title}</h4>
-                  <p className="text-[11px] text-forge-muted leading-relaxed">
-                    Author: {linkedBook.author} • Core concepts: {linkedBook.coreConcepts.slice(0, 3).join(', ')}
-                  </p>
-                  {onNavigateBook && (
-                    <button
-                      onClick={() => {
-                        setDrawerOpen(false);
-                        onNavigateBook(linkedBook.id);
-                      }}
-                      className="text-[11px] font-mono font-bold text-track-warehousing hover:underline flex items-center gap-1 pt-1"
+              {/* Horizontal Node Track */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
+                {lvl.nodes.map((node, nIdx) => {
+                  const Icon = node.icon;
+                  const isCompleted = completedIds.includes(node.id);
+                  const isBookmarked = bookmarkedIds.includes(node.id);
+                  const isSelected = selectedNode?.id === node.id;
+
+                  return (
+                    <div
+                      key={node.id}
+                      onClick={() => handleSelectNode(node)}
+                      className={`rounded-2xl border p-4 cursor-pointer transition-all flex flex-col justify-between space-y-3 relative group ${
+                        isSelected
+                          ? 'border-track-sql ring-2 ring-track-sql/30 bg-forge-surface shadow-md'
+                          : isCompleted
+                            ? 'bg-forge-surface/60 border-track-python/30 hover:border-track-python/60'
+                            : 'bg-forge-surface border-forge-border hover:border-forge-secondary/60'
+                      }`}
                     >
-                      <span>Read book chapters</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
-              )}
+                      {/* Top Bar: Icon + Completed indicator */}
+                      <div className="flex items-center justify-between">
+                        <div 
+                          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border shadow-inner"
+                          style={{
+                            backgroundColor: `${node.accentColor}15`,
+                            borderColor: `${node.accentColor}40`,
+                            color: node.accentColor
+                          }}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          {isCompleted && (
+                            <CheckCircle2 className="w-4 h-4 text-track-python" />
+                          )}
+                          {isBookmarked && (
+                            <Bookmark className="w-4 h-4 text-amber-400 fill-amber-400" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Middle: Title & Subtitle */}
+                      <div>
+                        <h4 className="text-xs font-bold text-forge-text group-hover:text-track-sql transition-colors leading-snug">
+                          {node.title}
+                        </h4>
+                        <p className="text-[11px] text-forge-secondary line-clamp-2 mt-1 leading-snug">
+                          {node.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Bottom: Track Link Badge */}
+                      <div className="pt-2 border-t border-forge-border/40 flex items-center justify-between text-[10px] font-mono text-forge-secondary">
+                        <span className="truncate max-w-[120px]">
+                          {node.trackTarget.trackId.toUpperCase()} • {node.trackTarget.tierName}
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-forge-secondary group-hover:text-track-sql group-hover:translate-x-0.5 transition-all" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
 
             </div>
+          );
+        })}
+      </div>
 
-            {/* Bottom Actions */}
-            <div className="pt-4 border-t border-forge-border space-y-3">
-              {activeCheckpoint.linkedPracticeChallenge && onNavigatePractice && (
-                <button
-                  onClick={() => {
-                    setDrawerOpen(false);
-                    onNavigatePractice(activeCheckpoint.linkedPracticeChallenge!);
-                  }}
-                  className="w-full py-2.5 rounded-xl bg-track-sql hover:bg-blue-600 text-white text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
-                >
-                  <Code2 className="w-4 h-4" />
-                  <span>Launch Practice Challenge</span>
-                </button>
-              )}
+      {/* 4. NODE DETAIL DRAWER / SIDE SHEET */}
+      {selectedNode && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-forge-card border border-forge-border rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-150">
+            
+            {/* Header */}
+            <div className="flex items-start justify-between border-b border-forge-border pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-forge-surface text-track-sql border border-forge-border">
+                    Level {selectedNode.level} Topic
+                  </span>
+                  <span className="text-xs text-forge-secondary font-mono">
+                    Target Track: {selectedNode.trackTarget.trackId.toUpperCase()} ({selectedNode.trackTarget.tierName} Tier)
+                  </span>
+                </div>
+                <h3 className="text-xl font-black text-forge-text mt-1">{selectedNode.title}</h3>
+                <p className="text-xs text-forge-secondary font-mono mt-0.5">{selectedNode.subtitle}</p>
+              </div>
 
               <button
-                onClick={() => handleNodeComplete(activeCheckpoint)}
-                className={`w-full py-2.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all ${
-                  completedIds.includes(activeCheckpoint.id)
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                    : 'bg-forge-surface hover:bg-forge-border text-forge-text border border-forge-border'
-                }`}
+                onClick={() => setSelectedNode(null)}
+                className="p-1 rounded-xl bg-forge-surface border border-forge-border text-forge-secondary hover:text-forge-text"
               >
-                {completedIds.includes(activeCheckpoint.id) ? (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Completed (+100 XP)</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 text-track-pyspark" />
-                    <span>Mark Checkpoint Complete (+100 XP)</span>
-                  </>
-                )}
+                <X className="w-4 h-4" />
               </button>
+            </div>
+
+            {/* Overview */}
+            <div className="space-y-1">
+              <h4 className="text-xs font-mono font-bold text-forge-secondary uppercase">Overview</h4>
+              <p className="text-xs text-forge-text leading-relaxed">{selectedNode.description}</p>
+            </div>
+
+            {/* Competencies */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-mono font-bold text-forge-secondary uppercase">Core Technical Competencies</h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {selectedNode.competencies.map((comp, i) => (
+                  <li key={i} className="flex items-start gap-2 p-2.5 rounded-xl bg-forge-bg border border-forge-border text-forge-text">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-track-python shrink-0 mt-0.5" />
+                    <span>{comp}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Interview Traps */}
+            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 space-y-2">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-red-400" />
+                <span className="text-xs font-bold text-red-400 font-mono uppercase">Staff DE Interview Traps</span>
+              </div>
+              <ul className="list-disc list-inside text-xs text-forge-text space-y-1 pl-1">
+                {selectedNode.interviewTraps.map((trap, i) => (
+                  <li key={i}>{trap}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Actions: Jump to Track, Open Book, Capture Note, Complete */}
+            <div className="pt-4 border-t border-forge-border flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onToggleComplete && onToggleComplete(selectedNode.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${
+                    completedIds.includes(selectedNode.id)
+                      ? 'bg-track-python/20 text-track-python border-track-python/40'
+                      : 'bg-forge-surface text-forge-secondary border-forge-border hover:text-forge-text'
+                  }`}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{completedIds.includes(selectedNode.id) ? 'Mastered ✓' : 'Mark Complete'}</span>
+                </button>
+
+                <button
+                  onClick={() => onToggleBookmark && onToggleBookmark(selectedNode.id)}
+                  className={`p-2 rounded-xl border text-xs transition-colors ${
+                    bookmarkedIds.includes(selectedNode.id)
+                      ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+                      : 'bg-forge-surface text-forge-secondary border-forge-border hover:text-forge-text'
+                  }`}
+                  title="Bookmark topic"
+                >
+                  <Bookmark className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={() => onOpenQuickNote && onOpenQuickNote({
+                    type: 'roadmap_node',
+                    id: selectedNode.id,
+                    title: selectedNode.title
+                  })}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-forge-surface border border-forge-border text-xs text-forge-secondary hover:text-track-sql"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>+ Note</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {selectedNode.sourceBookId && (
+                  <button
+                    onClick={() => onNavigateBook && onNavigateBook(selectedNode.sourceBookId)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-forge-surface border border-forge-border text-xs text-forge-text hover:bg-forge-surface/80"
+                  >
+                    <BookOpen className="w-3.5 h-3.5 text-track-sql" />
+                    <span>Open Book</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    const target = selectedNode;
+                    setSelectedNode(null);
+                    if (onNavigateTrack && target) {
+                      onNavigateTrack(target.trackTarget.trackId, target.trackTarget.tierNumber);
+                    }
+                  }}
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-track-sql text-black font-bold text-xs hover:bg-track-sql/90 shadow-sm"
+                >
+                  <span>Practice in {selectedNode.trackTarget.tierName} Track</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
           </div>

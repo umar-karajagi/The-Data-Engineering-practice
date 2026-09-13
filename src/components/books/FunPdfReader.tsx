@@ -25,22 +25,27 @@ import {
   Minimize2,
   List,
   Columns,
-  X
+  X,
+  Plus,
+  SkipForward
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { BookReference, BookQuizQuestion, BookConceptCard } from '../../types';
+import { BookReference, BookQuizQuestion, BookConceptCard, ContentRef } from '../../types';
 import { playSuccessChime, playHintChime } from '../../lib/sound';
+import { useUserStore } from '../../lib/userStore';
 
 interface FunPdfReaderProps {
   book: BookReference;
   onBackToLibrary?: () => void;
   onAddXP?: (amount: number) => void;
+  onOpenQuickNote?: (ref?: ContentRef) => void;
 }
 
 export const FunPdfReader: React.FC<FunPdfReaderProps> = ({
   book,
   onBackToLibrary,
   onAddXP,
+  onOpenQuickNote,
 }) => {
   const [activeTab, setActiveTab] = useState<'pdf' | 'concepts' | 'quiz' | 'ask'>('pdf');
   const [isTheaterMode, setIsTheaterMode] = useState<boolean>(false);
@@ -70,6 +75,47 @@ export const FunPdfReader: React.FC<FunPdfReaderProps> = ({
 
   const conceptCards: BookConceptCard[] = book.conceptCards || [];
   const quizQuestions: BookQuizQuestion[] = book.quizQuestions || [];
+
+  // Connect to unified user store
+  let storeSaveCheckpoint: any = null;
+  let storeSaveBookmark: any = null;
+  let storeSetLastActive: any = null;
+  let storeAddXP: any = null;
+  try {
+    const store = useUserStore();
+    storeSaveCheckpoint = store.saveBookCheckpoint;
+    storeSaveBookmark = store.saveBookBookmark;
+    storeSetLastActive = store.setLastActive;
+    storeAddXP = store.addXP;
+  } catch {
+    // Fallback if rendered outside provider
+  }
+
+  // Auto-record reading bookmark & last active item
+  useEffect(() => {
+    if (storeSaveBookmark) {
+      storeSaveBookmark(book.id, currentPage, 100);
+    }
+    if (storeSetLastActive) {
+      storeSetLastActive({
+        type: 'library_chapter',
+        id: `${book.id}-p${currentPage}`,
+        title: book.title,
+        subtitle: `Page ${currentPage} • ${book.author}`,
+        bookId: book.id
+      });
+    }
+  }, [book.id, book.title, book.author, currentPage, storeSaveBookmark, storeSetLastActive]);
+
+  const handleSkipCheckpoint = (chapterNum: number) => {
+    if (storeSaveCheckpoint) {
+      storeSaveCheckpoint(book.id, chapterNum, 'single', 100, true);
+    }
+    if (storeAddXP) storeAddXP(25);
+    if (onAddXP) onAddXP(25);
+    playSuccessChime();
+    triggerDrmNotification(`Checkpoint for chapter ${chapterNum} bypassed (Reference Reading Mode). Reading progress saved!`);
+  };
 
   // Anti-download DRM keyboard listener & Theater mode escape
   useEffect(() => {
@@ -123,14 +169,25 @@ export const FunPdfReader: React.FC<FunPdfReaderProps> = ({
     setRevealedExplanations({ ...revealedExplanations, [qId]: true });
 
     if (optionIndex === correctIndex) {
-      setQuizScore(prev => prev + 1);
+      const newScore = quizScore + 1;
+      setQuizScore(newScore);
       playSuccessChime();
       confetti({
         particleCount: 50,
         spread: 60,
         origin: { y: 0.8 }
       });
+      if (storeAddXP) storeAddXP(50);
       if (onAddXP) onAddXP(50);
+
+      // Check soft checkpoint pass threshold (≥60%)
+      const totalQ = quizQuestions.length;
+      if (totalQ > 0 && (newScore / totalQ) >= 0.6) {
+        if (storeSaveCheckpoint) {
+          const chNum = typeof selectedChapterQuiz === 'number' ? selectedChapterQuiz : 1;
+          storeSaveCheckpoint(book.id, chNum, 'single', Math.round((newScore / totalQ) * 100), false);
+        }
+      }
     } else {
       playHintChime();
     }
@@ -298,6 +355,25 @@ export const FunPdfReader: React.FC<FunPdfReaderProps> = ({
               >
                 <Columns className="w-3.5 h-3.5" />
                 <span className="hidden lg:inline">Study Companion</span>
+              </button>
+            )}
+
+            {/* Quick Note attached to page */}
+            {onOpenQuickNote && (
+              <button
+                onClick={() => onOpenQuickNote({
+                  type: 'book_page',
+                  id: `${book.id}-pg${currentPage}`,
+                  title: `${book.title} (Page ${currentPage})`,
+                  bookId: book.id,
+                  chapterNumber: currentPage,
+                  label: `${book.title} (Page ${currentPage})`
+                })}
+                className="px-3 py-1.5 rounded-xl bg-forge-card hover:bg-forge-surface border border-forge-border text-xs font-mono font-bold flex items-center gap-1.5 text-forge-text hover:border-track-sql/60 transition-colors shrink-0 shadow-sm"
+                title="Capture quick note for this page"
+              >
+                <Plus className="w-3.5 h-3.5 text-track-sql" />
+                <span className="hidden sm:inline">Note</span>
               </button>
             )}
 
@@ -833,19 +909,45 @@ export const FunPdfReader: React.FC<FunPdfReaderProps> = ({
                 </p>
               </div>
 
-              {/* Score card */}
-              <div className="bg-forge-bg border border-forge-border rounded-2xl p-4 flex items-center gap-4 shrink-0">
-                <div className="text-center">
-                  <div className="text-xs font-mono text-forge-muted">SCORE</div>
-                  <div className="text-xl font-extrabold text-track-pyspark font-mono">
-                    {quizScore} / {quizQuestions.length}
+              {/* Score card + Checkpoint Status & Skip */}
+              <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap shrink-0">
+                <div className="bg-forge-bg border border-forge-border rounded-2xl p-4 flex items-center gap-4">
+                  <div className="text-center">
+                    <div className="text-xs font-mono text-forge-muted">SCORE</div>
+                    <div className="text-xl font-extrabold text-track-pyspark font-mono">
+                      {quizScore} / {quizQuestions.length}
+                    </div>
+                  </div>
+                  <div className="text-center border-l border-forge-border pl-4">
+                    <div className="text-xs font-mono text-forge-muted">XP REWARD</div>
+                    <div className="text-xl font-extrabold text-emerald-400 font-mono">
+                      +{quizScore * 50} XP
+                    </div>
                   </div>
                 </div>
-                <div className="text-center border-l border-forge-border pl-4">
-                  <div className="text-xs font-mono text-forge-muted">XP REWARD</div>
-                  <div className="text-xl font-extrabold text-emerald-400 font-mono">
-                    +{quizScore * 50} XP
+
+                {/* Soft checkpoint status & Skip escape hatch */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="px-3 py-1.5 rounded-xl bg-forge-bg border border-forge-border text-[11px] font-mono flex items-center gap-2">
+                    <span className="text-forge-muted">Checkpoint (≥60%):</span>
+                    {quizQuestions.length > 0 && (quizScore / quizQuestions.length) >= 0.6 ? (
+                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        Cleared
+                      </span>
+                    ) : (
+                      <span className="text-amber-400 font-bold">Soft Check</span>
+                    )}
                   </div>
+
+                  <button
+                    onClick={() => handleSkipCheckpoint(typeof selectedChapterQuiz === 'number' ? selectedChapterQuiz : 1)}
+                    className="px-3 py-1.5 rounded-xl bg-forge-bg hover:bg-forge-surface border border-forge-border hover:border-track-warehousing/60 text-[11px] font-mono font-bold text-forge-secondary hover:text-forge-text flex items-center justify-center gap-1.5 transition-colors"
+                    title="Skip checkpoint for pure reference reading (marked without penalty)"
+                  >
+                    <SkipForward className="w-3 h-3 text-track-warehousing" />
+                    <span>Skip Checkpoint</span>
+                  </button>
                 </div>
               </div>
             </div>

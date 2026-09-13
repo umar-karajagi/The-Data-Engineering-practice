@@ -1,78 +1,95 @@
-/* DataForge Three-Theme Token System */
+/* DataForge Foundry Three-Theme Token System */
+/* Industrial Control Room, Technical Blueprint, Research Notebook Aesthetic */
 
 :root {
-  /* Dark Mode (Default) */
-  --bg-primary: #0D1117;
-  --bg-secondary: #161B22;
-  --bg-tertiary: #21262D;
-  --bg-canvas: #090D13;
-  --border-color: #30363D;
-  --border-subtle: #21262D;
-  --text-primary: #F0F6FC;
-  --text-secondary: #8B949E;
-  --text-muted: #6E7681;
-  --accent-glow: rgba(59, 130, 246, 0.15);
+  /* Dark Mode (DataForge Foundry Industrial Slate / Default) */
+  --bg-primary: #101415;
+  --bg-secondary: #182123;
+  --bg-tertiary: #212B2D;
+  --bg-canvas: #0B0E0F;
+  --border-color: #2B3839;
+  --border-subtle: #1E282A;
+  --text-primary: #FFFDF7;
+  --text-secondary: #A2B0B2;
+  --text-muted: #6F7D7E;
+  --accent-glow: rgba(200, 255, 74, 0.15);
 
-  /* Track Colors */
-  --track-sql: #3B82F6;
-  --track-python: #84CC16;
-  --track-pyspark: #F97316;
-  --track-warehousing: #14B8A6;
-  --track-architecture: #A855F7;
-  --track-dsa: #EC4899;
-  --track-azure: #0EA5E9;
-  --track-behavioral: #EAB308;
+  /* Foundry Accent & Track Tokens */
+  --track-sql: #C8FF4A;          /* Signal Lime */
+  --track-python: #56D8FF;       /* Data Cyan */
+  --track-pyspark: #FFB14A;      /* Foundry Amber */
+  --track-warehousing: #56D8FF;  /* Data Cyan */
+  --track-architecture: #C8FF4A; /* Signal Lime */
+  --track-dsa: #FF6B5E;          /* Alert Coral */
+  --track-azure: #56D8FF;        /* Electric Blue */
+  --track-behavioral: #FFB14A;   /* Foundry Amber */
+
+  /* Semantic UI Tokens */
+  --color-signal-lime: #C8FF4A;
+  --color-data-cyan: #56D8FF;
+  --color-amber: #FFB14A;
+  --color-alert-coral: #FF6B5E;
 }
 
-/* Light Mode */
+/* Light Mode (Engineering Blueprint) */
 html.theme-light {
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F6F8FA;
-  --bg-tertiary: #EAEEF2;
-  --bg-canvas: #F0F3F6;
-  --border-color: #D0D7DE;
-  --border-subtle: #E1E4E8;
-  --text-primary: #1F2328;
-  --text-secondary: #57606A;
-  --text-muted: #6E7781;
-  --accent-glow: rgba(37, 99, 235, 0.12);
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #F1F5F9;
+  --bg-tertiary: #E2E8F0;
+  --bg-canvas: #FFFFFF;
+  --border-color: #CBD5E1;
+  --border-subtle: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --accent-glow: rgba(14, 165, 233, 0.15);
 
-  /* Adjusted track colors for high-contrast on white */
-  --track-sql: #1D4ED8;
-  --track-python: #4D7C0F;
-  --track-pyspark: #C2410C;
-  --track-warehousing: #0F766E;
-  --track-architecture: #7E22CE;
-  --track-dsa: #BE185D;
+  /* Adjusted high-contrast tokens */
+  --track-sql: #0284C7;
+  --track-python: #0D9488;
+  --track-pyspark: #D97706;
+  --track-warehousing: #0284C7;
+  --track-architecture: #7C3AED;
+  --track-dsa: #DC2626;
   --track-azure: #0369A1;
-  --track-behavioral: #A16207;
+  --track-behavioral: #D97706;
+
+  --color-signal-lime: #0284C7;
+  --color-data-cyan: #0D9488;
+  --color-amber: #D97706;
+  --color-alert-coral: #DC2626;
 }
 
-/* Focus / Learner Mode (Warm Sepia / Reduced Blue Light for deep study) */
+/* Focus / Learner Mode (Research Notebook Warm Paper) */
 html.theme-focus {
-  --bg-primary: #FAF5EB;
-  --bg-secondary: #F2E8D5;
-  --bg-tertiary: #E8DCBF;
-  --bg-canvas: #EDE3CA;
-  --border-color: #D8C7A5;
-  --border-subtle: #DFCFB0;
-  --text-primary: #2D271E;
-  --text-secondary: #6B5D4D;
-  --text-muted: #8A7A68;
+  --bg-primary: #F4F0E7;
+  --bg-secondary: #EBE5D8;
+  --bg-tertiary: #E0D9C8;
+  --bg-canvas: #FAF6ED;
+  --border-color: #D3C9B4;
+  --border-subtle: #DFD5BF;
+  --text-primary: #1D2324;
+  --text-secondary: #4A5658;
+  --text-muted: #728082;
   --accent-glow: rgba(180, 83, 9, 0.12);
 
   /* Warm tuned track colors */
-  --track-sql: #2563EB;
-  --track-python: #65A30D;
-  --track-pyspark: #EA580C;
-  --track-warehousing: #0D9488;
-  --track-architecture: #9333EA;
-  --track-dsa: #DB2777;
+  --track-sql: #15803D;
+  --track-python: #0369A1;
+  --track-pyspark: #C2410C;
+  --track-warehousing: #0F766E;
+  --track-architecture: #7E22CE;
+  --track-dsa: #BE123C;
   --track-azure: #0284C7;
-  --track-behavioral: #CA8A04;
+  --track-behavioral: #B45309;
+
+  --color-signal-lime: #15803D;
+  --color-data-cyan: #0369A1;
+  --color-amber: #C2410C;
+  --color-alert-coral: #BE123C;
 }
 
-/* Custom modern scrollbars */
+/* Custom Foundry industrial scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

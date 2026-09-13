@@ -30,14 +30,21 @@ import { FunPdfReader } from './FunPdfReader';
 import { MasterCatalogTable } from './MasterCatalogTable';
 import { AddBookModal } from './AddBookModal';
 import { getCustomBooks, deleteCustomBook, getReadingProgress } from '../../lib/libraryStorage';
+import { ContentRef } from '../../types';
 
 interface LibraryViewProps {
   initialBookId?: string;
   onNavigatePractice?: (practiceId: string) => void;
   onAddXP?: (amount: number) => void;
+  onOpenQuickNote?: (ref?: ContentRef) => void;
 }
 
-export const LibraryView: React.FC<LibraryViewProps> = ({ initialBookId, onNavigatePractice, onAddXP }) => {
+export const LibraryView: React.FC<LibraryViewProps> = ({ 
+  initialBookId, 
+  onNavigatePractice, 
+  onAddXP,
+  onOpenQuickNote 
+}) => {
   // Books collection
   const [customBooks, setCustomBooks] = useState<BookReference[]>([]);
   const [vaultBooks, setVaultBooks] = useState<BookReference[]>([]);
@@ -144,10 +151,17 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ initialBookId, onNavig
   // Filter books for Shelf view
   const filteredBooks = allBooks.filter(book => {
     const isNb = book.isNotebook || book.formatType === 'notebook';
+    const concepts = (book.coreConcepts || []).map(c => c.toLowerCase());
     const matchesTrack = 
       selectedTrack === 'ALL' ? true :
       selectedTrack === 'notebooks' ? isNb :
       selectedTrack === 'custom' ? book.isCustom :
+      selectedTrack === 'streaming' ? (concepts.some(c => c.includes('streaming') || c.includes('kafka')) || book.track === 'pyspark') :
+      selectedTrack === 'dbt' ? (concepts.some(c => c.includes('dbt') || c.includes('warehousing')) || book.track === 'warehousing') :
+      selectedTrack === 'dataops' ? (concepts.some(c => c.includes('test') || c.includes('quality') || c.includes('ci/cd') || c.includes('ops'))) :
+      selectedTrack === 'cloud' ? (concepts.some(c => c.includes('cloud') || c.includes('aws') || c.includes('azure') || c.includes('terraform')) || book.track === 'azure') :
+      selectedTrack === 'graph' ? (concepts.some(c => c.includes('graph') || c.includes('vector'))) :
+      selectedTrack === 'systemdesign' ? (concepts.some(c => c.includes('design') || c.includes('architecture')) || book.track === 'architecture') :
       book.track === selectedTrack;
 
     const matchesSearch = 
@@ -170,6 +184,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ initialBookId, onNavig
           book={activeBook}
           onBackToLibrary={() => setActiveBook(null)}
           onAddXP={onAddXP}
+          onOpenQuickNote={onOpenQuickNote}
         />
       );
     }
@@ -188,6 +203,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ initialBookId, onNavig
         book={activeBook}
         onBackToLibrary={() => setActiveBook(null)}
         onNavigatePractice={onNavigatePractice}
+        onOpenQuickNote={onOpenQuickNote}
       />
     );
   }
@@ -318,12 +334,17 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ initialBookId, onNavig
               {[
                 { id: 'ALL', label: 'All Literature' },
                 { id: 'notebooks', label: `Notebooks (${notebookCount})` },
-                { id: 'warehousing', label: 'Warehousing' },
-                { id: 'architecture', label: 'Architecture' },
-                { id: 'pyspark', label: 'PySpark' },
-                { id: 'sql', label: 'SQL' },
-                { id: 'python', label: 'Python' },
-                { id: 'dsa', label: 'DSA' },
+                { id: 'sql', label: '1. Relational DBs & SQL' },
+                { id: 'warehousing', label: '2. Warehousing & Modeling' },
+                { id: 'architecture', label: '3. Distributed Systems' },
+                { id: 'pyspark', label: '4. Big Data & PySpark' },
+                { id: 'python', label: '5. Python & Systems Eng' },
+                { id: 'streaming', label: '6. Streaming & Kafka' },
+                { id: 'dbt', label: '7. Analytics & dbt' },
+                { id: 'dataops', label: '8. Data Quality & DataOps' },
+                { id: 'cloud', label: '9. Cloud & Terraform' },
+                { id: 'graph', label: '10. Graph & Vector DBs' },
+                { id: 'systemdesign', label: '11. System Design' },
               ].map((track) => (
                 <button
                   key={track.id}
