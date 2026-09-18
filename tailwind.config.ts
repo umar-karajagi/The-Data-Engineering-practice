@@ -31,6 +31,19 @@ const config: Config = {
           azure: "var(--track-azure)",
           behavioral: "var(--track-behavioral)",
         },
+        brand: {
+          blue: "#0050FF",
+          hover: "#1C449A",
+          light: "rgba(0, 80, 255, 0.08)",
+          subtle: "rgba(0, 80, 255, 0.15)",
+        },
+        vidhya: {
+          bg: "#0C0C0C",
+          card: "#141414",
+          elevated: "#1C1C1E",
+          border: "#262626",
+          subtle: "#1C1C1C",
+        },
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],

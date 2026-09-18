@@ -4,6 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { UserStoreProvider, useUserStore } from '../lib/userStore';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import { DataVidhyaNavbar } from '../components/layout/DataVidhyaNavbar';
+import { DataVidhyaFooter } from '../components/layout/DataVidhyaFooter';
+import { DataVidhyaHome } from '../components/datavidhya/DataVidhyaHome';
+import { VideoMasterclassModal } from '../components/videos/VideoMasterclassModal';
+import { CuratedVideo, HERO_MASTERCLASS_VIDEO, getCuratedVideoById } from '../content/videos/curatedVideos';
 import { LandingPage } from '../components/landing/LandingPage';
 import { DeveloperDashboard } from '../components/dashboard/DeveloperDashboard';
 import { TracksView } from '../components/tracks/TracksView';
@@ -22,6 +27,7 @@ import { CareerStudioView } from '../components/career-studio/CareerStudioView';
 import { ContentRef, LinkedRef } from '../types';
 
 type ActiveTab = 
+  | 'home'
   | 'dashboard'
   | 'catalog'
   | 'course-detail'
@@ -40,7 +46,8 @@ const ROADMAP_STORAGE_KEY = 'dataforge_roadmap_state_v2';
 
 function DataForgeMasterApp() {
   const { user, addXP } = useUserStore();
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const [activeVideoModal, setActiveVideoModal] = useState<CuratedVideo | null>(null);
 
   // Selected Course and Lesson for Interactive Learning Flow
   const [selectedCourseId, setSelectedCourseId] = useState<string>('SF-04');
@@ -192,20 +199,32 @@ function DataForgeMasterApp() {
     <div className="min-h-screen bg-forge-bg text-forge-text flex flex-col justify-between selection:bg-track-sql selection:text-white">
       
       {/* 1. Global Sticky Navigation */}
-      <Navbar
+      <DataVidhyaNavbar
         activeTab={activeTab}
-        setActiveTab={(tab: string) => {
+        onNavigateTab={(tab: string) => {
           setActiveTab(tab as ActiveTab);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        onOpenQuickNote={() => handleOpenQuickNote()}
-        xp={user.totalXp ?? user.xp ?? 450}
-        streak={user.streak ?? user.streakDays ?? 5}
+        onOpenAssessment={() => handleOpenDiagnostic('SF-04')}
+        onOpenHeroVideo={() => setActiveVideoModal(HERO_MASTERCLASS_VIDEO)}
       />
 
       {/* 2. Main Canonical Views Router */}
       <main className="flex-1 pb-16">
         
+        {/* VIEW 0: DATAVIDHYA HOMEPAGE (13 CANONICAL SECTIONS + YOUTUBE MASTERCLASSES) */}
+        {activeTab === 'home' && (
+          <DataVidhyaHome
+            onOpenVideo={(video) => setActiveVideoModal(video)}
+            onNavigateTab={(tab) => {
+              setActiveTab(tab as ActiveTab);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onOpenAssessment={() => handleOpenDiagnostic('SF-04')}
+            onSelectCourse={handleSelectCourse}
+          />
+        )}
+
         {/* VIEW 1: DASHBOARD */}
         {activeTab === 'dashboard' && (
           <DeveloperDashboard
@@ -358,7 +377,24 @@ function DataForgeMasterApp() {
       )}
 
       {/* 5. Global Site Footer */}
-      <Footer />
+      <DataVidhyaFooter
+        onNavigateTab={(tab) => {
+          setActiveTab(tab as ActiveTab);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenVideo={(videoId) => {
+          const v = getCuratedVideoById(videoId);
+          if (v) setActiveVideoModal(v);
+        }}
+      />
+
+      {/* 6. Video Masterclass Modal */}
+      {activeVideoModal && (
+        <VideoMasterclassModal
+          video={activeVideoModal}
+          onClose={() => setActiveVideoModal(null)}
+        />
+      )}
 
     </div>
   );
