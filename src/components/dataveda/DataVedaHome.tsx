@@ -6,7 +6,7 @@ import {
   CURATED_PROJECT_VIDEOS, 
   CURATED_COURSE_VIDEOS, 
   CuratedVideo 
-} from '@/content/videos/curatedVideos';
+} from '../../content/videos/curatedVideos';
 import { 
   Play, 
   Sparkles, 
@@ -33,14 +33,14 @@ import {
   Filter
 } from 'lucide-react';
 
-interface DataVidhyaHomeProps {
+interface DataVedaHomeProps {
   onOpenVideo: (video: CuratedVideo) => void;
   onNavigateTab: (tab: string) => void;
   onOpenAssessment: () => void;
   onSelectCourse?: (courseId: string) => void;
 }
 
-export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
+export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
   onOpenVideo,
   onNavigateTab,
   onOpenAssessment,
@@ -89,13 +89,13 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
       title: 'Curated Video Tutorials',
       description: 'Full-length, high-definition masterclasses embedded directly with interactive timestamp chapters, code snippets, and key takeaways.',
       tag: 'Full Masterclasses',
-      tabTarget: 'catalog'
+      tabTarget: 'projects'
     },
     {
       title: 'Real-World Projects',
       description: '23 production-grade data pipelines (Uber GCP, Spotify AWS, YouTube ETL, Kafka Real-Time) with architecture diagrams and GitHub repositories.',
       tag: '23 Projects',
-      tabTarget: 'catalog'
+      tabTarget: 'projects'
     },
     {
       title: 'Data Model Playground',
@@ -119,25 +119,25 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
       title: 'Cloud Labs',
       description: 'Hands-on guided walkthroughs executing data workloads across AWS, GCP, Azure, Snowflake, and Databricks.',
       tag: 'Multi-Cloud',
-      tabTarget: 'catalog'
+      tabTarget: 'projects'
     },
     {
       title: 'AI Resume Evaluator',
       description: 'Real-time ATS diagnostics, keyword coverage matching against target job descriptions, and Google XYZ bullet improvements.',
       tag: 'ResumeCraft',
-      tabTarget: 'career-studio'
+      tabTarget: 'resources'
     },
     {
       title: 'The Vault (Book Library)',
       description: 'Read the complete industry textbooks online: Kimball Data Warehouse Toolkit, Designing Data-Intensive Applications, and more.',
       tag: 'Full Books',
-      tabTarget: 'vault'
+      tabTarget: 'library'
     },
     {
       title: 'Article Podcasts & Guides',
       description: '300+ concise deep dives explaining Airflow internals, PySpark memory tuning, Kafka consumer groups, and data contracts.',
       tag: 'Deep Dives',
-      tabTarget: 'catalog'
+      tabTarget: 'projects'
     },
     {
       title: 'Community Solutions',
@@ -164,25 +164,25 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
       name: 'Chanchal V',
       company: 'Certa.ai (ex-TCS)',
       role: 'AWS Data Engineer',
-      quote: 'Data Vidhya has been a great learning experience for me transitioning into Data Engineering. The structured learning path, practical projects, and clear explanations helped me understand concepts beyond just theory. The hands-on Spotify and Uber projects gave me confidence in real-world pipelines.'
+      quote: 'DataVeda has been a great learning experience for me transitioning into Data Engineering. The structured learning path, practical projects, and clear explanations helped me understand concepts beyond just theory. The hands-on Spotify and Uber projects gave me confidence in real-world pipelines.'
     },
     {
       name: 'Ballal Pathare',
       company: 'AGCO Corporation (ex-Infosys)',
       role: 'Technology Lead',
-      quote: 'The data lab in DataVidhya platform is very useful for practicing coding problems. The in-browser execution is very helpful to understand how to simplify the code written based on time complexity and coding standards.'
+      quote: 'The data lab in DataVeda platform is very useful for practicing coding problems. The in-browser execution is very helpful to understand how to simplify the code written based on time complexity and coding standards.'
     },
     {
       name: 'Shakti Jagadish',
       company: 'HSBC',
       role: 'Senior Software Engineer',
-      quote: 'When I started learning Data Engineering, I thought it was mainly about syntax and tools. Data Vidhya completely changed that understanding with its fundamentals-first approach and why-before-how explanations.'
+      quote: 'When I started learning Data Engineering, I thought it was mainly about syntax and tools. DataVeda completely changed that understanding with its fundamentals-first approach and why-before-how explanations.'
     },
     {
       name: 'Rochita Das',
       company: 'Polen Capital',
       role: 'Data Engineer',
-      quote: 'DataVidhya helped me transition from Data Analyst to Data Engineer after a layoff. Having structured hands-on projects and interview questions helped me land an offer in record time.'
+      quote: 'DataVeda helped me transition from Data Analyst to Data Engineer after a layoff. Having structured hands-on projects and interview questions helped me land an offer in record time.'
     },
     {
       name: 'Pradeep Guled',
@@ -194,8 +194,8 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
 
   const faqs = [
     {
-      q: 'What is Data Vidhya?',
-      a: 'Data Vidhya is a comprehensive, guided learning and interview-preparation platform for data careers. It includes 3 career tracks, 28+ courses, curated YouTube video masterclasses, 850+ coding problems, in-browser DuckDB execution, 23 real-world projects, The Vault online book library, and AI-powered interview tools — all in one unified platform.'
+      q: 'What is DataVeda?',
+      a: 'DataVeda is a comprehensive, guided learning and interview-preparation platform for data careers. It includes 3 career tracks, 28+ courses, curated YouTube video masterclasses, 850+ coding problems, in-browser DuckDB execution, 23 real-world projects, The Vault online book library, and AI-powered interview tools — all in one unified platform.'
     },
     {
       q: 'Who is this for?',
@@ -207,11 +207,11 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
     },
     {
       q: 'Is it really 100% free with zero paywalls?',
-      a: 'Yes! While other platforms charge $279+/year for isolated video access, this DataVidhya edition offers 100% free open access across all 28+ courses, video masterclasses, 850+ problems, 23 projects, and online book readers with zero paywalls.'
+      a: 'Yes! While other platforms charge $279+/year for isolated video access, this DataVeda edition offers 100% free open access across all 28+ courses, video masterclasses, 850+ problems, 23 projects, and online book readers with zero paywalls.'
     },
     {
       q: 'How is this different from generic YouTube playlists?',
-      a: 'Random YouTube playlists teach concepts in isolation without structured order, exercise data, or validation. Data Vidhya curates the highest-rated, verified YouTube masterclasses and wraps them inside an authentic engineering environment: timestamp chapters, key architecture takeaways, in-browser DuckDB SQL execution, GitHub repos, notes, and career tracks.'
+      a: 'Random YouTube playlists teach concepts in isolation without structured order, exercise data, or validation. DataVeda curates the highest-rated, verified YouTube masterclasses and wraps them inside an authentic engineering environment: timestamp chapters, key architecture takeaways, in-browser DuckDB SQL execution, GitHub repos, notes, and career tracks.'
     }
   ];
 
@@ -269,7 +269,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
               </button>
 
               <button
-                onClick={() => onNavigateTab('catalog')}
+                onClick={() => onNavigateTab('projects')}
                 className="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#141414] hover:bg-[#1C1C1E] border border-[#262626] hover:border-neutral-500 text-white text-sm font-semibold tracking-tight transition-colors flex items-center justify-center gap-2"
               >
                 <span>Explore Career Tracks</span>
@@ -299,7 +299,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
 
                 <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[#0C0C0C] border border-[#262626] text-xs text-neutral-400 font-mono">
                   <span className="text-neutral-500">https://</span>
-                  <span className="text-white">datavidhya.com</span>
+                  <span className="text-white">dataveda.io</span>
                   <span className="text-neutral-500">/masterclass/uber-data-analytics</span>
                 </div>
 
@@ -450,7 +450,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
               <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
                 <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
                 <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('catalog')}
+                  onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
                 >
                   <span>Explore Track</span>
@@ -490,7 +490,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
               <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
                 <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
                 <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('catalog')}
+                  onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
                 >
                   <span>Explore Track</span>
@@ -530,7 +530,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
               <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
                 <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
                 <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('catalog')}
+                  onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
                 >
                   <span>Explore Track</span>
@@ -595,7 +595,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
             ].map((skill, i) => (
               <div 
                 key={i}
-                onClick={() => onNavigateTab('catalog')}
+                onClick={() => onNavigateTab('projects')}
                 className="p-4 rounded-xl bg-[#141414] border border-[#262626] hover:border-[#0050FF] cursor-pointer transition-all space-y-2"
               >
                 <span className="text-[11px] font-semibold text-[#0050FF]">{skill.tag}</span>
@@ -705,7 +705,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-2">
           <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
-            How DataVidhya Works
+            How DataVeda Works
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
             From “Where do I start?” to interview-ready.
@@ -832,7 +832,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
             Loved by data engineers worldwide
           </h2>
           <p className="text-xs sm:text-sm text-neutral-400 max-w-xl mx-auto">
-            Real stories from 25,000+ engineers using Data Vidhya to land offers and level up their stack.
+            Real stories from 25,000+ engineers using DataVeda to land offers and level up their stack.
           </p>
         </div>
 
@@ -876,7 +876,7 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
                 <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
                   FREE LIFETIME ACCESS
                 </span>
-                <h3 className="text-2xl font-bold text-white mt-2">DataVidhya Master Curriculum</h3>
+                <h3 className="text-2xl font-bold text-white mt-2">DataVeda Master Curriculum</h3>
                 <p className="text-xs text-neutral-400 mt-0.5">Curated with industry-standard top YouTube tutorials & real cloud labs.</p>
               </div>
 
@@ -938,11 +938,11 @@ export const DataVidhyaHome: React.FC<DataVidhyaHomeProps> = ({
           Making data easier for everyone
         </h2>
         <p className="text-sm text-neutral-300 leading-relaxed font-serif italic max-w-2xl mx-auto">
-          "When we started building DataVidhya, our vision was simple: Make data engineering accessible, practical, and career-defining. Data engineering isn't just about pipelines and tools; it's about solving real problems, building systems that scale, and enabling companies to make smarter decisions. Let's build the future of data, together."
+          "When we started building DataVeda, our vision was simple: Make data engineering accessible, practical, and career-defining. Data engineering isn't just about pipelines and tools; it's about solving real problems, building systems that scale, and enabling companies to make smarter decisions. Let's build the future of data, together."
         </p>
         <div>
           <div className="font-bold text-white text-sm">Darshil Parmar</div>
-          <div className="text-xs text-[#0050FF]">Founder, Data Vidhya</div>
+          <div className="text-xs text-[#0050FF]">Founder, DataVeda</div>
         </div>
       </section>
 

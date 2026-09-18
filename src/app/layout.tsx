@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'DataForge — Principal Data Architect Platform',
-  description: 'Master Data Engineering from Junior to Principal level. Grounded in 13 seminal industry texts with in-browser DuckDB execution.',
+  title: 'DataVeda — Data Engineering Interview Prep, Practice & Free Masterclasses',
+  description: 'Everything you need to become a job-ready Data Engineer. Learn the fundamentals, build real production projects with YouTube masterclasses, practice 850+ company-tagged problems, and read top engineering books in The Vault.',
 };
 
 export default function RootLayout({
