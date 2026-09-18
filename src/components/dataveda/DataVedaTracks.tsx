@@ -17,7 +17,7 @@ import {
   Lock,
   ArrowRight
 } from 'lucide-react';
-import { CURATED_COURSE_VIDEOS, CuratedVideo } from '../../content/videos/curatedVideos';
+import { getCuratedVideoById, ALL_CURATED_VIDEOS, CuratedVideo } from '../../content/videos/curatedVideos';
 
 interface DataVedaTracksProps {
   onOpenVideo: (video: CuratedVideo) => void;
@@ -81,9 +81,9 @@ const CAREER_TRACKS: TrackDef[] = [
         title: 'Distributed Systems & Big Data with Spark',
         description: 'Process terabytes to petabytes of data without running out of executor memory.',
         modules: [
-          { name: 'PySpark Fundamentals & Spark Architecture', duration: '16 hrs', topic: 'Spark', videoQuery: 'course-pyspark-bigdata' },
-          { name: 'Databricks, Delta Lake & Lakehouse Architecture', duration: '10 hrs', topic: 'Databricks' },
-          { name: 'Salting, Broadcast Joins & Spark Optimization', duration: '8 hrs', topic: 'Spark' }
+          { name: 'PySpark Fundamentals & Spark Architecture', duration: '16 hrs', topic: 'Spark', videoQuery: 'course-pyspark-full' },
+          { name: 'Databricks, Delta Lake & Lakehouse Architecture', duration: '10 hrs', topic: 'Databricks', videoQuery: 'course-de-fundamentals' },
+          { name: 'Salting, Broadcast Joins & Spark Optimization', duration: '8 hrs', topic: 'Spark', videoQuery: 'course-pyspark-full' }
         ]
       },
       {
@@ -91,8 +91,8 @@ const CAREER_TRACKS: TrackDef[] = [
         title: 'Orchestration & Real-Time Event Streaming',
         description: 'Coordinate multi-stage dependencies and ingest events with millisecond latencies.',
         modules: [
-          { name: 'Apache Airflow Mastery: DAGs, Sensors & TaskFlow API', duration: '10 hrs', topic: 'Airflow', videoQuery: 'course-airflow-mastery' },
-          { name: 'Apache Kafka: Brokers, Producers, Consumers & Lag', duration: '10 hrs', topic: 'Kafka', videoQuery: 'course-kafka-mastery' },
+          { name: 'Apache Airflow Mastery: DAGs, Sensors & TaskFlow API', duration: '10 hrs', topic: 'Airflow', videoQuery: 'project-twitter-airflow' },
+          { name: 'Apache Kafka: Brokers, Producers, Consumers & Lag', duration: '10 hrs', topic: 'Kafka', videoQuery: 'project-kafka-crash-course' },
           { name: 'Snowflake Cloud Data Warehouse & Zero-Copy Clones', duration: '8 hrs', topic: 'Snowflake', videoQuery: 'course-snowflake-mastery' }
         ]
       },
@@ -176,15 +176,15 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
 
   const handleLaunchModule = (videoQuery?: string) => {
     if (videoQuery) {
-      const match = CURATED_COURSE_VIDEOS.find(v => v.id === videoQuery);
+      const match = getCuratedVideoById(videoQuery);
       if (match) {
         onOpenVideo(match);
         return;
       }
     }
-    // Fallback to first course
-    if (CURATED_COURSE_VIDEOS.length > 0) {
-      onOpenVideo(CURATED_COURSE_VIDEOS[0]);
+    // Fallback to first verified video
+    if (ALL_CURATED_VIDEOS.length > 0) {
+      onOpenVideo(ALL_CURATED_VIDEOS[0]);
     }
   };
 

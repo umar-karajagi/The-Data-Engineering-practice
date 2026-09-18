@@ -58,7 +58,7 @@ export const VideoMasterclassModal: React.FC<VideoMasterclassModalProps> = ({
     setCurrentSeconds(seconds);
     const iframe = document.getElementById('masterclass-youtube-iframe') as HTMLIFrameElement;
     if (iframe) {
-      iframe.src = `https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&start=${seconds}&rel=0`;
+      iframe.src = `https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&start=${seconds}&rel=0`;
     }
   };
 
@@ -148,6 +148,17 @@ export const VideoMasterclassModal: React.FC<VideoMasterclassModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <a
+              href={video.youtubeUrl || `https://www.youtube.com/watch?v=${video.youtubeId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-lg bg-red-600/15 hover:bg-red-600/25 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              title="Open video directly on YouTube"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Watch on YouTube</span>
+            </a>
+
             <button
               onClick={handleCompleteVideo}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
@@ -186,10 +197,11 @@ export const VideoMasterclassModal: React.FC<VideoMasterclassModalProps> = ({
           <div className="relative w-full rounded-xl overflow-hidden bg-black border border-[#262626] shadow-2xl" style={{ paddingBottom: '56.25%' }}>
             <iframe
               id="masterclass-youtube-iframe"
-              src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
+              src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0&enablejsapi=1`}
               title={video.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
               className="absolute top-0 left-0 w-full h-full border-0"
             />
           </div>

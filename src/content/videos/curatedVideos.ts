@@ -16,7 +16,7 @@ export interface CuratedVideo {
   duration: string;
   rating: number;
   views: string;
-  level: 'Beginner' | 'Beginner → Intermediate' | 'Intermediate → Advanced' | 'Advanced';
+  level: 'Beginner' | 'Beginner → Intermediate' | 'Intermediate → Advanced' | 'Beginner → Advanced' | 'Advanced';
   summary: string;
   techStack: string[];
   chapters: VideoChapter[];
@@ -36,9 +36,9 @@ export const HERO_MASTERCLASS_VIDEO: CuratedVideo = {
   category: 'hero',
   topic: 'GCP',
   instructor: 'Darshil Parmar',
-  instructorRole: 'Lead Data Engineer & Founder, Data Vidhya',
-  youtubeId: 'WpQECq5ZZ9Q',
-  youtubeUrl: 'https://www.youtube.com/watch?v=WpQECq5ZZ9Q',
+  instructorRole: 'Lead Data Engineer & Founder',
+  youtubeId: 'WpQECq5Hx9g',
+  youtubeUrl: 'https://www.youtube.com/watch?v=WpQECq5Hx9g',
   duration: '1 hr 42 min',
   rating: 4.9,
   views: '1.2M+ views',
@@ -46,19 +46,19 @@ export const HERO_MASTERCLASS_VIDEO: CuratedVideo = {
   summary: 'A complete real-world data engineering walkthrough modeling millions of Uber trips. Learn dimensional modeling (Fact & Dimension tables), modern orchestration with Mage AI, Google Cloud Storage, BigQuery data warehousing, and Looker Studio dashboarding.',
   techStack: ['Python', 'Google Cloud Platform (GCP)', 'Mage AI', 'Google BigQuery', 'Looker Studio', 'Lucidchart'],
   chapters: [
-    { time: '00:00', seconds: 0, title: 'Project Overview & Architectural Blueprint' },
-    { time: '07:30', seconds: 450, title: 'Dataset Exploration & Schema Analysis' },
+    { time: '00:00', seconds: 0, title: 'Project Architecture & System Overview' },
+    { time: '07:30', seconds: 450, title: 'Dataset Exploration & Entity Relationships' },
     { time: '18:15', seconds: 1095, title: 'Dimensional Modeling: Fact & Dimension Design' },
-    { time: '35:40', seconds: 2140, title: 'GCP Setup & Google Cloud Storage Bucket Config' },
-    { time: '52:10', seconds: 3130, title: 'Pipeline Orchestration with Mage AI & ETL Scripting' },
-    { time: '01:15:20', seconds: 4520, title: 'Loading Transformed Entities into BigQuery' },
-    { time: '01:30:45', seconds: 5445, title: 'Interactive Analytics & Looker Studio Dashboard' }
+    { time: '35:40', seconds: 2140, title: 'GCP Cloud Storage Bucket Setup' },
+    { time: '52:10', seconds: 3130, title: 'Mage AI Orchestration & Python ETL Pipeline' },
+    { time: '01:15:20', seconds: 4520, title: 'Loading Analytics Mart into Google BigQuery' },
+    { time: '01:30:45', seconds: 5445, title: 'Building Interactive Looker Studio Executive Dashboard' }
   ],
   keyTakeaways: [
-    'How to decompose real-world flat CSV trip data into 1NF, 2NF, and Kimball Star Schema',
-    'Configuring GCP service accounts, IAM roles, and secure API keys for automated pipelines',
-    'Executing containerized Mage data pipelines for extract, transform, and load stages',
-    'Writing optimized SQL in BigQuery joining dimension keys to calculate revenue per payment type'
+    'Decomposing flat ride records into dimensional star schemas (dim_datetime, dim_rate_code, fact_trips)',
+    'Configuring secure GCP Service Accounts and Compute Engine instances for automated pipelines',
+    'Developing modular extract, transform, and load blocks using modern Python in Mage AI',
+    'Executing optimized SQL aggregations in BigQuery for revenue per payment type'
   ],
   githubUrl: 'https://github.com/darshilparmar/uber-etl-pipeline-data-engineering-project',
   datasetUrl: 'https://github.com/darshilparmar/uber-etl-pipeline-data-engineering-project/blob/main/data/uber_data.csv',
@@ -74,173 +74,213 @@ FROM fact_table f
 JOIN dim_payment_type d ON f.payment_type_id = d.payment_type_id
 GROUP BY f.VendorID, d.payment_type_name
 ORDER BY total_revenue DESC;`,
-    explanation: 'Calculates total trips and aggregate revenue per payment type directly against the dimensional model created in BigQuery.'
+    explanation: 'Aggregates total trips and revenue per payment type joining the Fact and Dimension tables in BigQuery.'
   }
 };
 
 export const CURATED_PROJECT_VIDEOS: CuratedVideo[] = [
   HERO_MASTERCLASS_VIDEO,
   {
-    id: 'project-spotify-aws',
-    title: 'Spotify End-to-End Real-Time ETL Data Pipeline | AWS Lambda, S3, Glue & Athena',
+    id: 'project-zomato-ai',
+    title: 'Zomato AI Data Analytics | End-To-End AI Data Engineering Project',
     category: 'project',
-    topic: 'AWS',
+    topic: 'GCP',
     instructor: 'Darshil Parmar',
-    instructorRole: 'Founder, Data Vidhya',
-    youtubeId: 'qSxrVu3gqU4',
-    youtubeUrl: 'https://www.youtube.com/watch?v=qSxrVu3gqU4',
-    duration: '1 hr 18 min',
+    instructorRole: 'Lead Data Engineer',
+    youtubeId: 'kYwaNMQ3XT8',
+    youtubeUrl: 'https://www.youtube.com/watch?v=kYwaNMQ3XT8',
+    duration: '1 hr 35 min',
     rating: 4.9,
-    views: '850K+ views',
+    views: '480K+ views',
     level: 'Beginner → Intermediate',
-    summary: 'Extract live top global tracks via Spotify Web API, trigger event-driven AWS Lambda functions on daily schedules, store raw and cleansed JSON in Amazon S3, crawl schemas using AWS Glue Data Catalog, and query data using serverless Amazon Athena SQL.',
-    techStack: ['Python', 'Spotify Web API', 'AWS Lambda', 'Amazon S3', 'AWS EventBridge', 'AWS Glue', 'Amazon Athena'],
+    summary: 'Build a next-generation AI-powered food delivery data pipeline. Ingest restaurant transaction feeds, perform geospatial customer analytics, clean data with Python, and leverage Generative AI for automated menu categorization and sentiment scoring.',
+    techStack: ['Python', 'Google Cloud', 'BigQuery', 'AI Analytics', 'Streamlit', 'Mage'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'Introduction & End-to-End Architecture' },
-      { time: '06:20', seconds: 380, title: 'Spotify Developer App & API Credentials' },
-      { time: '19:45', seconds: 1185, title: 'Building Python Extraction Script with Spotipy' },
-      { time: '34:10', seconds: 2050, title: 'Deploying AWS Lambda with Custom Deployment Packages' },
-      { time: '48:30', seconds: 2910, title: 'Transformation Lambda & Target S3 Buckets' },
-      { time: '01:02:15', seconds: 3735, title: 'AWS Glue Crawler Setup & SQL Analytics with Athena' }
+      { time: '00:00', seconds: 0, title: 'Introduction & AI Data Architecture' },
+      { time: '08:45', seconds: 525, title: 'Zomato Dataset Cleaning & Geo-indexing' },
+      { time: '24:30', seconds: 1470, title: 'Data Transformation & Embedding Generation' },
+      { time: '45:10', seconds: 2710, title: 'Loading into BigQuery & Partition Optimization' },
+      { time: '01:10:00', seconds: 4200, title: 'Interactive AI Analytics Dashboard' }
     ],
     keyTakeaways: [
-      'Event-driven data extraction using Spotify API authentication tokens',
-      'Deploying AWS Lambda layers with pre-compiled Spotipy and Pandas binaries',
-      'Automating schema evolution with AWS Glue Crawlers into Hive Metastore tables',
-      'Querying partitioned Parquet datasets directly with serverless Amazon Athena'
+      'Combining traditional SQL analytics with LLM-powered enrichment workflows',
+      'Handling semi-structured restaurant menu JSON payloads at scale',
+      'Optimizing query latency using BigQuery BI Engine and clustered tables'
     ],
-    githubUrl: 'https://github.com/darshilparmar/spotify-api-data-engineering-project',
-    datasetUrl: 'https://developer.spotify.com/documentation/web-api',
-    practiceSnippet: {
-      language: 'sql',
-      code: `SELECT 
-  artist_name,
-  COUNT(song_id) AS total_top_songs,
-  ROUND(AVG(popularity), 1) AS avg_popularity
-FROM spotify_curated_db.songs_table
-GROUP BY artist_name
-HAVING COUNT(song_id) > 2
-ORDER BY avg_popularity DESC;`,
-      explanation: 'Identifies the most popular recurring artists in Spotify weekly charts from AWS Athena.'
-    }
+    githubUrl: 'https://github.com/darshilparmar'
   },
   {
-    id: 'project-youtube-analysis',
-    title: 'YouTube Data Analysis & ETL Pipeline | AWS Data Engineering Project',
+    id: 'project-twitter-airflow',
+    title: 'Twitter Data Pipeline using Airflow for Beginners | Data Engineering Project',
+    category: 'project',
+    topic: 'Airflow',
+    instructor: 'Darshil Parmar',
+    instructorRole: 'Lead Data Engineer',
+    youtubeId: 'q8q3OFFfY6c',
+    youtubeUrl: 'https://www.youtube.com/watch?v=q8q3OFFfY6c',
+    duration: '58 min',
+    rating: 4.9,
+    views: '540K+ views',
+    level: 'Beginner → Intermediate',
+    summary: 'Build a production-grade automated ETL pipeline orchestrating Twitter streaming data with Apache Airflow. Provision Amazon EC2, write custom Airflow DAGs with Python operators, extract tweets, and store refined Parquet datasets into Amazon S3.',
+    techStack: ['Apache Airflow', 'Python', 'Amazon EC2', 'Amazon S3', 'Tweepy', 'Pandas'],
+    chapters: [
+      { time: '00:00', seconds: 0, title: 'End-to-End Architecture Overview' },
+      { time: '06:15', seconds: 375, title: 'Setting up AWS EC2 & Installing Apache Airflow' },
+      { time: '18:30', seconds: 1110, title: 'Extracting Tweets using Python & Tweepy API' },
+      { time: '32:45', seconds: 1965, title: 'Creating Airflow DAGs with PythonOperator' },
+      { time: '45:20', seconds: 2720, title: 'Deploying S3 Hook & Automated Daily Scheduling' }
+    ],
+    keyTakeaways: [
+      'Configuring Airflow webserver and scheduler daemons on cloud instances',
+      'Writing clean idempotent DAG definitions with proper retries and SLA callbacks',
+      'Using Airflow AWS S3 Hooks for secure cloud credentials management'
+    ],
+    githubUrl: 'https://github.com/darshilparmar'
+  },
+  {
+    id: 'project-aws-masterclass',
+    title: 'AWS Masterclass for Data Engineers with End-to-End Project',
     category: 'project',
     topic: 'AWS',
     instructor: 'Darshil Parmar',
-    instructorRole: 'Founder, Data Vidhya',
-    youtubeId: 'yZKJ_e6h7qU',
-    youtubeUrl: 'https://www.youtube.com/watch?v=yZKJ_e6h7qU',
-    duration: '2 hr 10 min',
-    rating: 4.8,
-    views: '620K+ views',
-    level: 'Intermediate → Advanced',
-    summary: 'Manage structured and semi-structured trending YouTube video data across multiple global regions. Cleanse data with AWS Glue Spark ETL jobs, convert nested JSON into columnar Parquet, and build executive reporting in Amazon QuickSight.',
-    techStack: ['AWS Glue', 'Apache Spark', 'Amazon S3', 'AWS Lambda', 'Amazon Athena', 'Amazon QuickSight'],
-    chapters: [
-      { time: '00:00', seconds: 0, title: 'System Architecture & Regional Data Overview' },
-      { time: '14:20', seconds: 860, title: 'AWS CLI Bulk Upload & S3 Data Lake Partitioning' },
-      { time: '38:40', seconds: 2320, title: 'Serverless Lambda Data Pre-processing' },
-      { time: '01:05:10', seconds: 3910, title: 'Writing Spark ETL Scripts in AWS Glue Studio' },
-      { time: '01:42:30', seconds: 6150, title: 'Amazon Athena Ad-hoc Performance Optimization' }
-    ],
-    keyTakeaways: [
-      'Handling nested JSON reference schemas alongside flat CSV video metrics',
-      'Optimizing Spark shuffle and partition sizes inside AWS Glue jobs',
-      'Enforcing Athena query cost limits using partition projection'
-    ],
-    githubUrl: 'https://github.com/darshilparmar/youtube-data-engineering-project'
-  },
-  {
-    id: 'project-kafka-stock-market',
-    title: 'Real-Time Stock Market Data Pipeline with Apache Kafka | Python, AWS EC2, S3 & Glue',
-    category: 'project',
-    topic: 'Kafka',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Founder, Data Vidhya',
-    youtubeId: 'bAyrObl7TYE',
-    youtubeUrl: 'https://www.youtube.com/watch?v=bAyrObl7TYE',
-    duration: '1 hr 25 min',
+    instructorRole: 'Lead Data Engineer',
+    youtubeId: 'yvAWbbQa8eE',
+    youtubeUrl: 'https://www.youtube.com/watch?v=yvAWbbQa8eE',
+    duration: '1 hr 45 min',
     rating: 4.9,
-    views: '740K+ views',
+    views: '610K+ views',
     level: 'Intermediate → Advanced',
-    summary: 'Build an end-to-end real-time streaming pipeline simulating live stock market ticker feeds. Provision an Apache Kafka cluster on AWS EC2, stream data using Python Kafka Producers & Consumers, land streams in S3, and run real-time queries with Athena.',
-    techStack: ['Apache Kafka', 'Python', 'AWS EC2', 'Amazon S3', 'AWS Glue', 'Amazon Athena'],
+    summary: 'Master the AWS Data Stack. Connect Amazon S3 data lakes with AWS Lambda serverless compute, crawl schema evolution with AWS Glue Data Catalog, run distributed Spark transformations, and execute serverless SQL queries with Amazon Athena.',
+    techStack: ['Amazon S3', 'AWS Lambda', 'AWS Glue', 'Amazon Athena', 'Python', 'AWS IAM'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'Streaming Architecture & Kafka Fundamentals' },
-      { time: '11:15', seconds: 675, title: 'Spinning up Ubuntu EC2 & Installing Kafka + ZooKeeper' },
-      { time: '28:30', seconds: 1710, title: 'Creating Kafka Topics & Testing CLI Console Producer' },
-      { time: '44:00', seconds: 2640, title: 'Building Python Streaming Producer with Real Stock Feed' },
-      { time: '01:02:10', seconds: 3730, title: 'Streaming Consumer to AWS S3 & Glue Cataloging' }
+      { time: '00:00', seconds: 0, title: 'AWS Data Engineering Landscape' },
+      { time: '12:30', seconds: 750, title: 'IAM Roles, S3 Bucket Policies & Security' },
+      { time: '28:15', seconds: 1695, title: 'Serverless Event-Driven Extraction with Lambda' },
+      { time: '49:00', seconds: 2940, title: 'AWS Glue Data Catalog & Crawlers' },
+      { time: '01:18:20', seconds: 4700, title: 'Serverless SQL Analytics with Amazon Athena' }
     ],
     keyTakeaways: [
-      'Configuring Kafka broker listeners, partitions, and replication factors on EC2',
-      'Implementing fault-tolerant Python KafkaProducer serialization and error handling',
-      'Handling at-least-once message delivery semantics when landing event data in S3'
+      'Designing least-privilege IAM policies for automated cloud pipelines',
+      'Managing partition projection in Athena to cut scanning costs by 90%',
+      'Handling automated schema changes and catalog registration with Glue'
     ],
-    githubUrl: 'https://github.com/darshilparmar/kafka-stock-market-data-engineering-project'
+    githubUrl: 'https://github.com/darshilparmar'
   },
   {
-    id: 'project-dbt-snowflake-netflix',
-    title: 'Modern Analytics Engineering with dbt Core & Snowflake | End-to-End Netflix Pipeline',
+    id: 'project-dbt-snowflake',
+    title: 'Intro to Data Build Tool (dbt) | Create Your First Production Project with Snowflake',
     category: 'project',
     topic: 'dbt',
-    instructor: 'Kahan Data Solutions & Darshil Parmar',
-    instructorRole: 'Analytics Engineering Experts',
+    instructor: 'Kahan Data Solutions',
+    instructorRole: 'Analytics Engineering Specialist',
     youtubeId: '5rNquRnNb4E',
     youtubeUrl: 'https://www.youtube.com/watch?v=5rNquRnNb4E',
-    duration: '1 hr 55 min',
+    duration: '1 hr 12 min',
     rating: 4.9,
     views: '390K+ views',
-    level: 'Intermediate → Advanced',
-    summary: 'Master the Modern Data Stack (MDS). Setup dbt Core with Snowflake, build staging, intermediate, and dimensional mart models, configure schema tests, manage incremental loading, and implement slowly changing dimensions (SCD Type 2).',
-    techStack: ['dbt Core', 'Snowflake', 'SQL', 'Git', 'Jinja', 'Data Modeling'],
+    level: 'Beginner → Intermediate',
+    summary: 'Master dbt Core from scratch with Snowflake. Setup profiles.yml, build staging views, modularize SQL transformations with ref(), configure schema tests (unique, not null), and generate live lineage documentation.',
+    techStack: ['dbt Core', 'Snowflake', 'SQL', 'Jinja', 'Data Modeling'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'Modern Data Stack & dbt Core Architecture' },
-      { time: '12:40', seconds: 760, title: 'Snowflake Virtual Warehouses, Databases & Roles Setup' },
-      { time: '29:15', seconds: 1755, title: 'dbt Project Initialization & Profiles.yml Configuration' },
-      { time: '48:30', seconds: 2910, title: 'Building Staging Views & Ephemeral Transformations' },
-      { time: '01:14:00', seconds: 4440, title: 'Incremental Materializations & Surrogate Keys' },
-      { time: '01:38:20', seconds: 5900, title: 'Testing, Documentation & dbt Docs Lineage Graph' }
+      { time: '00:00', seconds: 0, title: 'What is dbt & The Modern Data Stack?' },
+      { time: '11:20', seconds: 680, title: 'Installing dbt Core & Snowflake Connection' },
+      { time: '25:40', seconds: 1540, title: 'Building Staging Models & Sources' },
+      { time: '42:15', seconds: 2535, title: 'Dimension Marts & Modular ref() Functions' },
+      { time: '55:30', seconds: 3330, title: 'Schema Testing & dbt Docs Lineage' }
     ],
     keyTakeaways: [
-      'Writing reusable modular SQL models using Jinja macros and ref() functions',
-      'Implementing dbt snapshot blocks for automated SCD Type 2 dimension tracking',
-      'Configuring schema validation tests (unique, not_null, accepted_values, relationships)'
+      'How dbt shifts transformations from fragile cron scripts to version-controlled software',
+      'Writing DRY (Don’t Repeat Yourself) SQL using Jinja macros',
+      'Automating regression testing on primary and foreign keys before reporting'
     ],
     githubUrl: 'https://github.com/dbt-labs/jaffle_shop'
+  },
+  {
+    id: 'project-kafka-crash-course',
+    title: 'Apache Kafka Crash Course | Real-Time Event Streaming from Scratch',
+    category: 'project',
+    topic: 'Kafka',
+    instructor: 'freeCodeCamp / Hussein Nasser',
+    instructorRole: 'Distributed Systems Architect',
+    youtubeId: 'R873BlNVUB4',
+    youtubeUrl: 'https://www.youtube.com/watch?v=R873BlNVUB4',
+    duration: '1 hr 22 min',
+    rating: 4.9,
+    views: '1.5M+ views',
+    level: 'Intermediate → Advanced',
+    summary: 'A definitive guide to distributed event streaming with Apache Kafka. Deep dive into topics, partitions, broker clusters, producer ack semantics, consumer groups, offset commits, and Kafka vs traditional message brokers.',
+    techStack: ['Apache Kafka', 'Distributed Systems', 'Java/Python', 'Zookeeper/KRaft', 'Docker'],
+    chapters: [
+      { time: '00:00', seconds: 0, title: 'Why Kafka? Traditional Queues vs Commit Logs' },
+      { time: '15:20', seconds: 920, title: 'Topics, Partitions, Offsets & Replications' },
+      { time: '34:40', seconds: 2080, title: 'Kafka Producers & Message Hashing' },
+      { time: '52:10', seconds: 3130, title: 'Consumer Groups, Offsets & Rebalancing' },
+      { time: '01:08:00', seconds: 4080, title: 'Hands-on Kafka Cluster with Docker' }
+    ],
+    keyTakeaways: [
+      'Understanding partition ordering and why Kafka scales horizontally',
+      'Preventing consumer group rebalances during heavy downstream processing',
+      'Configuring acks=all and idempotence for fault-tolerant streams'
+    ]
   }
 ];
 
 export const CURATED_COURSE_VIDEOS: CuratedVideo[] = [
   {
     id: 'course-de-roadmap',
-    title: 'How to Become a Data Engineer in 2026 | The Complete Roadmap & Step-by-Step Guide',
+    title: 'Only Data Engineering Roadmap You Need 2026 | Step-by-Step Complete Guide',
     category: 'course',
     topic: 'Overview',
     instructor: 'Darshil Parmar',
-    instructorRole: 'Founder, Data Vidhya',
-    youtubeId: '0oBwH4pYg_k',
-    youtubeUrl: 'https://www.youtube.com/watch?v=0oBwH4pYg_k',
-    duration: '35 min',
+    instructorRole: 'Lead Data Engineer & Founder',
+    youtubeId: '4ifxQ_th07U',
+    youtubeUrl: 'https://www.youtube.com/watch?v=4ifxQ_th07U',
+    duration: '42 min',
     rating: 4.9,
-    views: '650K+ views',
+    views: '750K+ views',
     level: 'Beginner',
-    summary: 'A definitive roadmap explaining what tools matter and what tools are noise. Breaks down the 4 core pillars: programming (Python), data querying & modeling (SQL), distributed computing (Spark), and workflow orchestration (Airflow/dbt) with cloud platforms.',
-    techStack: ['SQL', 'Python', 'Spark', 'Airflow', 'dbt', 'AWS/GCP/Azure'],
+    summary: 'The definitive 2026 roadmap for aspiring and working data engineers. Covers exactly what tools matter (Python, SQL, PySpark, Airflow, Snowflake, AWS) and what tools are noise. Clear prerequisite order with project milestones.',
+    techStack: ['SQL', 'Python', 'Spark', 'Airflow', 'Snowflake', 'AWS/GCP'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'What Does a Modern Data Engineer Actually Do?' },
-      { time: '05:20', seconds: 320, title: 'The 4 Foundations: Programming, SQL, Linux & Git' },
-      { time: '12:45', seconds: 765, title: 'Data Warehousing vs. Data Lakes vs. Lakehouses' },
-      { time: '21:30', seconds: 1290, title: 'Cloud Data Platforms: AWS vs. GCP vs. Azure' },
-      { time: '28:10', seconds: 1690, title: 'Portfolio Strategy: How to Stand Out to Hiring Managers' }
+      { time: '00:00', seconds: 0, title: 'Data Engineering Landscape in 2026' },
+      { time: '06:30', seconds: 390, title: 'Foundations: Python, SQL & Shell Scripting' },
+      { time: '14:20', seconds: 860, title: 'Data Modeling, Warehousing & Lakehouse' },
+      { time: '22:45', seconds: 1365, title: 'Distributed Systems: Spark & Kafka' },
+      { time: '31:10', seconds: 1870, title: 'Portfolio Strategy: How to Get Hired' }
     ],
     keyTakeaways: [
-      'Stop tutorial hell: why building 3 portfolio projects beats 20 certifications',
-      'The exact order to learn: Python → SQL → Data Modeling → Cloud → Spark',
-      'How to tailor your GitHub profile and resume for Senior Data Engineer recruiters'
+      'Focusing on deep fundamentals rather than shallow tool-collecting',
+      'The exact learning progression: Python → SQL → Modeling → Spark → Orchestration',
+      'Structuring GitHub repositories and resumes to pass senior recruiter screening'
+    ]
+  },
+  {
+    id: 'course-de-fundamentals',
+    title: 'Fundamentals Of Data Engineering Masterclass | Comprehensive Architecture Overview',
+    category: 'course',
+    topic: 'Overview',
+    instructor: 'Darshil Parmar',
+    instructorRole: 'Lead Data Engineer & Founder',
+    youtubeId: 'hf2go3E2m8g',
+    youtubeUrl: 'https://www.youtube.com/watch?v=hf2go3E2m8g',
+    duration: '1 hr 15 min',
+    rating: 4.9,
+    views: '420K+ views',
+    level: 'Beginner',
+    summary: 'Understand the core lifecycle of data: ingestion, storage, transformation, serving, and security. Learn how data pipelines handle failures, backfilling, idempotency, and high-throughput workloads in production.',
+    techStack: ['Data Architecture', 'ETL/ELT', 'Data Warehouses', 'Data Lakes'],
+    chapters: [
+      { time: '00:00', seconds: 0, title: 'Data Engineering Lifecycle' },
+      { time: '14:10', seconds: 850, title: 'Source Systems & Ingestion Patterns' },
+      { time: '28:30', seconds: 1710, title: 'Storage Tiers: Hot, Warm, Cold & Object Stores' },
+      { time: '44:20', seconds: 2660, title: 'Transformation: Batch vs Micro-batch vs Streaming' },
+      { time: '59:00', seconds: 3540, title: 'Serving Data to BI and ML Consumers' }
+    ],
+    keyTakeaways: [
+      'Evaluating trade-offs between batch ELT and real-time streaming',
+      'Designing idempotent pipelines that survive distributed cluster restarts',
+      'Minimizing cloud infrastructure egress and query scanning costs'
     ]
   },
   {
@@ -250,11 +290,11 @@ export const CURATED_COURSE_VIDEOS: CuratedVideo[] = [
     topic: 'SQL',
     instructor: 'Mike Dane (freeCodeCamp)',
     instructorRole: 'Lead Software & Database Instructor',
-    youtubeId: 'HXV3zeRR3h4',
-    youtubeUrl: 'https://www.youtube.com/watch?v=HXV3zeRR3h4',
+    youtubeId: 'HXV3zeQKqGY',
+    youtubeUrl: 'https://www.youtube.com/watch?v=HXV3zeQKqGY',
     duration: '4 hr 20 min',
     rating: 4.9,
-    views: '8.4M+ views',
+    views: '9.2M+ views',
     level: 'Beginner → Intermediate',
     summary: 'The gold-standard comprehensive SQL masterclass. Learn relational database design, table DDL, schema constraints, CRUD operations, advanced aggregate functions, wildcards, UNIONs, complex JOINs, nested subqueries, and triggers.',
     techStack: ['SQL', 'PostgreSQL', 'MySQL', 'Relational Algebra'],
@@ -321,7 +361,7 @@ ORDER BY avg_salary DESC;`,
     title: 'Apache Spark & PySpark Full Course | Distributed Big Data Processing',
     category: 'course',
     topic: 'Spark',
-    instructor: 'freeCodeCamp / Krish Naik',
+    instructor: 'Krish Naik / freeCodeCamp',
     instructorRole: 'Big Data & AI Architect',
     youtubeId: '_C8kWso4ne4',
     youtubeUrl: 'https://www.youtube.com/watch?v=_C8kWso4ne4',
@@ -346,116 +386,88 @@ ORDER BY avg_salary DESC;`,
     ]
   },
   {
-    id: 'course-airflow-mastery',
-    title: 'Apache Airflow Complete Masterclass | Production DAGs, TaskFlow API & Best Practices',
+    id: 'course-snowflake-mastery',
+    title: 'Snowflake Full Course | Beginner to Advanced Architecture, Warehouses & SQL',
     category: 'course',
-    topic: 'Airflow',
-    instructor: 'Marc Lamberti',
-    instructorRole: 'Apache Airflow PMC Member',
-    youtubeId: 'IH1-0hwFBRQ',
-    youtubeUrl: 'https://www.youtube.com/watch?v=IH1-0hwFBRQ',
-    duration: '2 hr 45 min',
+    topic: 'Snowflake',
+    instructor: 'Learn By Doing It',
+    instructorRole: 'Cloud Data Warehouse Architect',
+    youtubeId: '7lpp5N73V98',
+    youtubeUrl: 'https://www.youtube.com/watch?v=7lpp5N73V98',
+    duration: '7 hr 15 min',
     rating: 4.9,
-    views: '480K+ views',
-    level: 'Intermediate → Advanced',
-    summary: 'The comprehensive guide to workflow orchestration with Apache Airflow. Covers architecture (Webserver, Scheduler, Metadata DB, Celery/Kubernetes Executor), writing robust DAGs with the modern TaskFlow API (@dag, @task), XComs, Sensors, and SLA alerts.',
-    techStack: ['Apache Airflow', 'Docker', 'Python', 'Celery', 'PostgreSQL'],
+    views: '510K+ views',
+    level: 'Beginner → Advanced',
+    summary: 'Comprehensive Snowflake cloud data warehousing masterclass. Multi-cluster shared data architecture, virtual compute warehouses, micro-partitions, clustering keys, zero-copy cloning, time travel, Snowpipe streaming, and role-based access control (RBAC).',
+    techStack: ['Snowflake', 'Cloud SQL', 'Snowpipe', 'Time Travel', 'Data Warehousing'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'Airflow Architecture: Scheduler, Webserver, Worker, DB' },
-      { time: '18:40', seconds: 1120, title: 'Setting Up Airflow with Docker Compose' },
-      { time: '42:15', seconds: 2535, title: 'Writing Your First DAG with the TaskFlow API' },
-      { time: '01:12:00', seconds: 4320, title: 'Data Passing with XComs & Best Practices' },
-      { time: '01:45:30', seconds: 6330, title: 'Branching, Dynamic Task Mapping & Sensors' },
-      { time: '02:18:00', seconds: 8280, title: 'Production Alerting with Slack & Email Webhooks' }
+      { time: '00:00', seconds: 0, title: 'Snowflake Unique Cloud Architecture' },
+      { time: '45:10', seconds: 2710, title: 'Virtual Warehouses & Scaling Policies' },
+      { time: '01:30:20', seconds: 5420, title: 'Databases, Schemas & Micro-Partitioning' },
+      { time: '02:45:00', seconds: 9900, title: 'Zero-Copy Cloning & Time Travel' },
+      { time: '04:10:00', seconds: 15000, title: 'Data Ingestion with COPY INTO & Snowpipe' },
+      { time: '05:35:00', seconds: 20100, title: 'Streams, Tasks & Continuous Pipelines' }
     ],
     keyTakeaways: [
-      'Never put heavy computation inside the DAG file top-level parse loop',
-      'Leverage Dynamic Task Mapping to spawn parallel workers per file partition',
-      'Configure execution_date idempotency so pipelines can safely backfill historical periods'
+      'Decoupled storage and compute: why Snowflake eliminates database lock contention',
+      'Zero-Copy Cloning allows instant staging environments without additional storage costs',
+      'Using Time Travel (AT / BEFORE) to restore corrupted tables without backups'
     ]
   },
   {
-    id: 'course-kafka-streaming',
-    title: 'Apache Kafka in 60 Minutes | Real-Time Event Streaming Crash Course',
-    category: 'course',
-    topic: 'Kafka',
-    instructor: 'Stephane Maarek',
-    instructorRole: 'AWS & Kafka Certified Instructor',
-    youtubeId: 'R873BlNVUB4',
-    youtubeUrl: 'https://www.youtube.com/watch?v=R873BlNVUB4',
-    duration: '1 hr 08 min',
-    rating: 4.9,
-    views: '1.5M+ views',
-    level: 'Beginner → Intermediate',
-    summary: 'The ultimate visual breakdown of real-time messaging with Apache Kafka. Topics, Partitions, Offsets, Consumers, Consumer Groups, Brokers, Replication, Producers, Keys, and KRaft consensus.',
-    techStack: ['Apache Kafka', 'KRaft', 'Java', 'Python', 'Event-Driven Architecture'],
-    chapters: [
-      { time: '00:00', seconds: 0, title: 'Why Kafka? Batch vs Streaming Architecture' },
-      { time: '12:30', seconds: 750, title: 'Topics, Partitions & Offset Retention' },
-      { time: '26:45', seconds: 1605, title: 'Message Keys & Partition Hashing Guarantees' },
-      { time: '38:20', seconds: 2300, title: 'Consumer Groups & Load Balancing' },
-      { time: '52:10', seconds: 3130, title: 'Cluster Replication Factor & Leader-Follower Sync' }
-    ],
-    keyTakeaways: [
-      'Partitioning keys ensure strict in-order message delivery per entity ID',
-      'Consumer groups enable horizontal scaling without duplicate consumption',
-      'How Kafka achieves millions of ops/sec via OS page cache and zero-copy transfer'
-    ]
-  },
-  {
-    id: 'course-data-modeling-kimball',
-    title: 'Data Modeling for Data Engineers | Star Schema, Snowflake Schema & SCDs',
+    id: 'course-data-modeling',
+    title: 'Data Modeling Tutorial: Star Schema (Kimball Approach) | Dimensions & Facts',
     category: 'course',
     topic: 'Data Modeling',
-    instructor: 'Zach Wilson / Seattle Data Guy',
-    instructorRole: 'Principal Data Engineers',
-    youtubeId: '7_hAeqv4s5U',
-    youtubeUrl: 'https://www.youtube.com/watch?v=7_hAeqv4s5U',
-    duration: '1 hr 12 min',
+    instructor: 'Kahan Data Solutions',
+    instructorRole: 'Analytics & Data Modeling Specialist',
+    youtubeId: 'gRE3E7VUzRU',
+    youtubeUrl: 'https://www.youtube.com/watch?v=gRE3E7VUzRU',
+    duration: '45 min',
     rating: 4.9,
-    views: '380K+ views',
+    views: '350K+ views',
     level: 'Beginner → Intermediate',
-    summary: 'Learn the architectural principles of dimensional modeling for analytics. Kimball Star Schema vs. Inmon 3NF, Conformed Dimensions, Fact Tables (Additive, Semi-Additive, Non-Additive), Factless Facts, and Slowly Changing Dimensions (Types 1, 2, and 3).',
-    techStack: ['Data Modeling', 'Kimball Methodology', 'SQL', 'Snowflake', 'BigQuery'],
+    summary: 'Master Ralph Kimball dimensional modeling principles. Understand business processes, declare the grain, identify dimensions and fact tables, surrogate keys vs natural keys, and Slowly Changing Dimensions (SCD Type 1, 2, and 3).',
+    techStack: ['Dimensional Modeling', 'Kimball', 'Star Schema', 'Data Warehousing'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'Why Dimensional Modeling Still Rules the Modern Lakehouse' },
-      { time: '14:20', seconds: 860, title: 'Grain Selection: The Most Critical Step in Design' },
-      { time: '28:45', seconds: 1725, title: 'Designing Fact Tables & Types of Measurement' },
-      { time: '42:10', seconds: 2530, title: 'Dimension Tables, Hierarchies & Surrogate Keys' },
-      { time: '55:30', seconds: 3330, title: 'Slowly Changing Dimensions (SCD Type 1, 2 & 3)' }
+      { time: '00:00', seconds: 0, title: 'What is Dimensional Modeling & Star Schema?' },
+      { time: '08:30', seconds: 510, title: 'Fact Tables: Additive, Semi-Additive & Non-Additive' },
+      { time: '18:15', seconds: 1095, title: 'Dimension Tables & Surrogate Key Design' },
+      { time: '29:40', seconds: 1780, title: 'Star Schema vs Snowflake Schema Comparison' },
+      { time: '38:00', seconds: 2280, title: 'Slowly Changing Dimensions (SCD Type 1 vs Type 2)' }
     ],
     keyTakeaways: [
-      'Always declare grain explicitly before defining dimensions or measures',
-      'Use integer surrogate keys instead of natural business keys for durable relationships',
-      'SCD Type 2 preserves history with effective start/end timestamps and current flags'
+      'Declaring the grain upfront prevents duplicate counting in analytical aggregations',
+      'Surrogate keys protect downstream reporting marts from operational database primary key updates',
+      'Star schemas minimize join depths for superior OLAP query performance'
     ]
   },
   {
-    id: 'course-system-design-interview',
-    title: 'Data Engineering System Design Interview | Complete Framework with Real Examples',
-    category: 'interview',
+    id: 'course-system-design',
+    title: 'System Design Interview – Step By Step Guide for Data & Software Engineers',
+    category: 'course',
     topic: 'System Design',
-    instructor: 'Seattle Data Guy / Exponent',
-    instructorRole: 'Staff Data Engineering Interviewers',
-    youtubeId: '8WzQ2K_eG38',
-    youtubeUrl: 'https://www.youtube.com/watch?v=8WzQ2K_eG38',
-    duration: '52 min',
+    instructor: 'ByteByteGo / Alex Xu',
+    instructorRole: 'Principal Systems Architect & Author',
+    youtubeId: 'bUHFg8CZFws',
+    youtubeUrl: 'https://www.youtube.com/watch?v=bUHFg8CZFws',
+    duration: '32 min',
     rating: 4.9,
-    views: '420K+ views',
-    level: 'Advanced',
-    summary: 'The step-by-step framework to crack Senior and Staff Data Engineering System Design rounds at top tech companies. Covers capacity estimation, batch vs streaming tradeoffs, data partitioning, deduplication, monitoring, and fault recovery.',
-    techStack: ['System Design', 'Distributed Systems', 'Kafka', 'Spark', 'S3', 'Airflow'],
+    views: '2.1M+ views',
+    level: 'Intermediate → Advanced',
+    summary: 'The 4-step framework used by Principal and Staff Engineers to ace technical system design interviews. Learn requirement clarification, back-of-the-envelope calculations, high-level architecture diagramming, and deep-dive bottleneck resolution.',
+    techStack: ['Distributed Systems', 'Load Balancing', 'Caching', 'Message Queues', 'Databases'],
     chapters: [
-      { time: '00:00', seconds: 0, title: 'The 5-Step System Design Interview Framework' },
-      { time: '08:30', seconds: 510, title: 'Requirements Clarification & Scale Math (QPS, TB/day)' },
-      { time: '19:15', seconds: 1155, title: 'High-Level Architecture: Ingestion → Storage → Serving' },
-      { time: '32:40', seconds: 1960, title: 'Deep Dive: Exactly-Once Processing & Deduping' },
-      { time: '44:10', seconds: 2650, title: 'Operational Readiness: Backfills, Monitoring & SLAs' }
+      { time: '00:00', seconds: 0, title: 'The 4-Step System Design Interview Framework' },
+      { time: '06:10', seconds: 370, title: 'Step 1: Scope & Functional vs Non-Functional Requirements' },
+      { time: '12:30', seconds: 750, title: 'Step 2: High-Level Architecture & API Design' },
+      { time: '20:15', seconds: 1215, title: 'Step 3: Design Deep Dive & Bottleneck Identification' },
+      { time: '27:40', seconds: 1660, title: 'Step 4: Wrap-Up, Scaling & Single Points of Failure' }
     ],
     keyTakeaways: [
-      'Spend the first 8 minutes clarifying SLAs, data volumes, latency, and query patterns',
-      'Proactively highlight failure modes (upstream API downtime, schema drift, network partitions)',
-      'Demonstrate trade-offs: Lambda vs Kappa vs Medallion Lakehouse architecture'
+      'Never jump straight into drawing boxes: always clarify QPS, storage, and latency SLAs first',
+      'Addressing single points of failure (SPOF) with replication and multi-region failovers',
+      'Evaluating CAP theorem trade-offs between consistency and availability in large-scale pipelines'
     ]
   }
 ];
@@ -466,10 +478,5 @@ export const ALL_CURATED_VIDEOS: CuratedVideo[] = [
 ];
 
 export function getCuratedVideoById(id: string): CuratedVideo | undefined {
-  return ALL_CURATED_VIDEOS.find(v => v.id === id);
-}
-
-export function getVideosByTopic(topic: string): CuratedVideo[] {
-  if (topic === 'All') return ALL_CURATED_VIDEOS;
-  return ALL_CURATED_VIDEOS.filter(v => v.topic.toLowerCase() === topic.toLowerCase() || v.techStack.some(t => t.toLowerCase() === topic.toLowerCase()));
+  return ALL_CURATED_VIDEOS.find(v => v.id === id || v.youtubeId === id);
 }
