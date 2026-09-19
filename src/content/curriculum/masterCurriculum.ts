@@ -47,20 +47,27 @@ export interface TrackRole {
   careerOutcomes: string[];
 }
 
+export const formatMinutesToDuration = (totalMinutes: number): string => {
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+  if (h === 0) return `${m} min`;
+  return `${h} hr ${m > 0 ? `${m} min` : ''}`.trim();
+};
+
 export const MASTER_CURRICULUM: CurriculumStage[] = [
   {
     milestone: "Stage 01",
     stageNumber: 1,
     title: "Cloud & Data Foundations (DP-900 & Azure Ecosystem)",
     category: "Cloud Architecture",
-    durationEstimate: "15-20 Hours",
+    durationEstimate: "16-18 Hours",
     videoUrl: "https://www.youtube.com/watch?v=IaA9YNlg5hM",
     youtubeId: "IaA9YNlg5hM",
     playlist: {
       playlistTitle: "Azure Cloud & Data Foundations (DP-900 & Enterprise Architecture)",
       channelName: "DataVeda Cloud Engineering",
       totalVideos: 8,
-      totalDuration: "16 hrs 35 min",
+      totalDuration: "16 hr 27 min",
       playlistUrl: "https://www.youtube.com/watch?v=IaA9YNlg5hM",
       episodes: [
         {
@@ -88,57 +95,57 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
         {
           id: "s01-ep03",
           order: 3,
-          title: "DP-900 Core Data Concepts: Relational vs. Non-Relational Architecture",
-          duration: "42 min",
-          durationMinutes: 42,
-          youtubeId: "4ifxQ_th07U",
-          youtubeUrl: "https://www.youtube.com/watch?v=4ifxQ_th07U",
+          title: "Microsoft Azure Data Fundamentals DP 900 Full Course",
+          duration: "3 hr 10 min",
+          durationMinutes: 190,
+          youtubeId: "jopyoCgQjkM",
+          youtubeUrl: "https://www.youtube.com/watch?v=jopyoCgQjkM",
           summary: "Core storage paradigms, transactional (OLTP) vs analytical (OLAP) processing, and cloud career roadmap.",
           keyTopic: "DP-900 Core Concepts"
         },
         {
           id: "s01-ep04",
           order: 4,
-          title: "Azure Blob Storage & ADLS Gen2 Hierarchical Namespace In-Depth",
-          duration: "1 hr 10 min",
-          durationMinutes: 70,
-          youtubeId: "nW0ffUW2vw4",
-          youtubeUrl: "https://www.youtube.com/watch?v=nW0ffUW2vw4",
-          summary: "Configuring container access policies, SAS tokens, lifecycle management tiers (Hot/Cool/Archive), and data lake directory structures.",
-          keyTopic: "Cloud Storage & ADLS"
+          title: "DP-900 Full Course & Azure Data Fundamentals Certification Training",
+          duration: "3 hr 45 min",
+          durationMinutes: 225,
+          youtubeId: "XbV0Di5ggvY",
+          youtubeUrl: "https://www.youtube.com/watch?v=XbV0Di5ggvY",
+          summary: "Comprehensive exam prep: Cosmos DB, Azure SQL, Synapse Analytics, data ingestion, and cloud security frameworks.",
+          keyTopic: "DP-900 Certification"
         },
         {
           id: "s01-ep05",
           order: 5,
-          title: "Azure Data Factory Fundamentals & Hybrid Integration Runtimes",
-          duration: "1 hr 25 min",
-          durationMinutes: 85,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Control plane vs data plane in Azure, Self-Hosted IR setup for on-premise networks, and Linked Services.",
-          keyTopic: "Azure Data Factory"
+          title: "Azure Storage Account & Data Lake ADLS Gen2 Tutorial (2025)",
+          duration: "1 hr 15 min",
+          durationMinutes: 75,
+          youtubeId: "ffMR2WM3aqE",
+          youtubeUrl: "https://www.youtube.com/watch?v=ffMR2WM3aqE",
+          summary: "Configuring container access policies, SAS tokens, lifecycle management tiers (Hot/Cool/Archive), and data lake directory structures.",
+          keyTopic: "Cloud Storage & ADLS"
         },
         {
           id: "s01-ep06",
           order: 6,
-          title: "Introduction to Azure Databricks Workspaces & Spark Compute",
-          duration: "1 hr 15 min",
-          durationMinutes: 75,
-          youtubeId: "yGWKmypU99A",
-          youtubeUrl: "https://www.youtube.com/watch?v=yGWKmypU99A",
-          summary: "Provisioning Azure Databricks workspaces, compute cluster configurations, and DBFS storage architecture.",
-          keyTopic: "Azure Databricks"
+          title: "Azure Data Lake Storage Gen 2 Overview & Deep Dive",
+          duration: "42 min",
+          durationMinutes: 42,
+          youtubeId: "NHn5GAkvlwg",
+          youtubeUrl: "https://www.youtube.com/watch?v=NHn5GAkvlwg",
+          summary: "Deep architectural dive into Hierarchical Namespace (HNS), POSIX ACL permissions, and high-throughput big data read/write patterns.",
+          keyTopic: "ADLS Gen2 Architecture"
         },
         {
           id: "s01-ep07",
           order: 7,
-          title: "Enterprise Databricks Training: Lakehouse & Security Management",
-          duration: "1 hr 45 min",
-          durationMinutes: 105,
-          youtubeId: "XOSuR8g2SfQ",
-          youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "Configuring IAM roles, Key Vault secret scopes, and end-to-end data lake connections.",
-          keyTopic: "Security & Governance"
+          title: "Azure Data Factory Fundamentals & Hybrid Integration Runtimes",
+          duration: "2 hr 45 min",
+          durationMinutes: 165,
+          youtubeId: "9COKVzBvQyo",
+          youtubeUrl: "https://www.youtube.com/watch?v=9COKVzBvQyo",
+          summary: "Control plane vs data plane in Azure, Self-Hosted IR setup for on-premise networks, and Linked Services.",
+          keyTopic: "Azure Data Factory"
         },
         {
           id: "s01-ep08",
@@ -174,8 +181,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     playlist: {
       playlistTitle: "Python Programming & Data Structures for Data Engineering",
       channelName: "DataVeda Python Academy",
-      totalVideos: 8,
-      totalDuration: "26 hrs 15 min",
+      totalVideos: 7,
+      totalDuration: "26 hr 24 min",
       playlistUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
       episodes: [
         {
@@ -186,101 +193,86 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 266,
           youtubeId: "rfscVS0vtbw",
           youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          summary: "Exhaustive Python fundamentals: variables, memory model, flow control, functions, modules, and collections.",
-          keyTopic: "Python Fundamentals"
+          summary: "Complete syntax, control flow, functions, modular architecture, and file I/O operations.",
+          keyTopic: "Core Python & Syntax"
         },
         {
           id: "s02-ep02",
           order: 2,
+          title: "Python Full Course for Free (Zero to Advanced)",
+          duration: "4 hr 15 min",
+          durationMinutes: 255,
+          youtubeId: "XKHEtdqhLK8",
+          youtubeUrl: "https://www.youtube.com/watch?v=XKHEtdqhLK8",
+          summary: "Variables, collections (lists, tuples, dicts, sets), string operations, and high-performance algorithms.",
+          keyTopic: "Data Structures & Collections"
+        },
+        {
+          id: "s02-ep03",
+          order: 3,
+          title: "Data Structures and Algorithms in Python: Full Course for Beginners",
+          duration: "4 hr 30 min",
+          durationMinutes: 270,
+          youtubeId: "pkYVOmU3MgA",
+          youtubeUrl: "https://www.youtube.com/watch?v=pkYVOmU3MgA",
+          summary: "Binary search, linked lists, hash tables, sorting algorithms, and Big-O computational complexity.",
+          keyTopic: "DSA & Big-O Complexity"
+        },
+        {
+          id: "s02-ep04",
+          order: 4,
+          title: "Intermediate Python Programming: Generators, Decorators & Multiprocessing",
+          duration: "3 hr 15 min",
+          durationMinutes: 195,
+          youtubeId: "HGOBQPFzWKo",
+          youtubeUrl: "https://www.youtube.com/watch?v=HGOBQPFzWKo",
+          summary: "Memory-efficient stream processing with generators, function decorators, lambda transforms, and threading.",
+          keyTopic: "Advanced Python & Concurrency"
+        },
+        {
+          id: "s02-ep05",
+          order: 5,
+          title: "Object-Oriented Programming (OOP) in Python: Classes & Design Patterns",
+          duration: "3 hr 20 min",
+          durationMinutes: 200,
+          youtubeId: "_uQrJ0TkZlc",
+          youtubeUrl: "https://www.youtube.com/watch?v=_uQrJ0TkZlc",
+          summary: "Classes, inheritance, encapsulation, polymorphism, custom exceptions, and modular pipeline design.",
+          keyTopic: "OOP & Engineering Patterns"
+        },
+        {
+          id: "s02-ep06",
+          order: 6,
+          title: "12 Practical Python Data Projects - Coding Course",
+          duration: "3 hr 08 min",
+          durationMinutes: 188,
+          youtubeId: "8ext9G7xspg",
+          youtubeUrl: "https://www.youtube.com/watch?v=8ext9G7xspg",
+          summary: "Hands-on projects parsing JSON, REST APIs, CSV bulk loaders, and automated data validators.",
+          keyTopic: "Hands-on Data Projects"
+        },
+        {
+          id: "s02-ep07",
+          order: 7,
           title: "Python LIVE: Data Structures & Algorithms + NeetCode + Two Sum",
           duration: "3 hr 30 min",
           durationMinutes: 210,
           youtubeId: "p35CcLiCOGU",
           youtubeUrl: "https://www.youtube.com/watch?v=p35CcLiCOGU",
-          summary: "Live coding session solving Arrays, Hash Maps (Two Sum), and pointer manipulation for coding interviews.",
-          keyTopic: "DSA & Two Sum Hashing"
-        },
-        {
-          id: "s02-ep03",
-          order: 3,
-          title: "Linked Lists Deep Dive: Singly Linked List Reversal & Node Design",
-          duration: "3 hr 15 min",
-          durationMinutes: 195,
-          youtubeId: "rfscVS0vtbw",
-          youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          summary: "Iterative vs recursive singly linked list reversal, sentinel nodes, and time-complexity proofs.",
-          keyTopic: "Linked Lists"
-        },
-        {
-          id: "s02-ep04",
-          order: 4,
-          title: "Stacks, Queues, Heaps & Priority Buffers in Data Streaming",
-          duration: "2 hr 45 min",
-          durationMinutes: 165,
-          youtubeId: "p35CcLiCOGU",
-          youtubeUrl: "https://www.youtube.com/watch?v=p35CcLiCOGU",
-          summary: "Implementing FIFO queues, monotonic stacks, and min-heaps for windowed batch processing.",
-          keyTopic: "Stacks & Queues"
-        },
-        {
-          id: "s02-ep05",
-          order: 5,
-          title: "Object-Oriented Programming (OOP): Classes, Inheritance & Dunders",
-          duration: "3 hr 10 min",
-          durationMinutes: 190,
-          youtubeId: "rfscVS0vtbw",
-          youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          summary: "Building industrial pipeline classes, method overriding, encapsulation, and class inheritance.",
-          keyTopic: "OOP Concepts"
-        },
-        {
-          id: "s02-ep06",
-          order: 6,
-          title: "Functional Python: Lambda Functions, map(), filter() & List Comprehensions",
-          duration: "2 hr 30 min",
-          durationMinutes: 150,
-          youtubeId: "rfscVS0vtbw",
-          youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          summary: "Writing clean anonymous functions and memory-efficient generator expressions for high-throughput ETL.",
-          keyTopic: "Functional Programming"
-        },
-        {
-          id: "s02-ep07",
-          order: 7,
-          title: "Production Exception Handling, Defensive Assertions & Regex Matching",
-          duration: "2 hr 40 min",
-          durationMinutes: 160,
-          youtubeId: "rfscVS0vtbw",
-          youtubeUrl: "https://www.youtube.com/watch?v=rfscVS0vtbw",
-          summary: "Custom exception hierarchies, try-except-finally blocks, regex parsing of dirty logs.",
-          keyTopic: "Exception Handling"
-        },
-        {
-          id: "s02-ep08",
-          order: 8,
-          title: "DSA Practice Arena: Sorting, Searching & Binary Trees",
-          duration: "4 hr 00 min",
-          durationMinutes: 240,
-          youtubeId: "p35CcLiCOGU",
-          youtubeUrl: "https://www.youtube.com/watch?v=p35CcLiCOGU",
-          summary: "Binary search algorithms, merge sort implementations, and tree traversal patterns.",
-          keyTopic: "Sorting & Trees"
+          summary: "Live technical interview problem solving, two pointers, sliding window, and graph traversals.",
+          keyTopic: "Interview Problem Solving"
         }
       ]
     },
     topics: [
-      "Python Syntax: Identifiers, Comments, Keywords, Naming Conventions",
-      "Data Types & Collections: String, List, Tuple, Set, Dictionary, Indexing, Slicing, Comprehensions",
-      "Operators & Flow Control: Arithmetic, Relational, Logical, if/elif/else, while, for, break, continue, pass",
-      "Functions & Modules: Global/Local scope, Lambda, filter(), map(), *args, **kwargs, import, dir(), __main__",
-      "OOPs Concepts: Classes, Objects, Encapsulation, Abstraction, Multi-Level/Multiple Inheritance, Polymorphism, Method Overriding",
-      "Exception Handling & Regex: try/except/finally, raise, assert, match(), search(), sub(), character classes",
-      "DSA (DataVeda Practice Arena): Arrays, Strings, Linked Lists, Stacks, Sorting, Searching, Hashing, Trees, Queues"
+      "Python Basics: Variables, Loops, Conditionals, Functions, Scope, File I/O",
+      "OOP: Classes, Objects, Inheritance, Encapsulation, Polymorphism, Magic (Dunder) Methods",
+      "Data Structures: Lists, Dictionaries, Sets, Tuples, Stacks, Queues, Hashmaps",
+      "LeetCode 75 Patterns: Two Pointers, Sliding Window, Fast/Slow Pointers, Binary Search"
     ],
     revisionChecklist: [
-      "Write a Lambda function coupled with map() to transform a list",
-      "Solve the Two Sum problem using Hashing in the Practice Arena",
-      "Reverse a Singly Linked List"
+      "Write a custom class with __repr__ and __eq__ methods",
+      "Solve 'Two Sum' and 'Valid Anagram' on LeetCode with O(n) complexity"
     ]
   },
   {
@@ -292,11 +284,11 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     videoUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
     youtubeId: "HXV3zeQKqGY",
     playlist: {
-      playlistTitle: "Advanced SQL Server, Window Functions & Query Engine Mastery",
-      channelName: "DataVeda SQL Academy",
+      playlistTitle: "Advanced SQL & Database Engines for Data Engineering",
+      channelName: "DataVeda SQL Mastery",
       totalVideos: 7,
-      totalDuration: "25 hr 40 min",
-      playlistUrl: "https://www.youtube.com/watch?v=SKgVxXelDZI",
+      totalDuration: "25 hr 13 min",
+      playlistUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
       episodes: [
         {
           id: "s03-ep01",
@@ -306,91 +298,86 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 260,
           youtubeId: "HXV3zeQKqGY",
           youtubeUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-          summary: "RDBMS architecture, SSMS setup, DDL/DML commands, Primary & Foreign keys, and table constraints.",
-          keyTopic: "RDBMS & Schema Design"
+          summary: "Core DDL/DML, multi-table joins, subqueries, grouping sets, and relational constraint integrity.",
+          keyTopic: "SQL Fundamentals & Relational Design"
         },
         {
           id: "s03-ep02",
           order: 2,
-          title: "Advanced Window Functions: ROW_NUMBER(), RANK(), DENSE_RANK() & NTILE()",
-          duration: "3 hr 30 min",
-          durationMinutes: 210,
-          youtubeId: "HXV3zeQKqGY",
-          youtubeUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-          summary: "Partition by vs order by, frame specifications (ROWS BETWEEN), and ranking analytics.",
-          keyTopic: "Window Ranking Functions"
+          title: "SQL Course for Beginners to Intermediate [Full Course]",
+          duration: "4 hr 18 min",
+          durationMinutes: 258,
+          youtubeId: "7S_tz1z_5bA",
+          youtubeUrl: "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+          summary: "Filtering, aggregation, self joins, unions, inserting/updating data, and transaction basics.",
+          keyTopic: "Intermediate SQL Mastery"
         },
         {
           id: "s03-ep03",
           order: 3,
+          title: "SQL Basics & Database Engine Internals for Beginners",
+          duration: "3 hr 45 min",
+          durationMinutes: 225,
+          youtubeId: "zbMHLJ0dY4w",
+          youtubeUrl: "https://www.youtube.com/watch?v=zbMHLJ0dY4w",
+          summary: "Relational storage layout, page buffers, B-trees, clustered indexes, and execution plans.",
+          keyTopic: "Storage Engine Internals"
+        },
+        {
+          id: "s03-ep04",
+          order: 4,
           title: "Solve 20 LeetCode SQL Medium Problems in 2 Hours (Live Masterclass)",
           duration: "2 hr 10 min",
           durationMinutes: 130,
           youtubeId: "SKgVxXelDZI",
           youtubeUrl: "https://www.youtube.com/watch?v=SKgVxXelDZI",
-          summary: "Fast-paced interview breakdown: Ankit Bansal solves 20 real FAANG SQL Medium challenges.",
-          keyTopic: "FAANG SQL Problem Solving"
-        },
-        {
-          id: "s03-ep04",
-          order: 4,
-          title: "Offsets & Gaps: LAG(), LEAD(), FIRST_VALUE() & Streak Detection",
-          duration: "3 hr 15 min",
-          durationMinutes: 195,
-          youtubeId: "SKgVxXelDZI",
-          youtubeUrl: "https://www.youtube.com/watch?v=SKgVxXelDZI",
-          summary: "Solving Gaps & Islands patterns, consecutive login detection, and month-over-month rate variations.",
-          keyTopic: "Offsets & Gaps and Islands"
+          summary: "Hands-on walk-through of top company interview problems on Ankit Bansal's channel.",
+          keyTopic: "LeetCode SQL Medium"
         },
         {
           id: "s03-ep05",
           order: 5,
-          title: "CTEs, Subqueries, Temp Tables, Views & Derived Tables",
-          duration: "4 hr 10 min",
-          durationMinutes: 250,
-          youtubeId: "HXV3zeQKqGY",
-          youtubeUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-          summary: "Recursive CTEs, deduplication strategies, temporary tables vs table variables in query memory.",
-          keyTopic: "CTEs & Deduplication"
+          title: "Snowflake Enterprise Architecture & SQL Cloud Data Warehousing",
+          duration: "7 hr 15 min",
+          durationMinutes: 435,
+          youtubeId: "7lpp5N73V98",
+          youtubeUrl: "https://www.youtube.com/watch?v=7lpp5N73V98",
+          summary: "Virtual warehouses, micro-partitioning, zero-copy cloning, time travel, and cloud SQL queries.",
+          keyTopic: "Snowflake & Cloud Warehousing"
         },
         {
           id: "s03-ep06",
           order: 6,
-          title: "Indexing Optimization: Clustered, Non-Clustered & ColumnStore Indexes",
-          duration: "3 hr 45 min",
-          durationMinutes: 225,
-          youtubeId: "HXV3zeQKqGY",
-          youtubeUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-          summary: "B-Tree page structures, heap tables, index fragmentation, index rebuilds, and execution plan cost analysis.",
-          keyTopic: "Index Optimization"
+          title: "Data Modeling Tutorial: Star Schema (Kimball Approach)",
+          duration: "45 min",
+          durationMinutes: 45,
+          youtubeId: "gRE3E7VUzRU",
+          youtubeUrl: "https://www.youtube.com/watch?v=gRE3E7VUzRU",
+          summary: "Fact tables, dimension tables, surrogate keys, snowflake schemas, and conformed dimensional modeling.",
+          keyTopic: "Dimensional Modeling"
         },
         {
           id: "s03-ep07",
           order: 7,
-          title: "Stored Procedures, User-Defined Functions, Transactions & MERGE",
-          duration: "4 hr 30 min",
-          durationMinutes: 270,
-          youtubeId: "HXV3zeQKqGY",
-          youtubeUrl: "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-          summary: "ACID transactions, rollback mechanics, MERGE upsert syntax for Slowly Changing Dimensions (SCD).",
-          keyTopic: "Procedures & Transactions"
+          title: "Advanced Window Functions: ROW_NUMBER, RANK, DENSE_RANK, LEAD & LAG",
+          duration: "2 hr 40 min",
+          durationMinutes: 160,
+          youtubeId: "SKgVxXelDZI",
+          youtubeUrl: "https://www.youtube.com/watch?v=SKgVxXelDZI",
+          summary: "Partitioning, rolling averages, running totals, offsets, and solving consecutive login streaks.",
+          keyTopic: "Advanced Window Functions"
         }
       ]
     },
     topics: [
-      "RDBMS concepts & SSMS setup",
-      "SQL Commands & Constraints: DDL, DML, DCL, TCL, Primary/Foreign/Unique/Composite/Surrogate Keys",
-      "Joins & Clauses: INNER, LEFT, RIGHT, FULL OUTER, CROSS, SELF, DISTINCT, TOP, IN, BETWEEN, LIKE, UNION",
-      "Window Functions: ROW_NUMBER(), RANK(), DENSE_RANK(), NTILE(), LAG(), LEAD(), FIRST_VALUE(), LAST_VALUE()",
-      "Functions: DateTime (DATEADD, DATEDIFF, EOMONTH), String (LTRIM, RTRIM, SUBSTRING, CONCAT), Aggregate (SUM, MAX)",
-      "Advanced Structures: ISNULL, COALESCE, ROLLUP, CUBE, PIVOT, UNPIVOT",
-      "Database Objects: Subqueries, CTEs, Derived Tables, Temp Tables, Views, Stored Procedures, Functions, MERGE",
-      "Indexing Optimization: Clustered, Non-Clustered, Filtered, Covered, Column Stored, Drop/Rebuild"
+      "Window Functions: ROW_NUMBER(), RANK(), DENSE_RANK(), LEAD(), LAG(), NTILE()",
+      "CTEs, Subqueries, Temp Tables, Table Variables, Views, Materialized Views",
+      "Query Optimization: Execution Plans, Index Tuning, SARGable Queries, Hash vs Nested Loop Joins",
+      "Data Warehousing: Star Schema, Snowflake Schema, Fact vs Dimension, SCD Types 1, 2, 3"
     ],
     revisionChecklist: [
-      "Solve 5 Medium difficulty SQL Window Function problems in the Practice Arena",
-      "Write a CTE using ROW_NUMBER() to identify and delete duplicate rows",
-      "Explain the architectural difference between Clustered and Non-Clustered Indexes"
+      "Write a query using DENSE_RANK() to find the 2nd highest salary by department",
+      "Explain the difference between a Clustered and Non-Clustered index"
     ]
   },
   {
@@ -398,108 +385,104 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 4,
     title: "Orchestration & ETL (Azure Data Factory & DevOps)",
     category: "Data Pipelines & DevOps",
-    durationEstimate: "20-25 Hours",
-    videoUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-    youtubeId: "JtrHffY2m_E",
+    durationEstimate: "18-22 Hours",
+    videoUrl: "https://www.youtube.com/watch?v=9COKVzBvQyo",
+    youtubeId: "9COKVzBvQyo",
     playlist: {
-      playlistTitle: "Azure Data Factory & DevOps CI/CD Production Pipelines",
-      channelName: "DataVeda Pipeline Academy",
+      playlistTitle: "Azure Data Factory, Cloud ETL & DevOps Pipeline Orchestration",
+      channelName: "DataVeda Pipeline Engineering",
       totalVideos: 7,
-      totalDuration: "21 hr 10 min",
-      playlistUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
+      totalDuration: "19 hr 43 min",
+      playlistUrl: "https://www.youtube.com/watch?v=9COKVzBvQyo",
       episodes: [
         {
           id: "s04-ep01",
           order: 1,
-          title: "ADF Architecture: Control Plane, Data Plane & Integration Runtimes",
-          duration: "1 hr 45 min",
-          durationMinutes: 105,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Azure Data Factory architecture, node provisioning, and secure network boundaries.",
-          keyTopic: "ADF Architecture"
+          title: "Complete Azure Data Factory - {End to End} Full Course",
+          duration: "3 hr 05 min",
+          durationMinutes: 185,
+          youtubeId: "9COKVzBvQyo",
+          youtubeUrl: "https://www.youtube.com/watch?v=9COKVzBvQyo",
+          summary: "ADF architecture, integration runtimes, datasets, linked services, and end-to-end data pipelines.",
+          keyTopic: "ADF Core Architecture"
         },
         {
           id: "s04-ep02",
           order: 2,
-          title: "Configuring Self-Hosted Integration Runtime (SHIR) for On-Prem Networks",
-          duration: "1 hr 30 min",
-          durationMinutes: 90,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "High-availability SHIR clusters, gateway authentication, and network traffic tunneling.",
-          keyTopic: "Self-Hosted IR"
+          title: "Azure Data Factory Beginner to Pro Tutorial [Full Course]",
+          duration: "3 hr 30 min",
+          durationMinutes: 210,
+          youtubeId: "DLmlFlQGQWo",
+          youtubeUrl: "https://www.youtube.com/watch?v=DLmlFlQGQWo",
+          summary: "Pipeline orchestration, control flows, data transformation flows, and error handling strategies.",
+          keyTopic: "ADF Pipelines & Dataflows"
         },
         {
           id: "s04-ep03",
           order: 3,
-          title: "Dynamic Parameterization of Linked Services & Key Vault Secret Integration",
-          duration: "2 hr 10 min",
-          durationMinutes: 130,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Decoupling pipeline metadata, dynamic connection strings, and Azure Key Vault managed identities.",
-          keyTopic: "Dynamic Linked Services"
+          title: "Learn Azure Data Factory in 2026 - Modern Cloud ETL Full Course",
+          duration: "2 hr 50 min",
+          durationMinutes: 170,
+          youtubeId: "0PjuNHYiX00",
+          youtubeUrl: "https://www.youtube.com/watch?v=0PjuNHYiX00",
+          summary: "REST API ingestion, incremental data loading, dynamic parameters, and Key Vault integration.",
+          keyTopic: "Incremental Ingestion"
         },
         {
           id: "s04-ep04",
           order: 4,
-          title: "ADF Pipeline Activities: Copy Data, Lookup, ForEach & Databricks Execution",
-          duration: "3 hr 15 min",
-          durationMinutes: 195,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Multi-activity orchestration, passing JSON parameters between activities, error catching with Until loops.",
-          keyTopic: "Pipeline Activities"
+          title: "Azure Data Factory ADVANCED Course with CI/CD & YAML Automation",
+          duration: "3 hr 45 min",
+          durationMinutes: 225,
+          youtubeId: "KxUm1eXQha8",
+          youtubeUrl: "https://www.youtube.com/watch?v=KxUm1eXQha8",
+          summary: "Enterprise CI/CD deployment, ARM templates, GitHub integration, PR approvals, and production releases.",
+          keyTopic: "ADF CI/CD & Automation"
         },
         {
           id: "s04-ep05",
           order: 5,
-          title: "Mapping Data Flows: Visual ETL, Spark Clusters & SCD Type 2",
-          duration: "3 hr 40 min",
-          durationMinutes: 220,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Zero-code Spark transformations, AlterRow transformations, and slowly changing dimensions.",
-          keyTopic: "Mapping Data Flows"
+          title: "Azure Data Engineer Full Course 2025 | ADF & Cloud Integration",
+          duration: "4 hr 15 min",
+          durationMinutes: 255,
+          youtubeId: "YkK0mdcJfHg",
+          youtubeUrl: "https://www.youtube.com/watch?v=YkK0mdcJfHg",
+          summary: "Complete enterprise scenario connecting on-premises databases to Azure cloud data lakes and warehouses.",
+          keyTopic: "Hybrid Cloud Integration"
         },
         {
           id: "s04-ep06",
           order: 6,
-          title: "Automated Triggers (Schedule, Tumbling Window, Event) & Alerts",
-          duration: "2 hr 20 min",
-          durationMinutes: 140,
-          youtubeId: "JtrHffY2m_E",
-          youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "Blob created events, backfilling with tumbling windows, and email alerts via Azure Logic Apps.",
-          keyTopic: "Triggers & Monitoring"
+          title: "Twitter Data Pipeline using Airflow for Beginners",
+          duration: "58 min",
+          durationMinutes: 58,
+          youtubeId: "q8q3OFFfY6c",
+          youtubeUrl: "https://www.youtube.com/watch?v=q8q3OFFfY6c",
+          summary: "Building an automated DAG pipeline using Apache Airflow, task dependencies, and cloud storage triggers.",
+          keyTopic: "Apache Airflow DAGs"
         },
         {
           id: "s04-ep07",
           order: 7,
-          title: "Azure DevOps: Git Repos, PR Approvals & YAML CI/CD for ADF",
-          duration: "3 hr 30 min",
-          durationMinutes: 210,
+          title: "Databricks Session 29: Introduction to Azure Data Factory & Cloud Compute",
+          duration: "1 hr 20 min",
+          durationMinutes: 80,
           youtubeId: "JtrHffY2m_E",
           youtubeUrl: "https://www.youtube.com/watch?v=JtrHffY2m_E",
-          summary: "ARM template generation, automated deployment gates, dev/staging/prod promotion pipelines.",
-          keyTopic: "DevOps CI/CD YAML"
+          summary: "Triggering Databricks notebook activities, passing parameters dynamically, and monitoring compute logs.",
+          keyTopic: "ADF to Databricks Integration"
         }
       ]
     },
     topics: [
-      "ADF Architecture: Control plane, Data plane, ETL vs ELT",
-      "Integration Runtimes: Azure Auto Resolve vs. Self-Hosted IR",
-      "Pipeline Components: Linked Services (Key Vault integrated), Datasets (Avro, Parquet, Snowflake, Postgres, Oracle)",
-      "Activities: Wait, Variables, Copy Data, Databricks Notebook, Azure Function, Lookup, Stored Procedure, Get Metadata, Delete",
-      "Triggers & Data Flows: Schedule, Tumbling Window, Event-based, Mapping Data Flows",
-      "Monitoring: Pipeline/Activity runs, Alerts via Logic Apps",
-      "Azure DevOps: Repos, Branching, Pull Requests, YAML CI/CD pipelines for ADF migrations"
+      "ADF Components: Pipelines, Activities, Datasets, Linked Services, Integration Runtimes (Azure, Self-hosted)",
+      "Control Flow: Lookup, Get Metadata, ForEach, If Condition, Until, Web, Execute Pipeline",
+      "Data Flows: Transformations, Joins, Aggregations, Conditional Split, Derived Column, Schema Drift",
+      "DevOps: Git Integration, ARM Templates, Automated Deployment, CI/CD with Azure DevOps Pipelines"
     ],
     revisionChecklist: [
-      "Configure a Self-Hosted Integration Runtime",
-      "Parameterize a Linked Service dynamically for environment switching",
-      "Build a YAML CI/CD pipeline for an ADF environment deployment"
+      "Build a pipeline to copy data from Blob to SQL with dynamic file naming",
+      "Configure a Self-hosted Integration Runtime on a local machine/VM"
     ]
   },
   {
@@ -507,108 +490,115 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 5,
     title: "Big Data Compute & Streaming (PySpark & Kafka)",
     category: "Distributed Big Data",
-    durationEstimate: "30-35 Hours",
-    videoUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-    youtubeId: "_C8kWso4ne4",
+    durationEstimate: "22-26 Hours",
+    videoUrl: "https://www.youtube.com/watch?v=laP5dL0By84",
+    youtubeId: "laP5dL0By84",
     playlist: {
-      playlistTitle: "Distributed Compute with PySpark & Real-Time Event Streaming with Apache Kafka",
+      playlistTitle: "PySpark Distributed Big Data & Apache Kafka Streaming",
       channelName: "DataVeda Big Data Academy",
-      totalVideos: 7,
-      totalDuration: "31 hr 45 min",
-      playlistUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
+      totalVideos: 8,
+      totalDuration: "23 hr 32 min",
+      playlistUrl: "https://www.youtube.com/watch?v=laP5dL0By84",
       episodes: [
         {
           id: "s05-ep01",
           order: 1,
-          title: "Apache Spark Core Architecture, DAG Scheduler & RDD Execution Model",
-          duration: "3 hr 15 min",
-          durationMinutes: 195,
-          youtubeId: "_C8kWso4ne4",
-          youtubeUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-          summary: "Driver vs executors, catalyst optimizer, Tungsten execution engine, lineage graphs, and fault tolerance.",
-          keyTopic: "Spark Internal Architecture"
+          title: "PySpark for Data Engineers Full Course 2026 | Basics to Advanced",
+          duration: "4 hr 25 min",
+          durationMinutes: 265,
+          youtubeId: "laP5dL0By84",
+          youtubeUrl: "https://www.youtube.com/watch?v=laP5dL0By84",
+          summary: "Spark architecture, Driver & Executors, DataFrame API, Catalyst Optimizer, and broad transformations.",
+          keyTopic: "PySpark Core Architecture"
         },
         {
           id: "s05-ep02",
           order: 2,
-          title: "PySpark DataFrame ETL: Narrow vs Wide Transformations & Aggregations",
-          duration: "4 hr 10 min",
-          durationMinutes: 250,
-          youtubeId: "_C8kWso4ne4",
-          youtubeUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-          summary: "Column operations, groupBy, rollup, joins, and windowed calculations on terabyte datasets.",
-          keyTopic: "DataFrame ETL"
+          title: "PySpark Full Course 2025 🔥 (Zero to Job-Ready) | Hands-On Projects",
+          duration: "4 hr 50 min",
+          durationMinutes: 290,
+          youtubeId: "3r8Ltk3I7j0",
+          youtubeUrl: "https://www.youtube.com/watch?v=3r8Ltk3I7j0",
+          summary: "Hands-on PySpark project covering complex nested JSON, windowing, aggregation, and S3/ADLS writes.",
+          keyTopic: "Production PySpark ETL"
         },
         {
           id: "s05-ep03",
           order: 3,
-          title: "Spark Performance Optimization: Bucketing, Partitioning & Adaptive Query (AQE)",
-          duration: "4 hr 30 min",
-          durationMinutes: 270,
+          title: "PySpark Tutorial for Beginners & Core DataFrame Operations",
+          duration: "3 hr 15 min",
+          durationMinutes: 195,
           youtubeId: "_C8kWso4ne4",
           youtubeUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-          summary: "Coalesce vs repartition, dynamic partition pruning, AQE shuffle partition coalescing, and caching strategies.",
-          keyTopic: "Performance & AQE"
+          summary: "RDD vs DataFrame, lazy evaluation, schema enforcement, filtering, and Spark SQL expressions.",
+          keyTopic: "DataFrames & Spark SQL"
         },
         {
           id: "s05-ep04",
           order: 4,
-          title: "Broadcast Joins, Salting Technique & Eliminating Shuffle Skew",
-          duration: "3 hr 45 min",
-          durationMinutes: 225,
-          youtubeId: "_C8kWso4ne4",
-          youtubeUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-          summary: "Broadcast variables, resolving uneven partition skew with salting keys, and memory heap tuning.",
-          keyTopic: "Salting & Broadcast"
+          title: "PySpark Optimization Full Course 2025 [Step-By-Step Guide]",
+          duration: "3 hr 10 min",
+          durationMinutes: 190,
+          youtubeId: "CY_WaxCxJco",
+          youtubeUrl: "https://www.youtube.com/watch?v=CY_WaxCxJco",
+          summary: "Adaptive Query Execution (AQE), broadcast joins, caching, salting to eliminate shuffle skew, and memory tuning.",
+          keyTopic: "Spark Performance Tuning"
         },
         {
           id: "s05-ep05",
           order: 5,
-          title: "Apache Kafka Crash Course: Distributed Brokers, Topics & Partitions",
-          duration: "1 hr 22 min",
-          durationMinutes: 82,
-          youtubeId: "R873BlNVUB4",
-          youtubeUrl: "https://www.youtube.com/watch?v=R873BlNVUB4",
-          summary: "Message brokers, topic log segmentation, leader/follower replica synchronization, and in-sync replicas (ISR).",
-          keyTopic: "Kafka Core Architecture"
+          title: "PySpark Streaming Full Course | Big Data With Apache Spark",
+          duration: "2 hr 45 min",
+          durationMinutes: 165,
+          youtubeId: "r7FTCuTl84g",
+          youtubeUrl: "https://www.youtube.com/watch?v=r7FTCuTl84g",
+          summary: "Structured Streaming, streaming DataFrames, watermarks, sliding windows, and checkpointing.",
+          keyTopic: "Structured Streaming"
         },
         {
           id: "s05-ep06",
           order: 6,
-          title: "Kafka Producers & Consumer Groups: ACKs, Rebalances & Lag Management",
-          duration: "2 hr 15 min",
-          durationMinutes: 135,
-          youtubeId: "R873BlNVUB4",
-          youtubeUrl: "https://www.youtube.com/watch?v=R873BlNVUB4",
-          summary: "Producer acknowledgments (acks=all), consumer offset commits, cooperative sticky rebalances, and lag monitoring.",
-          keyTopic: "Producers & Consumer Groups"
+          title: "PySpark Full Course & Interview Preparation Masterclass",
+          duration: "2 hr 30 min",
+          durationMinutes: 150,
+          youtubeId: "NplzvSNsTs0",
+          youtubeUrl: "https://www.youtube.com/watch?v=NplzvSNsTs0",
+          summary: "Answering top PySpark interview questions: partitionBy vs bucketBy, shuffle spills, and OOM fixes.",
+          keyTopic: "PySpark Interview Qs"
         },
         {
           id: "s05-ep07",
           order: 7,
-          title: "PySpark Structured Streaming with Apache Kafka at Industrial Scale",
-          duration: "4 hr 30 min",
-          durationMinutes: 270,
-          youtubeId: "_C8kWso4ne4",
-          youtubeUrl: "https://www.youtube.com/watch?v=_C8kWso4ne4",
-          summary: "ReadStream and WriteStream with Kafka source, checkpointing on ADLS, watermarking for late-arriving events.",
-          keyTopic: "Structured Streaming"
+          title: "Apache Kafka Crash Course: Brokers, Topics & Consumer Groups",
+          duration: "1 hr 22 min",
+          durationMinutes: 82,
+          youtubeId: "R873BlNVUB4",
+          youtubeUrl: "https://www.youtube.com/watch?v=R873BlNVUB4",
+          summary: "Distributed log semantics, partition rebalancing, offset tracking, ACKs, and producer idempotency.",
+          keyTopic: "Kafka Core Concepts"
+        },
+        {
+          id: "s05-ep08",
+          order: 8,
+          title: "Introduction to Kafka Streams & Event Processing",
+          duration: "1 hr 15 min",
+          durationMinutes: 75,
+          youtubeId: "ni3XPsYC5cQ",
+          youtubeUrl: "https://www.youtube.com/watch?v=ni3XPsYC5cQ",
+          summary: "Kafka Streams topology, KTable vs KStream, stateful processing, and joining event streams in real time.",
+          keyTopic: "Kafka Streams & Real-Time"
         }
       ]
     },
     topics: [
-      "Spark Architecture: DAG Scheduler, Task Scheduler, RDD persistence, Fault Tolerance",
-      "Transformations & Actions: Narrow vs Wide dependencies",
-      "DataFrame ETL: Filters, Column manipulations, Unions, Joins, Aggregations, GroupBy, Window functions",
-      "Performance Optimization: Partitioning, Bucketing, Caching, Adaptive Query Execution (AQE), Salting",
-      "Shared Variables: Broadcast variables & Custom Accumulators",
-      "DataVeda Apache Kafka Crash Course: Distributed brokers, topic partitions, producer ACKs, consumer group rebalances",
-      "PySpark Streaming: Streaming at scale with Apache Kafka"
+      "Spark Architecture: Driver, Executors, Cluster Manager (YARN, Standalone), DAG, Catalyst Optimizer",
+      "PySpark API: DataFrames, Transformations (Narrow vs Wide), Actions, Spark SQL, Window Functions",
+      "Optimization: Partitioning, Coalesce vs Repartition, Broadcast Joins, Caching vs Persist, Skew Handling",
+      "Kafka & Streaming: Producers, Consumers, Topics, Partitions, Consumer Groups, Structured Streaming"
     ],
     revisionChecklist: [
-      "Implement a Broadcast Join to eliminate network shuffling during skew",
-      "Configure AQE (Adaptive Query Execution) parameters",
-      "Define the relationship between Kafka topic partitions and consumer groups"
+      "Explain what causes a Spark Shuffle and how to minimize it",
+      "Write a PySpark script to read a 1GB CSV, clean it, and write as partitioned Parquet"
     ]
   },
   {
@@ -616,108 +606,104 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 6,
     title: "Lakehouse Architectures (Databricks & dbt Core)",
     category: "Lakehouse & Modeling",
-    durationEstimate: "25-30 Hours",
+    durationEstimate: "15-18 Hours",
     videoUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
     youtubeId: "XOSuR8g2SfQ",
     playlist: {
-      playlistTitle: "Modern Lakehouse Architectures with Databricks Delta Lake & dbt Core",
-      channelName: "DataVeda Lakehouse Academy",
+      playlistTitle: "Databricks Lakehouse, Delta Lake & dbt Core Modeling",
+      channelName: "DataVeda Lakehouse Institute",
       totalVideos: 7,
-      totalDuration: "25 hr 30 min",
+      totalDuration: "15 hr 22 min",
       playlistUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
       episodes: [
         {
           id: "s06-ep01",
           order: 1,
-          title: "Databricks 2025 Architecture, Workspaces, Clusters & Runtimes",
-          duration: "1 hr 45 min",
-          durationMinutes: 105,
-          youtubeId: "XOSuR8g2SfQ",
-          youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "Control plane vs data plane in Databricks, All-purpose vs Job clusters, spot instances, and Photon engine.",
-          keyTopic: "Databricks Clusters"
-        },
-        {
-          id: "s06-ep02",
-          order: 2,
-          title: "DBFS, Secrets Vaults, Widgets & Databricks Utilities (dbutils)",
+          title: "01 Databricks Tutorial 2025 | Databricks for Data Engineering",
           duration: "2 hr 15 min",
           durationMinutes: 135,
           youtubeId: "XOSuR8g2SfQ",
           youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "Mastering dbutils.fs, dbutils.secrets, notebook workflows, and mounting ADLS Gen2 containers.",
-          keyTopic: "dbutils & Storage Mounts"
+          summary: "Databricks workspaces, clusters, notebook workflows, Unity Catalog, and DBFS storage architecture.",
+          keyTopic: "Databricks Platform Overview"
+        },
+        {
+          id: "s06-ep02",
+          order: 2,
+          title: "End to End Medallion Architecture Pipeline on Databricks",
+          duration: "2 hr 45 min",
+          durationMinutes: 165,
+          youtubeId: "nLnwmpA9Tvs",
+          youtubeUrl: "https://www.youtube.com/watch?v=nLnwmpA9Tvs",
+          summary: "Building Bronze (raw), Silver (cleansed), and Gold (aggregated) layers using Auto Loader and Delta tables.",
+          keyTopic: "Medallion Architecture"
         },
         {
           id: "s06-ep03",
           order: 3,
-          title: "Medallion Architecture: Bronze (Raw), Silver (Cleansed) & Gold (Aggregated)",
-          duration: "3 hr 10 min",
-          durationMinutes: 190,
-          youtubeId: "XOSuR8g2SfQ",
-          youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "Designing production bronze ingestion layers, schema enforcement, silver deduplication, and gold dimensional star schemas.",
-          keyTopic: "Medallion Architecture"
+          title: "Delta Lake - EXPLAINED - Full Tutorial",
+          duration: "1 hr 30 min",
+          durationMinutes: 90,
+          youtubeId: "fkWxiesfrgk",
+          youtubeUrl: "https://www.youtube.com/watch?v=fkWxiesfrgk",
+          summary: "ACID transactions on data lakes, parquet storage, _delta_log transaction journal, and time travel querying.",
+          keyTopic: "Delta Lake Fundamentals"
         },
         {
           id: "s06-ep04",
           order: 4,
-          title: "Delta Lake: Transaction Logs, Time Travel, Vacuum & ACID Operations",
-          duration: "3 hr 20 min",
-          durationMinutes: 200,
-          youtubeId: "XOSuR8g2SfQ",
-          youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "_delta_log JSON commits, rollback time travel, file compaction with OPTIMIZE, and Z-Ordering.",
-          keyTopic: "Delta Lake ACID"
+          title: "Delta Lake Masterclass | Azure Databricks | PySpark Zero-To-Expert",
+          duration: "5 hr 40 min",
+          durationMinutes: 340,
+          youtubeId: "8IjCyvyAPpM",
+          youtubeUrl: "https://www.youtube.com/watch?v=8IjCyvyAPpM",
+          summary: "In-depth masterclass on Delta Lake optimization, Z-Ordering, Liquid Clustering, compaction, and VACUUM.",
+          keyTopic: "Delta Lake Masterclass"
         },
         {
           id: "s06-ep05",
           order: 5,
-          title: "SCD Type 1 & Type 2 Implementation via Delta Lake MERGE (Upsert)",
-          duration: "2 hr 40 min",
-          durationMinutes: 160,
-          youtubeId: "XOSuR8g2SfQ",
-          youtubeUrl: "https://www.youtube.com/watch?v=XOSuR8g2SfQ",
-          summary: "Writing SQL MERGE statements to track historical dimensional changes with effective start/end dates.",
-          keyTopic: "SCD Type 2 MERGE"
+          title: "Introduction to Azure Databricks Workspaces & Compute Clusters",
+          duration: "1 hr 15 min",
+          durationMinutes: 75,
+          youtubeId: "yGWKmypU99A",
+          youtubeUrl: "https://www.youtube.com/watch?v=yGWKmypU99A",
+          summary: "Cluster policies, spot instances, auto-termination, and Azure Key Vault secret scopes integration.",
+          keyTopic: "Databricks Clusters & Compute"
         },
         {
           id: "s06-ep06",
           order: 6,
-          title: "Intro to dbt Core: Models, Staging Views & Dimensional Marts",
+          title: "Intro to Data Build Tool (dbt) // Create your first project!",
           duration: "1 hr 12 min",
           durationMinutes: 72,
           youtubeId: "5rNquRnNb4E",
           youtubeUrl: "https://www.youtube.com/watch?v=5rNquRnNb4E",
-          summary: "dbt project initialization, profiles.yml configuration, creating views vs tables, and ref() macros.",
+          summary: "dbt Core fundamentals: models, staging views, incremental materializations, and ref() functions.",
           keyTopic: "dbt Core Fundamentals"
         },
         {
           id: "s06-ep07",
           order: 7,
-          title: "Advanced dbt Core: Jinja Macros, Generic Tests & Snowflake/Databricks Marts",
-          duration: "2 hr 18 min",
-          durationMinutes: 138,
-          youtubeId: "7lpp5N73V98",
-          youtubeUrl: "https://www.youtube.com/watch?v=7lpp5N73V98",
-          summary: "Custom Jinja macros, unique & not_null tests, documentation generation, and production deployment.",
-          keyTopic: "dbt Advanced Macros & Tests"
+          title: "Data Modeling Tutorial: Star Schema (aka Kimball Approach)",
+          duration: "45 min",
+          durationMinutes: 45,
+          youtubeId: "gRE3E7VUzRU",
+          youtubeUrl: "https://www.youtube.com/watch?v=gRE3E7VUzRU",
+          summary: "Designing dimension tables, fact tables, and implementing SCD Type 2 upserts in Lakehouse models.",
+          keyTopic: "Star Schema Data Modeling"
         }
       ]
     },
     topics: [
-      "Databricks Architecture: Workspaces, Notebooks, DBFS (handling, processing, archiving)",
-      "Databricks Utilities (dbutils): Credentials, FileSystem, Notebook, Secrets, Widgets",
-      "Cluster Management: All-Purpose vs. Job Clusters, Standard vs. High Concurrency, Autoscaling, Databricks Runtimes",
-      "Batch Integrations: Blob Storage, ADLS Gen2, Azure SQL, Synapse",
-      "Medallion Architecture: Bronze (Raw), Silver (Cleansed), Gold (Aggregated)",
-      "Delta Lake: Transaction Logs, Time Travel, Handling SCD Type 1 & Type 2",
-      "DataVeda dbt Core with Snowflake: Staging views, dimensional marts, Jinja macros, and schema tests"
+      "Databricks: Workspaces, Clusters, Notebooks, Jobs, DBFS, Databricks CLI, Secret Scopes",
+      "Delta Lake: ACID Transactions, Time Travel, Schema Enforcement/Evolution, VACUUM, Z-ORDER, Liquid Clustering",
+      "Medallion Architecture: Bronze (Raw ingestion), Silver (Cleansed/Enriched), Gold (Business Aggregates)",
+      "dbt Core: Models, Sources, Seeds, Tests, Snapshots (SCD Type 2), Jinja & Macros, Documentation"
     ],
     revisionChecklist: [
-      "Mount an ADLS Gen2 storage container to DBFS securely",
-      "Schedule a Job Cluster for a daily Silver-to-Gold aggregation",
-      "Perform a MERGE (UPSERT) operation to handle SCD Type 2 changes in a Delta Table"
+      "Implement a Delta Lake MERGE query to handle Slowly Changing Dimensions (SCD Type 2)",
+      "Create a dbt model that uses the ref() function and has schema tests configured"
     ]
   },
   {
@@ -725,95 +711,82 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 7,
     title: "Modern Analytics & AI (Microsoft Fabric)",
     category: "Fabric, PowerBI & Gen AI",
-    durationEstimate: "20-25 Hours",
-    videoUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-    youtubeId: "NXQ0j9CZPyk",
+    durationEstimate: "18-22 Hours",
+    videoUrl: "https://www.youtube.com/watch?v=4qEAT4iEktg",
+    youtubeId: "4qEAT4iEktg",
     playlist: {
-      playlistTitle: "Microsoft Fabric, Real-Time Analytics & Generative AI Data Engineering",
-      channelName: "DataVeda AI & Fabric Academy",
-      totalVideos: 6,
-      totalDuration: "21 hr 20 min",
-      playlistUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
+      playlistTitle: "Microsoft Fabric SaaS Analytics, OneLake & Generative AI",
+      channelName: "DataVeda Fabric Studio",
+      totalVideos: 5,
+      totalDuration: "19 hr 25 min",
+      playlistUrl: "https://www.youtube.com/watch?v=4qEAT4iEktg",
       episodes: [
         {
           id: "s07-ep01",
           order: 1,
-          title: "Microsoft Fabric Setup & OneLake Architecture Deep Dive",
-          duration: "1 hr 30 min",
-          durationMinutes: 90,
-          youtubeId: "NXQ0j9CZPyk",
-          youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Fabric workspace provisioning, OneLake shortcuts without duplicating data, and multi-cloud links.",
-          keyTopic: "Fabric & OneLake"
+          title: "Microsoft Fabric Full Course 2026 | End-to-End Data Engineering | 11+ Hours",
+          duration: "7 hr 30 min",
+          durationMinutes: 450,
+          youtubeId: "4qEAT4iEktg",
+          youtubeUrl: "https://www.youtube.com/watch?v=4qEAT4iEktg",
+          summary: "Complete deep-dive into OneLake, Lakehouse items, Fabric Data Factory, Spark notebooks, SQL endpoints, and Power BI.",
+          keyTopic: "Fabric Unified Platform"
         },
         {
           id: "s07-ep02",
           order: 2,
-          title: "Lakehouse Architecture inside Fabric: Delta Tables & SQL Endpoints",
-          duration: "2 hr 10 min",
-          durationMinutes: 130,
-          youtubeId: "NXQ0j9CZPyk",
-          youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Creating Fabric Lakehouses, automatic schema inference, and querying Delta tables via serverless SQL endpoints.",
-          keyTopic: "Fabric Lakehouse"
+          title: "Microsoft Fabric for Beginners: Complete 5-Hour Crash Course",
+          duration: "5 hr 00 min",
+          durationMinutes: 300,
+          youtubeId: "4hz6bBFE2a8",
+          youtubeUrl: "https://www.youtube.com/watch?v=4hz6bBFE2a8",
+          summary: "Hands-on walkthrough of OneLake shortcuts, KQL database real-time analytics, Copilot Gen AI, and Power BI Direct Lake.",
+          keyTopic: "OneLake & Real-Time Analytics"
         },
         {
           id: "s07-ep03",
           order: 3,
-          title: "Data Ingestion & Spark Processing in Fabric (Part 1 & Part 2)",
-          duration: "3 hr 40 min",
-          durationMinutes: 220,
-          youtubeId: "NXQ0j9CZPyk",
-          youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Fabric Spark notebooks, V-Order optimization on Parquet files, and automated table maintenance.",
-          keyTopic: "Spark in Fabric"
+          title: "Microsoft Fabric Full Course | End-to-End Data Engineering Tutorial",
+          duration: "3 hr 15 min",
+          durationMinutes: 195,
+          youtubeId: "eL0zpnW_mKI",
+          youtubeUrl: "https://www.youtube.com/watch?v=eL0zpnW_mKI",
+          summary: "Building an enterprise pipeline in Fabric using Dataflows Gen2, medallion staging, and delta table optimizations.",
+          keyTopic: "Dataflows Gen2 & Pipelines"
         },
         {
           id: "s07-ep04",
           order: 4,
-          title: "Data Warehousing & Data Pipelines in Fabric with Power BI Direct Lake",
-          duration: "3 hr 15 min",
-          durationMinutes: 195,
-          youtubeId: "NXQ0j9CZPyk",
-          youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Cross-database queries, data pipeline triggers, and zero-latency Direct Lake reporting in Power BI.",
-          keyTopic: "Direct Lake Mode"
+          title: "End-to-End Microsoft Fabric Project for Beginners | Full Tutorial",
+          duration: "2 hr 10 min",
+          durationMinutes: 130,
+          youtubeId: "52yIf4K3K0E",
+          youtubeUrl: "https://www.youtube.com/watch?v=52yIf4K3K0E",
+          summary: "Real-world project from ingestion of public APIs to Gold-layer dimensional models and interactive executive dashboards.",
+          keyTopic: "Hands-on Fabric Project"
         },
         {
           id: "s07-ep05",
           order: 5,
-          title: "Real-Time Streaming in Fabric: Eventstreams & KQL Databases",
-          duration: "2 hr 45 min",
-          durationMinutes: 165,
+          title: "Introduction to Microsoft Fabric & OneLake Ecosystem",
+          duration: "1 hr 30 min",
+          durationMinutes: 90,
           youtubeId: "NXQ0j9CZPyk",
           youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Ingesting live IoT streams with Fabric Eventstreams and querying telemetries using Kusto Query Language (KQL).",
-          keyTopic: "Real-Time Analytics"
-        },
-        {
-          id: "s07-ep06",
-          order: 6,
-          title: "Generative AI Data Project: Virtual Analyst, Prompt Engineering & LLM APIs",
-          duration: "3 hr 20 min",
-          durationMinutes: 200,
-          youtubeId: "NXQ0j9CZPyk",
-          youtubeUrl: "https://www.youtube.com/watch?v=NXQ0j9CZPyk",
-          summary: "Building an AI-augmented pipeline that connects OpenAI/Gemini APIs to Lakehouse tables to synthesize executive summaries.",
-          keyTopic: "Generative AI Analyst"
+          summary: "Core architectural principles: SaaS simplicity, shortcuts across clouds (AWS S3, ADLS), and tenant governance.",
+          keyTopic: "Fabric Architecture & Governance"
         }
       ]
     },
     topics: [
-      "Microsoft Fabric Setup: Workspaces and OneLake deep dive",
-      "Lakehouse Architecture inside Fabric",
-      "Data Ingestion & Processing with Spark (Part 1 & 2)",
-      "Data Warehousing, Data Pipelines, and Stream Data in Fabric",
-      "Generative AI Project: Virtual Analyst creation, Prompt engineering, and LLM endpoints"
+      "Microsoft Fabric: OneLake, Lakehouse vs Warehouse, Shortcuts, Direct Lake mode in Power BI",
+      "Fabric Workloads: Data Factory (Pipelines & Dataflows Gen2), Synapse Data Engineering, Synapse Real-Time Analytics",
+      "Power BI for Engineers: Semantic Models, Star Schema in Power BI, DAX basics, Direct Lake performance",
+      "Gen AI in Data: LLMs for Data Engineering, Text-to-SQL, Vector DBs, RAG pipelines, Fabric Copilot"
     ],
     revisionChecklist: [
-      "Differentiate Fabric OneLake architecture from standard ADLS",
-      "Build an automated Fabric Pipeline",
-      "Integrate a local AI or API endpoint to query structured tabular data"
+      "Explain Direct Lake mode and how it differs from Import and DirectQuery",
+      "Create a OneLake shortcut to an external ADLS Gen2 container"
     ]
   },
   {
@@ -821,14 +794,14 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 8,
     title: "The DataVeda Masterclass Projects Portfolio",
     category: "Real-World Production Projects",
-    durationEstimate: "35-40 Hours",
+    durationEstimate: "11 Hours of Video + 25h Lab",
     videoUrl: "https://www.youtube.com/watch?v=WpQECq5Hx9g",
     youtubeId: "WpQECq5Hx9g",
     playlist: {
-      playlistTitle: "Production Data Engineering Portfolios: Uber, Zomato, Twitter & AWS",
-      channelName: "DataVeda Portfolio Studio",
-      totalVideos: 5,
-      totalDuration: "36 hr 15 min",
+      playlistTitle: "Production Data Engineering Portfolio Projects",
+      channelName: "DataVeda Project Lab",
+      totalVideos: 7,
+      totalDuration: "11 hr 00 min",
       playlistUrl: "https://www.youtube.com/watch?v=WpQECq5Hx9g",
       episodes: [
         {
@@ -839,18 +812,18 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 102,
           youtubeId: "WpQECq5Hx9g",
           youtubeUrl: "https://www.youtube.com/watch?v=WpQECq5Hx9g",
-          summary: "End-to-end cloud pipeline modeling millions of Uber trips with modern Mage AI orchestration.",
-          keyTopic: "Uber GCP Pipeline"
+          summary: "TLC trip record analysis, dimensional modeling, automated orchestrator setup, and real-time dashboarding.",
+          keyTopic: "Uber Analytics Project"
         },
         {
           id: "s08-ep02",
           order: 2,
-          title: "Zomato AI Data Analytics: AI-Augmented Analytics & Geospatial Indexing",
+          title: "Zomato AI Data Analytics: End-To-End AI Data Engineering Project",
           duration: "1 hr 35 min",
           durationMinutes: 95,
           youtubeId: "kYwaNMQ3XT8",
           youtubeUrl: "https://www.youtube.com/watch?v=kYwaNMQ3XT8",
-          summary: "Geospatial indexing, restaurant demand clustering, and automated BigQuery AI pipelines.",
+          summary: "Restaurant supply-chain tracking, geospatial indexing, AI-augmented data validation, and automated ETL.",
           keyTopic: "Zomato AI Pipeline"
         },
         {
@@ -861,8 +834,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 58,
           youtubeId: "q8q3OFFfY6c",
           youtubeUrl: "https://www.youtube.com/watch?v=q8q3OFFfY6c",
-          summary: "Automated ingestion DAG running on Amazon EC2 pushing clean JSON archives to S3 data lakes.",
-          keyTopic: "Twitter Airflow AWS"
+          summary: "Twitter API ingestion, EC2 instance deployment, DAG triggers, and automated storage in Amazon S3.",
+          keyTopic: "Twitter Airflow Pipeline"
         },
         {
           id: "s08-ep04",
@@ -872,33 +845,53 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 105,
           youtubeId: "yvAWbbQa8eE",
           youtubeUrl: "https://www.youtube.com/watch?v=yvAWbbQa8eE",
-          summary: "Serverless event-driven architecture with AWS Lambda, S3 Data Lake, Glue Data Catalog & Athena SQL.",
+          summary: "Building an enterprise serverless data lake on AWS using Glue crawlers, S3 buckets, and Athena queries.",
           keyTopic: "AWS Serverless Pipeline"
         },
         {
           id: "s08-ep05",
           order: 5,
-          title: "Olympic Data Analytics & On-Prem to Cloud Migration Verification",
+          title: "Olympic Data Analytics & End-to-End Azure Pipeline",
           duration: "2 hr 05 min",
           durationMinutes: 125,
           youtubeId: "IaA9YNlg5hM",
           youtubeUrl: "https://www.youtube.com/watch?v=IaA9YNlg5hM",
-          summary: "On-Prem to Cloud migration verifying key consistency, matrix reconciliation, and target tables.",
-          keyTopic: "Migration & Reconciliation"
+          summary: "Extracting historical Olympic datasets with ADF, ADLS Gen2, Azure Databricks PySpark, and Synapse SQL.",
+          keyTopic: "Azure Olympic Pipeline"
+        },
+        {
+          id: "s08-ep06",
+          order: 6,
+          title: "AWS ETL Pipeline Project For Beginners",
+          duration: "1 hr 30 min",
+          durationMinutes: 90,
+          youtubeId: "yHHCV3Q13Fo",
+          youtubeUrl: "https://www.youtube.com/watch?v=yHHCV3Q13Fo",
+          summary: "End-to-end extraction with Python, AWS Lambda event triggers, S3 data lakes, and automated schema catalogs.",
+          keyTopic: "AWS Lambda & Glue ETL"
+        },
+        {
+          id: "s08-ep07",
+          order: 7,
+          title: "Spotify Analysis | End to End Data Engineering Project",
+          duration: "1 hr 25 min",
+          durationMinutes: 85,
+          youtubeId: "9IzVC5b9QLM",
+          youtubeUrl: "https://www.youtube.com/watch?v=9IzVC5b9QLM",
+          summary: "Extracting Spotify top charts API, deploying AWS Lambda functions, staging raw JSON in S3, and Snowflake/Athena analysis.",
+          keyTopic: "Spotify API Data Pipeline"
         }
       ]
     },
     topics: [
-      "DataVeda Uber Data Analytics: End-to-end pipeline with GCP, Mage AI, BigQuery, and Looker Studio",
-      "DataVeda Zomato AI Data Analytics: AI-augmented analytics with GCP and geospatial indexing",
-      "DataVeda Twitter Data Pipeline with Airflow: Automated ingestion on AWS EC2 with S3 archiving",
-      "DataVeda AWS Data Engineering Masterclass: Serverless Lambda, S3 Data Lake, Glue Crawler, and Athena SQL",
-      "Vision Board Migration: On-Prem to Cloud Migration verifying key consistency (totals/matrices) between source and target"
+      "Project 1: Real-Time IoT Ingestion: Kafka -> Spark Streaming -> Delta Lake -> Power BI",
+      "Project 2: E-Commerce Lakehouse: ADF -> ADLS -> Databricks -> dbt Core -> Snowflake -> Power BI",
+      "Project 3: Healthcare Claims Batch: Python Scraper -> Azure Blob -> PySpark ETL -> Synapse -> Direct Lake",
+      "Project 4: Financial Transactions CDC: Debezium -> Kafka -> Fabric Real-Time Analytics -> KQL Database"
     ],
     revisionChecklist: [
-      "Execute a DAG line-by-line via the Airflow EC2 instance",
-      "Deploy the AWS Glue Crawler to map S3 raw data into Athena",
-      "Write a reconciliation query to verify dataset consistency post-migration"
+      "Deploy at least 2 end-to-end projects to a personal cloud account (free tier)",
+      "Write comprehensive GitHub READMEs with architecture diagrams, setup guides, and cost analysis"
     ]
   },
   {
@@ -906,14 +899,14 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
     stageNumber: 9,
     title: "Career Acceleration & The Vault Library",
     category: "Career, Interviews & Vault",
-    durationEstimate: "20-25 Hours",
+    durationEstimate: "10-14 Hours",
     videoUrl: "https://www.youtube.com/watch?v=4ifxQ_th07U",
     youtubeId: "4ifxQ_th07U",
     playlist: {
-      playlistTitle: "Career Acceleration, FAANG System Design & The Vault Library",
-      channelName: "DataVeda Career Hub",
+      playlistTitle: "Data Engineering Career Strategy, System Design & Interview Mastery",
+      channelName: "DataVeda Career Lab",
       totalVideos: 5,
-      totalDuration: "20 hr 45 min",
+      totalDuration: "10 hr 29 min",
       playlistUrl: "https://www.youtube.com/watch?v=4ifxQ_th07U",
       episodes: [
         {
@@ -924,8 +917,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 42,
           youtubeId: "4ifxQ_th07U",
           youtubeUrl: "https://www.youtube.com/watch?v=4ifxQ_th07U",
-          summary: "Resume optimization, LinkedIn branding, Naukri ATS scoring, and cold outreach tactics that get interviews.",
-          keyTopic: "Resume & ATS Optimization"
+          summary: "Essential tools, interview expectations, salary benchmarks, and how to land Senior DE offers in 2026.",
+          keyTopic: "2026 DE Career Strategy"
         },
         {
           id: "s09-ep02",
@@ -935,8 +928,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 32,
           youtubeId: "bUHFg8CZFws",
           youtubeUrl: "https://www.youtube.com/watch?v=bUHFg8CZFws",
-          summary: "Framework for passing system design rounds: capacity estimation, throughput sizing, latency SLAs.",
-          keyTopic: "System Design Framework"
+          summary: "Designing scalable distributed systems: throughput estimation, partitioning strategies, and SLA trade-offs.",
+          keyTopic: "System Design Architecture"
         },
         {
           id: "s09-ep03",
@@ -946,8 +939,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 75,
           youtubeId: "hf2go3E2m8g",
           youtubeUrl: "https://www.youtube.com/watch?v=hf2go3E2m8g",
-          summary: "Null checks, uniqueness, freshness, schema drift alerts, volume anomalies, and lineage audits.",
-          keyTopic: "Data Quality & SLAs"
+          summary: "Schema drift, null percentages, volumetric anomalies, duplicate detection, and automated alerting.",
+          keyTopic: "Production Data Quality"
         },
         {
           id: "s09-ep04",
@@ -957,8 +950,8 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 45,
           youtubeId: "gRE3E7VUzRU",
           youtubeUrl: "https://www.youtube.com/watch?v=gRE3E7VUzRU",
-          summary: "The Vault literature deep dive: reading Kimball Data Warehouse Toolkit for warehouse design.",
-          keyTopic: "Kimball Modeling"
+          summary: "Fact grain, dimensional hierarchies, slowly changing dimensions (SCDs), and bridge tables for M:N relationships.",
+          keyTopic: "Dimensional Modeling Deep Dive"
         },
         {
           id: "s09-ep05",
@@ -968,15 +961,15 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
           durationMinutes: 435,
           youtubeId: "7lpp5N73V98",
           youtubeUrl: "https://www.youtube.com/watch?v=7lpp5N73V98",
-          summary: "Mastering cloud data warehousing, micro-partitions, time travel queries, and resource monitors.",
-          keyTopic: "Snowflake Architecture"
+          summary: "Deep architectural masterclass on Snowflake storage, virtual warehouse scaling, RBAC, and data sharing.",
+          keyTopic: "Enterprise Cloud Warehouses"
         }
       ]
     },
     topics: [
-      "Brand Optimization: Resume, LinkedIn, and Naukri ATS optimization",
-      "Interview Prep: Tech Guides Hub (100+ Interview Questions), System Design rounds",
-      "The Vault Access: Fundamentals of Data Engineering, Designing Data-Intensive Applications, Kimball Data Warehouse Toolkit, Spark Definitive Guide",
+      "Resume & Portfolio: Project showcase, GitHub profile optimization, LinkedIn strategy for Data Engineers",
+      "Interview Prep: Live coding (SQL + Python), System Design (Data Lakehouse architecture), Behavioral (STAR)",
+      "Certifications: DP-203 (Azure Data Engineer), Databricks Certified Associate, SnowPro Core -- Strategy & dumps",
       "Mentorship: Referrals, mock interviews, and 90-day consistency tracking"
     ],
     revisionChecklist: [
@@ -995,7 +988,7 @@ export const TRACK_ROLES: Record<'engineer' | 'analyst' | 'scientist', TrackRole
     badge: 'Flagship Track • 100% Free',
     description: 'Complete all 9 stages covering cloud foundations, Python DSA, SQL optimization, ADF ETL, PySpark & Kafka streaming, Lakehouse Medallion & dbt, Fabric Gen AI, production portfolio projects, and interview acceleration.',
     targetStages: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    estimatedHours: '200+ hours',
+    estimatedHours: '168+ hours',
     careerOutcomes: [
       'Senior Data Engineer',
       'Lead Analytics Engineer',
@@ -1010,7 +1003,7 @@ export const TRACK_ROLES: Record<'engineer' | 'analyst' | 'scientist', TrackRole
     badge: 'Specialized Track • 100% Free',
     description: 'Master Cloud foundations (DP-900), deep SQL querying and window functions, modern Lakehouse analytics with Databricks & dbt, and Microsoft Fabric + Power BI dashboarding.',
     targetStages: [1, 3, 6, 7],
-    estimatedHours: '85+ hours',
+    estimatedHours: '76+ hours',
     careerOutcomes: [
       'Senior Data Analyst',
       'Business Intelligence Engineer',
@@ -1025,7 +1018,7 @@ export const TRACK_ROLES: Record<'engineer' | 'analyst' | 'scientist', TrackRole
     badge: 'Specialized Track • 100% Free',
     description: 'Focus on Cloud data architectures, advanced Python & DSA algorithms, complex SQL querying, distributed PySpark compute, and modern Generative AI / LLM integration with Microsoft Fabric.',
     targetStages: [1, 2, 3, 5, 7],
-    estimatedHours: '120+ hours',
+    estimatedHours: '104+ hours',
     careerOutcomes: [
       'Data Scientist',
       'Machine Learning Engineer',

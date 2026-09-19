@@ -79,7 +79,9 @@ export const PlaylistTracker: React.FC<PlaylistTrackerProps> = ({
   const progressPercent = totalVideos > 0 ? Math.round((watchedCount / totalVideos) * 100) : 0;
   const allWatched = totalVideos > 0 && watchedCount >= totalVideos;
 
-  // Calculate watched time
+  // Calculate total playlist time and watched time dynamically
+  const totalPlaylistMinutes = playlist.episodes.reduce((acc, curr) => acc + (curr.durationMinutes || 0), 0);
+
   const watchedMinutes = playlist.episodes
     .filter(ep => watchedIds.includes(ep.id))
     .reduce((acc, curr) => acc + (curr.durationMinutes || 0), 0);
@@ -88,8 +90,10 @@ export const PlaylistTracker: React.FC<PlaylistTrackerProps> = ({
     const h = Math.floor(mins / 60);
     const m = mins % 60;
     if (h === 0) return `${m} min`;
-    return `${h} hr ${m > 0 ? `${m} min` : ''}`;
+    return `${h} hr ${m > 0 ? `${m} min` : ''}`.trim();
   };
+
+  const totalPlaylistDuration = formatMinutes(totalPlaylistMinutes);
 
   const nextUnwatchedEpisode = playlist.episodes.find(ep => !watchedIds.includes(ep.id)) || playlist.episodes[0];
 
@@ -118,7 +122,7 @@ export const PlaylistTracker: React.FC<PlaylistTrackerProps> = ({
           <div className="flex items-center gap-2 mb-1">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-blue/10 text-brand-blue text-[11px] font-bold uppercase tracking-wider">
               <Tv className="w-3.5 h-3.5" />
-              Complete Series Playlist ({totalVideos} Videos • {playlist.totalDuration})
+              Complete Series Playlist ({totalVideos} Videos • {totalPlaylistDuration})
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">
               by {playlist.channelName}
@@ -160,7 +164,7 @@ export const PlaylistTracker: React.FC<PlaylistTrackerProps> = ({
             </span>
             <span className="text-slate-300 dark:text-slate-700">•</span>
             <span className="text-slate-500 dark:text-slate-400">
-              {formatMinutes(watchedMinutes)} watched of {playlist.totalDuration}
+              {formatMinutes(watchedMinutes)} watched of {totalPlaylistDuration}
             </span>
           </div>
           {allWatched && (
