@@ -77,7 +77,7 @@ export const DataVedaPricing: React.FC = () => {
         </div>
 
         {/* DataVeda Free Open Model Card */}
-        <div className="bg-gradient-to-b from-brand-blue/10 via-vidhya-card to-vidhya-card border-2 border-brand-blue rounded-3xl p-8 flex flex-col justify-between shadow-2xl relative">
+        <div className="bg-gradient-to-b from-brand-blue/10 via-white to-white dark:via-slate-900 dark:to-slate-900 border-2 border-brand-blue rounded-3xl p-8 flex flex-col justify-between shadow-2xl relative">
           <div className="absolute -top-3.5 right-8 bg-brand-blue text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
             Our Open Mission
           </div>

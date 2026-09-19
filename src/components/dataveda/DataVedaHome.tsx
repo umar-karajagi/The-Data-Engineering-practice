@@ -244,7 +244,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             </div>
 
             {/* Master Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
               Everything you need to become <br className="hidden sm:block" />
               a job-ready{' '}
               <span className="relative inline-flex items-baseline text-[#0050FF]">
@@ -270,7 +270,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
               <button
                 onClick={() => onNavigateTab('projects')}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-neutral-500 text-white text-sm font-semibold tracking-tight transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-neutral-500 text-slate-900 dark:text-white text-sm font-semibold tracking-tight transition-colors flex items-center justify-center gap-2"
               >
                 <span>Explore Career Tracks</span>
                 <ChevronRight className="w-4 h-4 text-slate-600 dark:text-slate-400" />
@@ -299,7 +299,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
                 <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
                   <span className="text-slate-500 dark:text-slate-500">https://</span>
-                  <span className="text-white">dataveda.io</span>
+                  <span className="text-slate-900 dark:text-white">dataveda.io</span>
                   <span className="text-slate-500 dark:text-slate-500">/masterclass/uber-data-analytics</span>
                 </div>
 
@@ -379,7 +379,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
             Choose Your Path
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Pick the role. Follow the path.
           </h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
@@ -448,7 +448,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -488,7 +488,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -528,7 +528,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -621,7 +621,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold">
               Tech Stacks
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
               Master the tools companies actually use
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
@@ -675,7 +675,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
                     <div className="flex flex-wrap gap-1 pt-2">
                       {project.techStack.slice(0, 4).map(tool => (
-                        <span key={tool} className="text-[10px] px-2 py-0.5 rounded bg-neutral-800 text-slate-700 dark:text-slate-300">
+                        <span key={tool} className="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                           {tool}
                         </span>
                       ))}
@@ -707,7 +707,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
             How DataVeda Works
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
             From “Where do I start?” to interview-ready.
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
@@ -778,7 +778,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
               All-In-One Platform
             </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
               Thirteen tools, one outcome — the version of you that walks out with the offer.
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
@@ -828,7 +828,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
             Testimonials
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
             Loved by data engineers worldwide
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
@@ -862,7 +862,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <span className="text-xs uppercase tracking-widest text-emerald-400 font-bold">
               100% Free Open Access Edition
             </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
               One plan. Everything you need to get hired.
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -934,15 +934,15 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
           Founder's Vision
         </span>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           Making data easier for everyone
         </h2>
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-serif italic max-w-2xl mx-auto">
           "When we started building DataVeda, our vision was simple: Make data engineering accessible, practical, and career-defining. Data engineering isn't just about pipelines and tools; it's about solving real problems, building systems that scale, and enabling companies to make smarter decisions. Let's build the future of data, together."
         </p>
         <div>
-          <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">Darshil Parmar</div>
-          <div className="text-xs text-[#0050FF]">Founder, DataVeda</div>
+          <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">Umar Karajagi</div>
+          <div className="text-xs text-[#0050FF]">Founder & Creator, DataVeda</div>
         </div>
       </section>
 
@@ -955,7 +955,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold">
               FAQs
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
               All You Need to Know
             </h2>
           </div>
@@ -968,7 +968,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-neutral-800/40 transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-colors"
                 >
                   <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">{faq.q}</span>
                   <ChevronDown className={`w-4 h-4 text-slate-600 dark:text-slate-400 transition-transform ${openFaqIdx === idx ? 'rotate-180' : ''}`} />
