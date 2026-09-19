@@ -2,16 +2,16 @@
 /* Industrial Control Room, Technical Blueprint, Research Notebook Aesthetic */
 
 :root {
-  /* Dark Mode (DataForge Foundry Industrial Slate / Default) */
-  --bg-primary: #101415;
-  --bg-secondary: #182123;
-  --bg-tertiary: #212B2D;
-  --bg-canvas: #0B0E0F;
-  --border-color: #2B3839;
-  --border-subtle: #1E282A;
-  --text-primary: #FFFDF7;
-  --text-secondary: #A2B0B2;
-  --text-muted: #6F7D7E;
+  /* Dark Mode (DataVeda Slate Dark / Default) */
+  --bg-primary: #020617; /* slate-950 */
+  --bg-secondary: #0F172A; /* slate-900 */
+  --bg-tertiary: #1E293B; /* slate-800 */
+  --bg-canvas: #020617;
+  --border-color: #1E293B; /* slate-800 */
+  --border-subtle: #334155; /* slate-700 */
+  --text-primary: #F8FAFC; /* slate-50 */
+  --text-secondary: #94A3B8; /* slate-400 */
+  --text-muted: #64748B; /* slate-500 */
   --accent-glow: rgba(200, 255, 74, 0.15);
 
   /* Foundry Accent & Track Tokens */
@@ -33,15 +33,15 @@
 
 /* Light Mode (Engineering Blueprint) */
 html.theme-light {
-  --bg-primary: #F8FAFC;
-  --bg-secondary: #F1F5F9;
-  --bg-tertiary: #E2E8F0;
+  --bg-primary: #F8FAFC; /* slate-50 */
+  --bg-secondary: #FFFFFF; /* white card */
+  --bg-tertiary: #F1F5F9; /* slate-100 */
   --bg-canvas: #FFFFFF;
-  --border-color: #CBD5E1;
-  --border-subtle: #E2E8F0;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
+  --border-color: #E2E8F0; /* slate-200 */
+  --border-subtle: #CBD5E1; /* slate-300 */
+  --text-primary: #0F172A; /* slate-900 */
+  --text-secondary: #475569; /* slate-600 */
+  --text-muted: #64748B; /* slate-500 */
   --accent-glow: rgba(14, 165, 233, 0.15);
 
   /* Adjusted high-contrast tokens */

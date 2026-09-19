@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Compass, 
   Layers, 
@@ -15,311 +15,411 @@ import {
   Terminal,
   FolderGit2,
   Lock,
-  ArrowRight
+  Unlock,
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  Briefcase,
+  TrendingUp,
+  GraduationCap,
+  Tv,
+  ListVideo
 } from 'lucide-react';
-import { getCuratedVideoById, ALL_CURATED_VIDEOS, CuratedVideo } from '../../content/videos/curatedVideos';
+import { MASTER_CURRICULUM, TRACK_ROLES, CurriculumStage, TrackRole, PlaylistEpisode } from '../../content/curriculum/masterCurriculum';
+import { RevisionTracker } from './RevisionTracker';
+import { PlaylistTracker } from './PlaylistTracker';
+import { CuratedVideo } from '../../content/videos/curatedVideos';
+import { useUserStore } from '../../lib/userStore';
 
 interface DataVedaTracksProps {
   onOpenVideo: (video: CuratedVideo) => void;
 }
 
-interface TrackDef {
-  id: string;
-  title: string;
-  badge: string;
-  duration: string;
-  coursesCount: number;
-  projectsCount: number;
-  rating: number;
-  description: string;
-  stages: {
-    stageNumber: number;
-    title: string;
-    description: string;
-    modules: {
-      name: string;
-      duration: string;
-      topic: string;
-      videoQuery?: string;
-    }[];
-  }[];
-}
-
-const CAREER_TRACKS: TrackDef[] = [
-  {
-    id: 'track-de',
-    title: 'Data Engineer Career Track',
-    badge: 'Beginner → Advanced',
-    duration: '120+ hours',
-    coursesCount: 25,
-    projectsCount: 12,
-    rating: 4.9,
-    description: 'Zero to job-ready data engineer. Master computer science fundamentals, Python and SQL, dimensional modeling and data warehousing, then move through distributed PySpark, Airflow orchestration, Kafka streaming, and modern cloud platforms, finishing with System Design and Interview Prep.',
-    stages: [
-      {
-        stageNumber: 1,
-        title: 'Foundations: Systems, Linux & Git',
-        description: 'Understand how computers process data at the OS and network level before touching complex distributed systems.',
-        modules: [
-          { name: 'Computer Architecture & Linux Shell Command Line', duration: '4 hrs', topic: 'Linux' },
-          { name: 'Git Version Control & GitHub Team Collaboration', duration: '3 hrs', topic: 'Git' },
-          { name: 'Data Engineering 2026 Complete Roadmap & Mindset', duration: '2 hrs', topic: 'Overview', videoQuery: 'course-de-roadmap' }
-        ]
-      },
-      {
-        stageNumber: 2,
-        title: 'Core Querying & Pipeline Development',
-        description: 'Master writing production SQL and industrial Python code designed specifically for data manipulation.',
-        modules: [
-          { name: 'SQL for Data Engineering: Window Functions & Aggregations', duration: '12 hrs', topic: 'SQL', videoQuery: 'course-sql-masterclass' },
-          { name: 'Python for Data Engineering: OOP, Generators & Concurrency', duration: '14 hrs', topic: 'Python', videoQuery: 'course-python-de' },
-          { name: 'Dimensional Modeling: Kimball Star & Snowflake Schemas', duration: '6 hrs', topic: 'Data Modeling', videoQuery: 'course-data-modeling' }
-        ]
-      },
-      {
-        stageNumber: 3,
-        title: 'Distributed Systems & Big Data with Spark',
-        description: 'Process terabytes to petabytes of data without running out of executor memory.',
-        modules: [
-          { name: 'PySpark Fundamentals & Spark Architecture', duration: '16 hrs', topic: 'Spark', videoQuery: 'course-pyspark-full' },
-          { name: 'Databricks, Delta Lake & Lakehouse Architecture', duration: '10 hrs', topic: 'Databricks', videoQuery: 'course-de-fundamentals' },
-          { name: 'Salting, Broadcast Joins & Spark Optimization', duration: '8 hrs', topic: 'Spark', videoQuery: 'course-pyspark-full' }
-        ]
-      },
-      {
-        stageNumber: 4,
-        title: 'Orchestration & Real-Time Event Streaming',
-        description: 'Coordinate multi-stage dependencies and ingest events with millisecond latencies.',
-        modules: [
-          { name: 'Apache Airflow Mastery: DAGs, Sensors & TaskFlow API', duration: '10 hrs', topic: 'Airflow', videoQuery: 'project-twitter-airflow' },
-          { name: 'Apache Kafka: Brokers, Producers, Consumers & Lag', duration: '10 hrs', topic: 'Kafka', videoQuery: 'project-kafka-crash-course' },
-          { name: 'Snowflake Cloud Data Warehouse & Zero-Copy Clones', duration: '8 hrs', topic: 'Snowflake', videoQuery: 'course-snowflake-mastery' }
-        ]
-      },
-      {
-        stageNumber: 5,
-        title: 'System Design & High-Stakes Interview Prep',
-        description: 'Crush the final rounds at top tech companies with structured architectural patterns.',
-        modules: [
-          { name: 'Data Engineering System Design Masterclass', duration: '12 hrs', topic: 'System Design', videoQuery: 'course-system-design' },
-          { name: '100+ Hiring Manager Questions & Behavioral Drills', duration: '6 hrs', topic: 'Interview' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'track-ae',
-    title: 'Analytics Engineer Career Track',
-    badge: 'Beginner → Intermediate',
-    duration: '60+ hours',
-    coursesCount: 8,
-    projectsCount: 6,
-    rating: 4.8,
-    description: 'Bridge the gap between raw data engineering and business analytics. Transform data in production with modern software engineering practices using SQL, dbt, and cloud data warehouses.',
-    stages: [
-      {
-        stageNumber: 1,
-        title: 'Analytics Warehousing & Modeling',
-        description: 'Build single sources of truth using Kimball dimensional techniques.',
-        modules: [
-          { name: 'Advanced SQL: CTEs, Pivots, and Analytical Queries', duration: '8 hrs', topic: 'SQL', videoQuery: 'course-sql-masterclass' },
-          { name: 'Cloud Warehousing with Snowflake & BigQuery', duration: '10 hrs', topic: 'Snowflake', videoQuery: 'course-snowflake-mastery' }
-        ]
-      },
-      {
-        stageNumber: 2,
-        title: 'Production Transformations with dbt',
-        description: 'Modular SQL models, automated testing, documentation, and continuous integration.',
-        modules: [
-          { name: 'dbt Core & dbt Cloud: Models, Seeds, and Snapshots', duration: '14 hrs', topic: 'dbt' },
-          { name: 'Data Quality & Governance: Schema Tests and Alerts', duration: '6 hrs', topic: 'Data Quality' },
-          { name: 'Semantic Layers & Metric Stores', duration: '6 hrs', topic: 'Analytics' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'track-da',
-    title: 'Data Analyst Career Track',
-    badge: 'Beginner → Intermediate',
-    duration: '60+ hours',
-    coursesCount: 5,
-    projectsCount: 4,
-    rating: 4.8,
-    description: 'Build foundational analysis skills across spreadsheets, Python data manipulation, SQL querying, business KPIs, and executive reporting.',
-    stages: [
-      {
-        stageNumber: 1,
-        title: 'Exploratory Analysis & Business Metrics',
-        description: 'Extract actionable insights from raw business metrics.',
-        modules: [
-          { name: 'SQL for Business Analytics & Cohort Retention', duration: '12 hrs', topic: 'SQL', videoQuery: 'course-sql-masterclass' },
-          { name: 'Python for Data Analysis (Pandas, NumPy, Matplotlib)', duration: '14 hrs', topic: 'Python', videoQuery: 'course-python-de' }
-        ]
-      },
-      {
-        stageNumber: 2,
-        title: 'Executive Dashboards & Storytelling',
-        description: 'Communicate complex insights with clarity to stakeholders.',
-        modules: [
-          { name: 'Interactive Dashboards with Power BI and Looker Studio', duration: '10 hrs', topic: 'Visualization' },
-          { name: 'A/B Testing, Experimentation & Statistical Significance', duration: '8 hrs', topic: 'Statistics' }
-        ]
-      }
-    ]
-  }
-];
+type RoleId = 'engineer' | 'analyst' | 'scientist';
 
 export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) => {
-  const [selectedTrackId, setSelectedTrackId] = useState<string>('track-de');
-  const activeTrack = CAREER_TRACKS.find(t => t.id === selectedTrackId) || CAREER_TRACKS[0];
+  const { addXP } = useUserStore();
+  const [selectedRole, setSelectedRole] = useState<RoleId>('engineer');
+  const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
+  const [unrestrictedMode, setUnrestrictedMode] = useState<boolean>(false);
+  const [activeEpisodeId, setActiveEpisodeId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  const handleLaunchModule = (videoQuery?: string) => {
-    if (videoQuery) {
-      const match = getCuratedVideoById(videoQuery);
-      if (match) {
-        onOpenVideo(match);
-        return;
+  const STORAGE_KEY_COMPLETED = 'dataveda_completed_milestones_v2';
+  const STORAGE_KEY_ROLE = 'dataveda_selected_role_v2';
+
+  useEffect(() => {
+    try {
+      const savedCompleted = localStorage.getItem(STORAGE_KEY_COMPLETED);
+      if (savedCompleted) {
+        setCompletedMilestones(JSON.parse(savedCompleted));
       }
+      const savedRole = localStorage.getItem(STORAGE_KEY_ROLE) as RoleId | null;
+      if (savedRole && TRACK_ROLES[savedRole]) {
+        setSelectedRole(savedRole);
+      }
+    } catch (e) {
+      console.error(e);
     }
-    // Fallback to first verified video
-    if (ALL_CURATED_VIDEOS.length > 0) {
-      onOpenVideo(ALL_CURATED_VIDEOS[0]);
+    setMounted(true);
+  }, []);
+
+  const handleSelectRole = (role: RoleId) => {
+    setSelectedRole(role);
+    try {
+      localStorage.setItem(STORAGE_KEY_ROLE, role);
+    } catch (e) {}
+  };
+
+  const handleCompleteMilestone = (milestone: string) => {
+    if (!completedMilestones.includes(milestone)) {
+      const updated = [...completedMilestones, milestone];
+      setCompletedMilestones(updated);
+      try {
+        localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify(updated));
+      } catch (e) {}
+      addXP(100);
     }
+  };
+
+  const handleResetMilestone = (milestone: string) => {
+    const updated = completedMilestones.filter(m => m !== milestone);
+    setCompletedMilestones(updated);
+    try {
+      localStorage.setItem(STORAGE_KEY_COMPLETED, JSON.stringify(updated));
+    } catch (e) {}
+  };
+
+  const currentTrack = TRACK_ROLES[selectedRole];
+  const roleStages = MASTER_CURRICULUM.filter(stage => 
+    currentTrack.targetStages.includes(stage.stageNumber)
+  );
+
+  const roleCompletedCount = roleStages.filter(s => completedMilestones.includes(s.milestone)).length;
+  const roleTotalCount = roleStages.length;
+  const roleProgressPercent = Math.round((roleCompletedCount / roleTotalCount) * 100);
+
+  // Helper to check if a stage is unlocked in sequential order
+  const isStageUnlocked = (stageIndexInTrack: number) => {
+    if (unrestrictedMode) return true;
+    if (stageIndexInTrack === 0) return true;
+    const prevStage = roleStages[stageIndexInTrack - 1];
+    return completedMilestones.includes(prevStage.milestone);
+  };
+
+  const handlePlayEpisode = (stage: CurriculumStage, episode: PlaylistEpisode) => {
+    setActiveEpisodeId(episode.id);
+    const episodeVideo: CuratedVideo = {
+      id: episode.id,
+      title: `${stage.milestone} Ep ${episode.order}: ${episode.title}`,
+      category: 'track',
+      topic: (stage.category as any) || 'Azure',
+      instructor: stage.playlist.channelName,
+      instructorRole: 'DataVeda Engineering Faculty',
+      youtubeId: episode.youtubeId,
+      youtubeUrl: episode.youtubeUrl,
+      duration: episode.duration,
+      rating: 4.9,
+      views: '450K+ views',
+      level: 'Beginner → Advanced',
+      summary: episode.summary,
+      techStack: [stage.category, episode.keyTopic, 'Cloud Engineering'],
+      chapters: [
+        { time: '00:00', seconds: 0, title: 'Concept Overview & Setup' },
+        { time: '12:40', seconds: 760, title: 'Architecture & Implementation' },
+        { time: '35:20', seconds: 2120, title: 'Hands-on Pipeline Walkthrough' },
+        { time: '58:00', seconds: 3480, title: 'Best Practices & Common Pitfalls' }
+      ],
+      keyTakeaways: [
+        episode.summary,
+        `Mastered ${episode.keyTopic} for production pipelines`,
+        'Completed revision checklist item'
+      ],
+      playlist: stage.playlist,
+      currentEpisodeId: episode.id
+    };
+    onOpenVideo(episodeVideo);
+  };
+
+  const handleWatchStageVideo = (stage: CurriculumStage) => {
+    const firstEp = stage.playlist.episodes[0];
+    handlePlayEpisode(stage, firstEp);
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       
-      {/* Header */}
+      {/* Header Banner */}
       <div className="mb-10 text-center sm:text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-3">
           <Compass className="w-3.5 h-3.5" />
-          <span>Curated Learning Progression</span>
+          <span>Self-Paced Milestones • 100% Free & Open Access</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-forge-text">
-          Structured <span className="text-brand-blue">Career Tracks</span>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+          Curriculum <span className="text-brand-blue">Milestones & Playlists</span>
         </h1>
-        <p className="mt-2 text-base text-forge-muted max-w-3xl">
-          Pick the role. Follow the path. Learn in the exact prerequisite order, accompanied by top-rated video masterclasses, hands-on milestones, and real portfolio projects.
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+          Learn at your own pace without arbitrary week deadlines. Every milestone includes a complete multi-video playlist series with full hours, detailed lesson breakdowns, and individual progress tracking.
         </p>
       </div>
 
-      {/* Track Tabs */}
-      <div className="flex flex-wrap gap-3 mb-10">
-        {CAREER_TRACKS.map((track) => (
-          <button
-            key={track.id}
-            onClick={() => setSelectedTrackId(track.id)}
-            className={`px-5 py-3 rounded-2xl border text-sm font-bold transition-all flex items-center gap-2.5 ${
-              selectedTrackId === track.id
-                ? 'bg-brand-blue text-white border-brand-blue shadow-lg shadow-brand-blue/20'
-                : 'bg-vidhya-card border-forge-border/50 text-forge-muted hover:text-forge-text hover:border-brand-blue/40'
-            }`}
-          >
-            <span>{track.title}</span>
-            <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
-              selectedTrackId === track.id ? 'bg-white/20 text-white' : 'bg-forge-bg text-forge-muted'
-            }`}>
-              {track.duration}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Track Overview Card */}
-      <div className="bg-vidhya-card border border-forge-border/50 rounded-3xl p-8 mb-12 shadow-sm">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-forge-border/30">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-brand-blue/10 text-brand-blue">
-                {activeTrack.badge}
-              </span>
-              <span className="flex items-center gap-1 text-xs font-bold text-amber-400">
-                <Star className="w-3.5 h-3.5 fill-amber-400" />
-                {activeTrack.rating} Rating
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-forge-text">
-              {activeTrack.title}
-            </h2>
-            <p className="mt-2 text-sm text-forge-muted max-w-3xl leading-relaxed">
-              {activeTrack.description}
-            </p>
-          </div>
-
-          <div className="flex sm:flex-col items-center sm:items-end gap-3 shrink-0">
-            <div className="text-right hidden sm:block">
-              <span className="text-xs text-forge-muted block">Estimated Duration</span>
-              <span className="text-lg font-black text-forge-text">{activeTrack.duration}</span>
-            </div>
-            <button 
-              onClick={() => handleLaunchModule(activeTrack.stages[0]?.modules[0]?.videoQuery)}
-              className="px-6 py-3 rounded-xl bg-brand-blue text-white text-xs font-bold hover:bg-brand-hover transition-colors shadow-md shadow-brand-blue/20 flex items-center gap-2"
+      {/* Role Selector Tabs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {(['engineer', 'analyst', 'scientist'] as RoleId[]).map((roleKey) => {
+          const track = TRACK_ROLES[roleKey];
+          const isSelected = selectedRole === roleKey;
+          return (
+            <button
+              key={roleKey}
+              onClick={() => handleSelectRole(roleKey)}
+              className={`p-5 rounded-2xl text-left border transition-all relative overflow-hidden flex flex-col justify-between cursor-pointer ${
+                isSelected
+                  ? 'bg-white dark:bg-slate-900 border-brand-blue ring-2 ring-brand-blue/30 shadow-lg shadow-brand-blue/5'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
             >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Start Stage 1</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Track Curriculum Stages */}
-        <div className="mt-8 space-y-8">
-          {activeTrack.stages.map((stage) => (
-            <div 
-              key={stage.stageNumber}
-              className="bg-forge-bg/60 border border-forge-border/40 rounded-2xl p-6"
-            >
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <div>
-                  <span className="text-[11px] font-bold text-brand-blue uppercase tracking-wider">
-                    Stage 0{stage.stageNumber}
+              {isSelected && (
+                <div className="absolute top-0 right-0 w-24 h-24 bg-brand-blue/10 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none" />
+              )}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${
+                    isSelected
+                      ? 'bg-brand-blue/15 text-brand-blue border-brand-blue/30'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
+                  }`}>
+                    {track.badge}
                   </span>
-                  <h3 className="text-lg font-bold text-forge-text mt-0.5">
-                    {stage.title}
-                  </h3>
-                  <p className="text-xs text-forge-muted mt-1">
-                    {stage.description}
-                  </p>
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    {track.targetStages.length} Milestones
+                  </span>
                 </div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  {track.title}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  {track.description}
+                </p>
               </div>
 
-              {/* Modules in this Stage */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
-                {stage.modules.map((mod, idx) => (
-                  <div 
-                    key={idx}
-                    onClick={() => handleLaunchModule(mod.videoQuery)}
-                    className="p-4 rounded-xl bg-vidhya-card border border-forge-border/40 hover:border-brand-blue/50 transition-all cursor-pointer group flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between text-[11px] text-forge-muted mb-2">
-                        <span className="font-semibold text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded">
-                          {mod.topic}
-                        </span>
-                        <span>{mod.duration}</span>
-                      </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-forge-text group-hover:text-brand-blue transition-colors line-clamp-2">
-                        {mod.name}
-                      </h4>
+              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-brand-blue" />
+                  {track.estimatedHours}
+                </span>
+                <span className={`font-semibold flex items-center gap-1 ${
+                  isSelected ? 'text-brand-blue' : 'text-slate-400 dark:text-slate-500'
+                }`}>
+                  {isSelected ? 'Active Track' : 'Select Track'}
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Track Stats & Progression Banner */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 mb-10 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <GraduationCap className="w-5 h-5 text-brand-blue" />
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+                {currentTrack.title} Overview
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
+              {currentTrack.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">Career Outcomes:</span>
+              {currentTrack.careerOutcomes.map((outcome, idx) => (
+                <span key={idx} className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  {outcome}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:w-80 flex-shrink-0 bg-slate-50 dark:bg-slate-950/60 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between text-xs font-semibold mb-2">
+              <span className="text-slate-700 dark:text-slate-300">Milestones Verified</span>
+              <span className="text-brand-blue">{roleCompletedCount} of {roleTotalCount} ({roleProgressPercent}%)</span>
+            </div>
+            <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-3">
+              <div 
+                className="h-full bg-brand-blue rounded-full transition-all duration-300"
+                style={{ width: `${roleProgressPercent}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between pt-1 text-[11px]">
+              <button
+                onClick={() => setUnrestrictedMode(!unrestrictedMode)}
+                className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-brand-blue transition-colors cursor-pointer"
+                title="Toggle unrestricted review mode to inspect any milestone"
+              >
+                {unrestrictedMode ? <Unlock className="w-3.5 h-3.5 text-emerald-500" /> : <Lock className="w-3.5 h-3.5" />}
+                <span>{unrestrictedMode ? 'Self-Paced Unrestricted' : 'Sequential Unlock'}</span>
+              </button>
+              <span className="text-slate-400 dark:text-slate-600">
+                {roleStages.length} Milestones
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stages List */}
+      <div className="space-y-8">
+        {roleStages.map((stage, trackIdx) => {
+          const isCompleted = completedMilestones.includes(stage.milestone);
+          const isUnlocked = isStageUnlocked(trackIdx);
+
+          return (
+            <div
+              key={stage.milestone}
+              className={`rounded-2xl border transition-all duration-200 ${
+                isCompleted
+                  ? 'bg-white dark:bg-slate-900 border-emerald-300 dark:border-emerald-800/60 shadow-sm'
+                  : isUnlocked
+                  ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700'
+                  : 'bg-slate-50/60 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800/60 opacity-85'
+              }`}
+            >
+              {/* Stage Top Bar */}
+              <div className="p-6 sm:p-7">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${
+                      isCompleted
+                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                        : isUnlocked
+                        ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                    }`}>
+                      {isCompleted ? (
+                        <Check className="w-5 h-5 stroke-[3]" />
+                      ) : !isUnlocked ? (
+                        <Lock className="w-4 h-4" />
+                      ) : (
+                        stage.stageNumber.toString().padStart(2, '0')
+                      )}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-forge-border/30 flex items-center justify-between text-[11px] text-forge-muted">
-                      <span className="flex items-center gap-1 group-hover:text-brand-blue transition-colors">
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>Watch Masterclass</span>
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">
+                          {stage.milestone}
+                        </span>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                          {stage.category}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 mt-0.5">
+                        {stage.title}
+                      </h3>
                     </div>
                   </div>
-                ))}
+
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                      <Clock className="w-3.5 h-3.5" />
+                      {stage.durationEstimate}
+                    </span>
+
+                    {isCompleted ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Completed
+                      </span>
+                    ) : !isUnlocked ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+                        <Lock className="w-3.5 h-3.5" />
+                        Locked
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-lg bg-brand-blue/15 text-brand-blue border border-brand-blue/30">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        In Progress
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Locked Banner if not unlocked */}
+                {!isUnlocked && (
+                  <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between gap-4 mb-5">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-slate-400" />
+                      <span>
+                        This milestone unlocks sequentially after completing <strong>{roleStages[trackIdx - 1]?.milestone}</strong>.
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setUnrestrictedMode(true)}
+                      className="text-brand-blue font-semibold hover:underline flex-shrink-0 cursor-pointer"
+                    >
+                      Unlock for Review
+                    </button>
+                  </div>
+                )}
+
+                {/* Topics Grid */}
+                <div className="mb-6">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+                    Exhaustive Syllabus Topics ({stage.topics.length} Key Domains)
+                  </h4>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {stage.topics.map((topic, tIdx) => (
+                      <div
+                        key={tIdx}
+                        className="flex items-start gap-3 p-3 rounded-xl bg-slate-50/80 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/70 text-xs sm:text-sm text-slate-700 dark:text-slate-300"
+                      >
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-blue mt-2 flex-shrink-0" />
+                        <span className="leading-relaxed">{topic}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Multi-Video Playlist & Watched Series Tracker */}
+                <PlaylistTracker
+                  stageMilestone={stage.milestone}
+                  playlist={stage.playlist}
+                  onPlayEpisode={(ep) => handlePlayEpisode(stage, ep)}
+                  activePlayingEpisodeId={activeEpisodeId}
+                />
+
+                {/* Revision Checklist Component */}
+                <RevisionTracker
+                  milestone={stage.milestone}
+                  checklist={stage.revisionChecklist}
+                  isMilestoneCompleted={isCompleted}
+                  onCompleteMilestone={() => handleCompleteMilestone(stage.milestone)}
+                  onResetMilestone={() => handleResetMilestone(stage.milestone)}
+                />
               </div>
-
             </div>
-          ))}
-        </div>
-
+          );
+        })}
       </div>
+
+      {/* Bottom Completion Certificate Callout */}
+      {roleCompletedCount === roleTotalCount && roleTotalCount > 0 && (
+        <div className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-brand-blue/10 to-emerald-500/10 border border-emerald-500/30 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/20">
+            <Award className="w-8 h-8" />
+          </div>
+          <h3 className="text-2xl font-black text-slate-900 dark:text-slate-50">
+            Congratulations! {currentTrack.title} Completed
+          </h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto mt-2">
+            You have verified all {roleTotalCount} milestones and watched the series lessons. You are now prepared for industrial engineering interviews and production data pipelines.
+          </p>
+        </div>
+      )}
 
     </div>
   );

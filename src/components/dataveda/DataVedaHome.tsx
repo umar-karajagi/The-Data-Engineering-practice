@@ -216,7 +216,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#0C0C0C] text-neutral-100 font-sans selection:bg-[#0050FF] selection:text-white pt-24 pb-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-[#0050FF] selection:text-white pt-24 pb-20">
       
       {/* ========================================================================= */}
       {/* SECTION 1: HERO SECTION WITH FLOATING BADGES & PLAYABLE VIDEO BROWSER CHROME */}
@@ -232,7 +232,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <div className="flex flex-col items-center gap-6 text-center max-w-4xl mx-auto">
             
             {/* Live Counter Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#262626] bg-[#141414] px-3 py-1 text-xs text-neutral-300 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1 text-xs text-slate-700 dark:text-slate-300 shadow-sm">
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
                 <span className="relative flex size-1.5">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
@@ -254,7 +254,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-2xl text-base sm:text-lg text-neutral-400 leading-relaxed font-normal">
+            <p className="max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
               Learn the fundamentals, build 23 real projects, practice 850+ company-tagged problems, and master modern cloud stacks — curated with top-tier masterclasses, start to hired.
             </p>
 
@@ -270,14 +270,14 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
               <button
                 onClick={() => onNavigateTab('projects')}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#141414] hover:bg-[#1C1C1E] border border-[#262626] hover:border-neutral-500 text-white text-sm font-semibold tracking-tight transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-neutral-500 text-white text-sm font-semibold tracking-tight transition-colors flex items-center justify-center gap-2"
               >
                 <span>Explore Career Tracks</span>
-                <ChevronRight className="w-4 h-4 text-neutral-400" />
+                <ChevronRight className="w-4 h-4 text-slate-600 dark:text-slate-400" />
               </button>
             </div>
 
-            <p className="text-xs text-neutral-500 font-medium pt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-500 font-medium pt-1">
               100% Free Open Access • Zero Paywalls • Industry-Standard Masterclasses
             </p>
 
@@ -287,20 +287,20 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           {/* BROWSER CHROME HERO VIDEO MOCKUP (INTERACTIVE PLAYABLE PREVIEW) */}
           {/* ========================================================================= */}
           <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
-            <div className="rounded-2xl border border-[#262626] bg-[#141414] shadow-2xl overflow-hidden group relative">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden group relative">
               
               {/* Browser Window Header */}
-              <div className="px-4 py-3 bg-[#1A1A1A] border-b border-[#262626] flex items-center justify-between">
+              <div className="px-4 py-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
                   <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
                   <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
                 </div>
 
-                <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[#0C0C0C] border border-[#262626] text-xs text-neutral-400 font-mono">
-                  <span className="text-neutral-500">https://</span>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
+                  <span className="text-slate-500 dark:text-slate-500">https://</span>
                   <span className="text-white">dataveda.io</span>
-                  <span className="text-neutral-500">/masterclass/uber-data-analytics</span>
+                  <span className="text-slate-500 dark:text-slate-500">/masterclass/uber-data-analytics</span>
                 </div>
 
                 <div className="text-[11px] font-mono text-emerald-400 font-semibold hidden sm:inline">
@@ -327,15 +327,15 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                     <span className="px-2.5 py-1 rounded-full bg-[#0050FF] text-white text-[11px] font-bold uppercase tracking-wider">
                       Featured Project Masterclass
                     </span>
-                    <h3 className="text-lg sm:text-2xl font-bold text-white mt-2">
+                    <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
                       Uber Data Analytics End-to-End Pipeline
                     </h3>
-                    <p className="text-xs sm:text-sm text-neutral-300 mt-1 max-w-xl">
+                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1 max-w-xl">
                       GCP, Mage AI, BigQuery & Looker Studio • 1 hr 42 min • 1.2M+ Views • Darshil Parmar
                     </p>
                   </div>
 
-                  <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shrink-0 self-start sm:self-auto flex items-center gap-1.5">
+                  <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-900 dark:text-slate-100 shrink-0 self-start sm:self-auto flex items-center gap-1.5">
                     <span>Click to Play in HD</span>
                     <span>▶</span>
                   </span>
@@ -351,13 +351,13 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       {/* SECTION 2: SOCIAL PROOF BAR (TOP COMPANIES) */}
       {/* ========================================================================= */}
-      <section className="border-y border-[#262626] bg-[#0E0E0E] py-8">
+      <section className="border-y border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center space-y-5">
-          <p className="text-xs uppercase tracking-widest text-neutral-400 font-semibold">
+          <p className="text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-semibold">
             Trusted by 25,000+ Aspiring & Working Data Engineers From Top Companies
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-70 text-sm sm:text-base font-bold tracking-tight text-neutral-300">
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-70 text-sm sm:text-base font-bold tracking-tight text-slate-700 dark:text-slate-300">
             <span>Walmart Global Tech</span>
             <span>Apple</span>
             <span>Amazon</span>
@@ -382,16 +382,16 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
             Pick the role. Follow the path.
           </h2>
-          <p className="text-sm sm:text-base text-neutral-400">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
             Follow a complete career track, or focus on one skill at a time. Every path starts with the foundations and builds toward job-ready skills.
           </p>
 
           {/* Tab Switcher: Career Tracks | Courses | Skill Tracks */}
-          <div className="inline-flex items-center p-1 rounded-xl bg-[#141414] border border-[#262626] mt-4">
+          <div className="inline-flex items-center p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mt-4">
             <button
               onClick={() => setRoleTab('tracks')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'tracks' ? 'bg-[#0050FF] text-white shadow-md' : 'text-neutral-400 hover:text-white'
+                roleTab === 'tracks' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Career Tracks
@@ -399,7 +399,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <button
               onClick={() => setRoleTab('courses')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'courses' ? 'bg-[#0050FF] text-white shadow-md' : 'text-neutral-400 hover:text-white'
+                roleTab === 'courses' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Courses (28)
@@ -407,7 +407,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <button
               onClick={() => setRoleTab('skills')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'skills' ? 'bg-[#0050FF] text-white shadow-md' : 'text-neutral-400 hover:text-white'
+                roleTab === 'skills' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Skill Tracks
@@ -420,7 +420,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Track 1: Data Engineer */}
-            <div className="rounded-2xl border border-[#262626] bg-[#141414] p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold">
@@ -431,14 +431,14 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white group-hover:text-[#0050FF] transition-colors">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
                   Data Engineer
                 </h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Zero to job-ready data engineer — fundamentals, Python and SQL, modeling and warehousing, then Spark, orchestration, streaming, and the cloud, finishing with system design.
                 </p>
 
-                <div className="pt-3 border-t border-[#262626] flex items-center gap-3 text-xs text-neutral-300">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
                   <span><strong>120+</strong> hours</span>
                   <span>•</span>
                   <span><strong>25</strong> courses</span>
@@ -447,8 +447,8 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
-                <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -460,7 +460,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             </div>
 
             {/* Track 2: Analytics Engineer */}
-            <div className="rounded-2xl border border-[#262626] bg-[#141414] p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-semibold">
@@ -471,14 +471,14 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white group-hover:text-[#0050FF] transition-colors">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
                   Analytics Engineer
                 </h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Model and transform data for analytics — start with Python and SQL, then move through dimensional modeling, warehousing on Snowflake, and dbt for production transformations.
                 </p>
 
-                <div className="pt-3 border-t border-[#262626] flex items-center gap-3 text-xs text-neutral-300">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
                   <span><strong>60+</strong> hours</span>
                   <span>•</span>
                   <span><strong>8</strong> courses</span>
@@ -487,8 +487,8 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
-                <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -500,7 +500,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             </div>
 
             {/* Track 3: Streaming Systems Engineer */}
-            <div className="rounded-2xl border border-[#262626] bg-[#141414] p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[11px] font-semibold">
@@ -511,14 +511,14 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white group-hover:text-[#0050FF] transition-colors">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
                   Streaming Systems Engineer
                 </h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   Build event-driven distributed systems using Apache Kafka, Spark Structured Streaming, Flink, and cloud messaging for sub-second data processing.
                 </p>
 
-                <div className="pt-3 border-t border-[#262626] flex items-center gap-3 text-xs text-neutral-300">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
                   <span><strong>90+</strong> hours</span>
                   <span>•</span>
                   <span><strong>7</strong> courses</span>
@@ -527,8 +527,8 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#262626] flex items-center justify-between">
-                <span className="text-xs text-neutral-400">Curator: Darshil Parmar</span>
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Darshil Parmar</span>
                 <button
                   onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
                   className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
@@ -548,25 +548,25 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             {CURATED_COURSE_VIDEOS.map(course => (
               <div 
                 key={course.id}
-                className="p-5 rounded-xl bg-[#141414] border border-[#262626] hover:border-[#0050FF]/60 transition-all flex flex-col justify-between"
+                className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF]/60 transition-all flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <span className="px-2 py-0.5 rounded bg-[#0050FF]/15 text-[#0050FF] font-semibold">
                       {course.topic}
                     </span>
-                    <span className="text-neutral-400">{course.duration}</span>
+                    <span className="text-slate-600 dark:text-slate-400">{course.duration}</span>
                   </div>
-                  <h4 className="font-bold text-white text-sm line-clamp-2">
+                  <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm line-clamp-2">
                     {course.title}
                   </h4>
-                  <p className="text-xs text-neutral-400 line-clamp-2">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
                     {course.summary}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#262626] flex items-center justify-between">
-                  <span className="text-xs text-neutral-400">{course.instructor}</span>
+                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-xs text-slate-600 dark:text-slate-400">{course.instructor}</span>
                   <button
                     onClick={() => onOpenVideo(course)}
                     className="text-xs font-bold text-[#0050FF] hover:underline flex items-center gap-1"
@@ -596,11 +596,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               <div 
                 key={i}
                 onClick={() => onNavigateTab('projects')}
-                className="p-4 rounded-xl bg-[#141414] border border-[#262626] hover:border-[#0050FF] cursor-pointer transition-all space-y-2"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF] cursor-pointer transition-all space-y-2"
               >
                 <span className="text-[11px] font-semibold text-[#0050FF]">{skill.tag}</span>
-                <h4 className="font-bold text-white text-sm">{skill.title}</h4>
-                <div className="text-xs text-neutral-400 flex items-center justify-between pt-1">
+                <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">{skill.title}</h4>
+                <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between pt-1">
                   <span>{skill.count}</span>
                   <span className="text-[#0050FF]">Explore →</span>
                 </div>
@@ -614,17 +614,17 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       {/* SECTION 4: MASTER THE TOOLS COMPANIES ACTUALLY USE */}
       {/* ========================================================================= */}
-      <section className="py-16 bg-[#0E0E0E] border-y border-[#262626]">
+      <section className="py-16 bg-slate-50 dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
           <div className="text-center space-y-2">
-            <span className="text-xs uppercase tracking-widest text-neutral-400 font-bold">
+            <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold">
               Tech Stacks
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               Master the tools companies actually use
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
               Learn the high-demand data engineering stack — from cloud platforms to orchestration tools.
             </p>
           </div>
@@ -638,7 +638,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
                   selectedTech === t.name 
                     ? 'bg-[#0050FF] text-white shadow-md shadow-[#0050FF]/25' 
-                    : 'bg-[#141414] text-neutral-400 hover:text-white border border-[#262626]'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-brand-blue border border-slate-200 dark:border-slate-800'
                 }`}
               >
                 <span>{t.icon}</span>
@@ -654,36 +654,36 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               .map(project => (
                 <div 
                   key={project.id}
-                  className="rounded-xl border border-[#262626] bg-[#141414] overflow-hidden hover:border-[#0050FF]/60 transition-all flex flex-col justify-between group"
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden hover:border-[#0050FF]/60 transition-all flex flex-col justify-between group"
                 >
                   <div className="p-5 space-y-3">
                     <div className="flex items-center justify-between text-xs">
                       <span className="px-2.5 py-0.5 rounded-full bg-[#0050FF]/15 text-[#0050FF] font-semibold">
                         {project.topic}
                       </span>
-                      <span className="text-neutral-400 flex items-center gap-1">
+                      <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {project.duration}
                       </span>
                     </div>
 
-                    <h4 className="font-bold text-white text-base group-hover:text-[#0050FF] transition-colors line-clamp-2">
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-base group-hover:text-[#0050FF] transition-colors line-clamp-2">
                       {project.title}
                     </h4>
-                    <p className="text-xs text-neutral-400 line-clamp-3">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3">
                       {project.summary}
                     </p>
 
                     <div className="flex flex-wrap gap-1 pt-2">
                       {project.techStack.slice(0, 4).map(tool => (
-                        <span key={tool} className="text-[10px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-300">
+                        <span key={tool} className="text-[10px] px-2 py-0.5 rounded bg-neutral-800 text-slate-700 dark:text-slate-300">
                           {tool}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="p-4 bg-[#181818] border-t border-[#262626] flex items-center justify-between">
-                    <span className="text-xs text-neutral-400 font-medium">★ {project.rating} ({project.views})</span>
+                  <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">★ {project.rating} ({project.views})</span>
                     <button
                       onClick={() => onOpenVideo(project)}
                       className="px-3 py-1.5 rounded-lg bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
@@ -710,7 +710,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
             From “Where do I start?” to interview-ready.
           </h2>
-          <p className="text-sm text-neutral-400 max-w-xl mx-auto">
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
             Choose your goal, follow the right learning order, validate each skill, and prove you can apply it.
           </p>
         </div>
@@ -728,32 +728,32 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               onClick={() => setActiveStep(parseInt(step.num))}
               className={`p-6 rounded-2xl border transition-all cursor-pointer space-y-3 ${
                 activeStep === parseInt(step.num)
-                  ? 'bg-[#141414] border-[#0050FF] shadow-lg shadow-[#0050FF]/10'
-                  : 'bg-[#0E0E0E] border-[#262626] hover:border-neutral-700'
+                  ? 'bg-white dark:bg-slate-900 border-[#0050FF] shadow-lg shadow-[#0050FF]/10'
+                  : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700'
               }`}
             >
-              <span className={`text-2xl font-mono font-bold ${activeStep === parseInt(step.num) ? 'text-[#0050FF]' : 'text-neutral-500'}`}>
+              <span className={`text-2xl font-mono font-bold ${activeStep === parseInt(step.num) ? 'text-[#0050FF]' : 'text-slate-500 dark:text-slate-500'}`}>
                 {step.num}
               </span>
-              <h4 className="text-base font-bold text-white">{step.title}</h4>
-              <p className="text-xs text-neutral-400 leading-relaxed">{step.sub}</p>
+              <h4 className="text-base font-bold text-slate-900 dark:text-slate-50">{step.title}</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{step.sub}</p>
             </div>
           ))}
         </div>
 
         {/* Step Detail Highlight Card */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-[#141414] border border-[#262626] max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
             <span className="text-xs font-mono font-bold text-[#0050FF] uppercase">
               Step {activeStep} / 4
             </span>
-            <h3 className="text-xl font-bold text-white">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
               {activeStep === 1 && 'Prerequisite sequencing prevents tutorial hell'}
               {activeStep === 2 && 'Diagnostic assessments to skip what you already know'}
               {activeStep === 3 && 'Build cloud pipelines using real production patterns'}
               {activeStep === 4 && '850+ Company-tagged coding problems with DuckDB runner'}
             </h3>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-lg">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg">
               Your path follows strict prerequisite order, so every lesson builds directly on the concepts proven before it.
             </p>
           </div>
@@ -771,7 +771,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       {/* SECTION 6: 13 TOOLS SHOWCASE */}
       {/* ========================================================================= */}
-      <section className="py-20 bg-[#0E0E0E] border-y border-[#262626]">
+      <section className="py-20 bg-slate-50 dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -781,7 +781,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
               Thirteen tools, one outcome — the version of you that walks out with the offer.
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               Everything integrated in one place with zero subscription paywalls.
             </p>
           </div>
@@ -792,19 +792,19 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               <div 
                 key={idx}
                 onClick={() => onNavigateTab(tool.tabTarget)}
-                className="p-6 rounded-2xl bg-[#141414] border border-[#262626] hover:border-[#0050FF]/60 cursor-pointer transition-all flex flex-col justify-between group space-y-4"
+                className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF]/60 cursor-pointer transition-all flex flex-col justify-between group space-y-4"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-neutral-500 font-bold">0{idx + 1}</span>
+                    <span className="text-xs font-mono text-slate-500 dark:text-slate-500 font-bold">0{idx + 1}</span>
                     <span className="px-2 py-0.5 rounded-full bg-[#0050FF]/15 text-[#0050FF] text-[10px] font-bold">
                       {tool.tag}
                     </span>
                   </div>
-                  <h4 className="text-base font-bold text-white group-hover:text-[#0050FF] transition-colors">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
                     {tool.title}
                   </h4>
-                  <p className="text-xs text-neutral-400 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     {tool.description}
                   </p>
                 </div>
@@ -831,21 +831,21 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
             Loved by data engineers worldwide
           </h2>
-          <p className="text-xs sm:text-sm text-neutral-400 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
             Real stories from 25,000+ engineers using DataVeda to land offers and level up their stack.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.slice(0, 3).map((item, idx) => (
-            <div key={idx} className="p-6 rounded-2xl bg-[#141414] border border-[#262626] flex flex-col justify-between space-y-4">
-              <p className="text-xs text-neutral-300 leading-relaxed italic">
+            <div key={idx} className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-4">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed italic">
                 "{item.quote}"
               </p>
-              <div className="pt-4 border-t border-[#262626]">
-                <div className="font-bold text-white text-xs">{item.name}</div>
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="font-bold text-slate-900 dark:text-slate-100 text-xs">{item.name}</div>
                 <div className="text-[11px] text-[#0050FF] font-medium">{item.role}</div>
-                <div className="text-[10px] text-neutral-500">{item.company}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-500">{item.company}</div>
               </div>
             </div>
           ))}
@@ -855,7 +855,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       {/* SECTION 8: 100% FREE OPEN ACCESS COMPARISON */}
       {/* ========================================================================= */}
-      <section className="py-20 bg-[#0E0E0E] border-y border-[#262626]">
+      <section className="py-20 bg-slate-50 dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
           
           <div className="space-y-2">
@@ -865,28 +865,28 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
               One plan. Everything you need to get hired.
             </h2>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               No credit card required. No $279 annual lock-in. Everything unlocked and open.
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl bg-[#141414] border border-[#262626] shadow-2xl text-left space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#262626] pb-6">
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl text-left space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
               <div>
                 <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
                   FREE LIFETIME ACCESS
                 </span>
-                <h3 className="text-2xl font-bold text-white mt-2">DataVeda Master Curriculum</h3>
-                <p className="text-xs text-neutral-400 mt-0.5">Curated with industry-standard top YouTube tutorials & real cloud labs.</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">DataVeda Master Curriculum</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Curated with industry-standard top YouTube tutorials & real cloud labs.</p>
               </div>
 
               <div className="text-right">
                 <div className="text-3xl font-extrabold text-emerald-400">$0 / mo</div>
-                <div className="text-xs text-neutral-500 line-through">Standard $279/yr</div>
+                <div className="text-xs text-slate-500 dark:text-slate-500 line-through">Standard $279/yr</div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-neutral-300">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700 dark:text-slate-300">
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-emerald-400" />
                 <span>3 Career Tracks + 9 Skill Tracks</span>
@@ -913,8 +913,8 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#262626] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-xs text-neutral-400">Join 25,000+ engineers leveling up today.</span>
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="text-xs text-slate-600 dark:text-slate-400">Join 25,000+ engineers leveling up today.</span>
               <button
                 onClick={onOpenAssessment}
                 className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-bold transition-colors shadow-lg shadow-[#0050FF]/25"
@@ -937,11 +937,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
           Making data easier for everyone
         </h2>
-        <p className="text-sm text-neutral-300 leading-relaxed font-serif italic max-w-2xl mx-auto">
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-serif italic max-w-2xl mx-auto">
           "When we started building DataVeda, our vision was simple: Make data engineering accessible, practical, and career-defining. Data engineering isn't just about pipelines and tools; it's about solving real problems, building systems that scale, and enabling companies to make smarter decisions. Let's build the future of data, together."
         </p>
         <div>
-          <div className="font-bold text-white text-sm">Darshil Parmar</div>
+          <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">Darshil Parmar</div>
           <div className="text-xs text-[#0050FF]">Founder, DataVeda</div>
         </div>
       </section>
@@ -949,10 +949,10 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       {/* SECTION 10: FAQS ACCORDION */}
       {/* ========================================================================= */}
-      <section className="py-20 bg-[#0E0E0E] border-t border-[#262626]">
+      <section className="py-20 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-4 space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs uppercase tracking-widest text-neutral-400 font-bold">
+            <span className="text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold">
               FAQs
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
@@ -964,17 +964,17 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             {faqs.map((faq, idx) => (
               <div 
                 key={idx}
-                className="rounded-2xl bg-[#141414] border border-[#262626] overflow-hidden"
+                className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden"
               >
                 <button
                   onClick={() => toggleFaq(idx)}
                   className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-neutral-800/40 transition-colors"
                 >
-                  <span className="font-bold text-white text-sm">{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${openFaqIdx === idx ? 'rotate-180' : ''}`} />
+                  <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">{faq.q}</span>
+                  <ChevronDown className={`w-4 h-4 text-slate-600 dark:text-slate-400 transition-transform ${openFaqIdx === idx ? 'rotate-180' : ''}`} />
                 </button>
                 {openFaqIdx === idx && (
-                  <div className="px-5 pb-5 pt-1 text-xs text-neutral-300 leading-relaxed border-t border-neutral-800/60">
+                  <div className="px-5 pb-5 pt-1 text-xs text-slate-700 dark:text-slate-300 leading-relaxed border-t border-slate-200 dark:border-slate-800/60">
                     {faq.a}
                   </div>
                 )}

@@ -30,10 +30,10 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
           <FolderGit2 className="w-3.5 h-3.5" />
           <span>Production Portfolios</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-forge-text">
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-50">
           Real-World <span className="text-brand-blue">Data Engineering Projects</span>
         </h1>
-        <p className="mt-2 text-base text-forge-muted max-w-3xl">
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
           Build genuine portfolio projects that recruiters respect. Complete end-to-end architectures with free video masterclasses, open-source GitHub codebases, and public datasets.
         </p>
       </div>
@@ -43,7 +43,7 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
         {CURATED_PROJECT_VIDEOS.map((project) => (
           <div 
             key={project.id}
-            className="group bg-vidhya-card border border-forge-border/50 rounded-2xl overflow-hidden shadow-sm hover:border-brand-blue/50 transition-all flex flex-col"
+            className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:border-brand-blue/50 transition-all flex flex-col"
           >
             {/* Video Thumbnail Header */}
             <div 
@@ -88,16 +88,16 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
                   <span className="text-xs font-semibold px-2 py-0.5 rounded bg-brand-blue/10 text-brand-blue">
                     {project.topic}
                   </span>
-                  <span className="text-xs text-forge-muted">
-                    Instructor: <span className="text-forge-text font-medium">{project.instructor}</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400">
+                    Instructor: <span className="text-slate-900 dark:text-slate-50 font-medium">{project.instructor}</span>
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-forge-text group-hover:text-brand-blue transition-colors line-clamp-2">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-brand-blue transition-colors line-clamp-2">
                   {project.title}
                 </h3>
 
-                <p className="mt-2 text-xs sm:text-sm text-forge-muted leading-relaxed line-clamp-3">
+                <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                   {project.summary}
                 </p>
 
@@ -106,7 +106,7 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
                   {project.techStack.map((tech, idx) => (
                     <span 
                       key={idx}
-                      className="px-2 py-0.5 rounded-md bg-forge-bg border border-forge-border/40 text-[11px] font-medium text-forge-muted"
+                      className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-medium text-slate-600 dark:text-slate-400"
                     >
                       {tech}
                     </span>
@@ -115,7 +115,7 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-6 pt-4 border-t border-forge-border/30 flex items-center justify-between gap-3">
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
                 <button
                   onClick={() => onOpenVideo(project)}
                   className="flex-1 py-2 rounded-xl bg-brand-blue text-white text-xs font-bold hover:bg-brand-hover transition-colors flex items-center justify-center gap-1.5 shadow-sm"
@@ -129,7 +129,7 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
                     href={project.githubUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 rounded-xl border border-forge-border/50 text-forge-muted hover:text-forge-text hover:bg-forge-bg transition-colors"
+                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800 transition-colors"
                     title="View GitHub Repository"
                   >
                     <FolderGit2 className="w-4 h-4" />
@@ -141,7 +141,7 @@ export const DataVedaProjects: React.FC<DataVedaProjectsProps> = ({ onOpenVideo 
                     href={project.datasetUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 rounded-xl border border-forge-border/50 text-forge-muted hover:text-forge-text hover:bg-forge-bg transition-colors"
+                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800 transition-colors"
                     title="Download Raw Dataset"
                   >
                     <Database className="w-4 h-4" />

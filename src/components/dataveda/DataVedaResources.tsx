@@ -50,22 +50,22 @@ export const DataVedaResources: React.FC = () => {
           <HelpCircle className="w-3.5 h-3.5" />
           <span>Knowledge & Interview Vault</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-forge-text">
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-slate-50">
           Tech Guides & <span className="text-brand-blue">Interview Prep Hub</span>
         </h1>
-        <p className="mt-2 text-base text-forge-muted max-w-3xl">
+        <p className="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
           Everything you need for technical rounds. 100+ company-verified data engineer interview questions, code snippets, system design templates, and architecture guides.
         </p>
       </div>
 
       {/* Main Switcher: Interview Questions vs Tech Guides */}
-      <div className="flex items-center gap-4 mb-8 border-b border-forge-border/40 pb-4">
+      <div className="flex items-center gap-4 mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
         <button
           onClick={() => setActiveTab('interview')}
           className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
             activeTab === 'interview' 
               ? 'bg-brand-blue text-white shadow-sm' 
-              : 'text-forge-muted hover:text-forge-text'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50'
           }`}
         >
           100+ Interview Questions Bank
@@ -75,7 +75,7 @@ export const DataVedaResources: React.FC = () => {
           className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
             activeTab === 'guides' 
               ? 'bg-brand-blue text-white shadow-sm' 
-              : 'text-forge-muted hover:text-forge-text'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50'
           }`}
         >
           Tech Guides & Architecture Articles
@@ -83,16 +83,16 @@ export const DataVedaResources: React.FC = () => {
       </div>
 
       {/* Search and Category Filters */}
-      <div className="bg-vidhya-card border border-forge-border/40 rounded-2xl p-5 mb-8 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 mb-8 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
-            <Search className="w-4 h-4 text-forge-muted absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 text-slate-600 dark:text-slate-400 absolute left-3.5 top-3" />
             <input 
               type="text"
               placeholder="Search interview questions, tools, or concepts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-forge-bg border border-forge-border/50 rounded-xl text-sm text-forge-text placeholder:text-forge-muted focus:outline-none focus:border-brand-blue"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-50 placeholder:text-slate-600 dark:text-slate-400 focus:outline-none focus:border-brand-blue"
             />
           </div>
 
@@ -105,7 +105,7 @@ export const DataVedaResources: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     selectedCategory === cat 
                       ? 'bg-brand-blue text-white font-semibold shadow-sm' 
-                      : 'bg-forge-bg border border-forge-border/40 text-forge-muted hover:text-forge-text'
+                      : 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50'
                   }`}
                 >
                   {cat}
@@ -124,7 +124,7 @@ export const DataVedaResources: React.FC = () => {
             return (
               <div 
                 key={q.id}
-                className="bg-vidhya-card border border-forge-border/40 rounded-2xl overflow-hidden transition-all shadow-sm"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all shadow-sm"
               >
                 <div 
                   onClick={() => setExpandedQuestionId(isExpanded ? null : q.id)}
@@ -144,55 +144,55 @@ export const DataVedaResources: React.FC = () => {
                       }`}>
                         {q.difficulty}
                       </span>
-                      <div className="flex items-center gap-1 text-xs text-forge-muted ml-2">
+                      <div className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 ml-2">
                         <Building2 className="w-3 h-3" />
                         <span>{q.companies.join(', ')}</span>
                       </div>
                     </div>
-                    <h3 className="text-base font-bold text-forge-text">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-50">
                       {q.title}
                     </h3>
                   </div>
 
-                  <button className="p-2 rounded-lg text-forge-muted hover:text-forge-text">
+                  <button className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50">
                     {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                   </button>
                 </div>
 
                 {isExpanded && (
-                  <div className="px-5 pb-6 pt-2 border-t border-forge-border/30 bg-forge-bg/40 animate-fadeIn space-y-4">
+                  <div className="px-5 pb-6 pt-2 border-t border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 animate-fadeIn space-y-4">
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-forge-muted mb-1">Question Prompt</h4>
-                      <p className="text-sm text-forge-text font-medium leading-relaxed">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Question Prompt</h4>
+                      <p className="text-sm text-slate-900 dark:text-slate-50 font-medium leading-relaxed">
                         {q.question}
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-vidhya-card border border-forge-border/40">
+                    <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" /> High-Scoring Interview Answer
                       </h4>
-                      <p className="text-sm text-forge-text leading-relaxed whitespace-pre-line">
+                      <p className="text-sm text-slate-900 dark:text-slate-50 leading-relaxed whitespace-pre-line">
                         {q.answer}
                       </p>
                     </div>
 
                     {q.codeSnippet && (
                       <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-forge-muted mb-1.5 flex items-center gap-1">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1">
                           <Code2 className="w-3.5 h-3.5" /> Code Snippet / Architecture
                         </h4>
-                        <pre className="p-4 rounded-xl bg-black/60 border border-forge-border/50 font-mono text-xs text-cyan-300 overflow-x-auto">
+                        <pre className="p-4 rounded-xl bg-black/60 border border-slate-200 dark:border-slate-800 font-mono text-xs text-cyan-300 overflow-x-auto">
                           {q.codeSnippet}
                         </pre>
                       </div>
                     )}
 
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-forge-muted mb-2">Key Takeaways for the Interviewer</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Key Takeaways for the Interviewer</h4>
                       <ul className="space-y-1.5">
                         {q.keyTakeaways.map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-xs text-forge-text">
+                          <li key={idx} className="flex items-start gap-2 text-xs text-slate-900 dark:text-slate-50">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                             <span>{point}</span>
                           </li>
@@ -214,10 +214,10 @@ export const DataVedaResources: React.FC = () => {
             <div 
               key={guide.id}
               onClick={() => setActiveGuideModal(guide)}
-              className="bg-vidhya-card border border-forge-border/40 rounded-2xl p-6 hover:border-brand-blue/50 transition-all cursor-pointer flex flex-col justify-between group shadow-sm"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:border-brand-blue/50 transition-all cursor-pointer flex flex-col justify-between group shadow-sm"
             >
               <div>
-                <div className="flex items-center justify-between text-xs text-forge-muted mb-2">
+                <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-2">
                   <span className="font-bold text-brand-blue bg-brand-blue/10 px-2 py-0.5 rounded">
                     {guide.category}
                   </span>
@@ -227,24 +227,24 @@ export const DataVedaResources: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-forge-text group-hover:text-brand-blue transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-brand-blue transition-colors">
                   {guide.title}
                 </h3>
 
-                <p className="mt-2 text-xs sm:text-sm text-forge-muted leading-relaxed line-clamp-3">
+                <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                   {guide.summary}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {guide.tags.map((tag, idx) => (
-                    <span key={idx} className="text-[11px] bg-forge-bg text-forge-muted px-2 py-0.5 rounded border border-forge-border/40">
+                    <span key={idx} className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-forge-border/30 flex items-center justify-between text-xs font-bold text-brand-blue">
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-brand-blue">
                 <span>Read Full Guide</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -256,23 +256,23 @@ export const DataVedaResources: React.FC = () => {
       {/* Guide Detail Modal */}
       {activeGuideModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-vidhya-card border border-forge-border/50 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-forge-border/40 flex items-center justify-between bg-forge-bg/60">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
               <div>
                 <span className="text-xs font-bold text-brand-blue uppercase tracking-wider">{activeGuideModal.category} · {activeGuideModal.readTime}</span>
-                <h2 className="text-xl font-bold text-forge-text mt-1">{activeGuideModal.title}</h2>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-50 mt-1">{activeGuideModal.title}</h2>
               </div>
               <button 
                 onClick={() => setActiveGuideModal(null)}
-                className="p-1.5 rounded-lg text-forge-muted hover:text-forge-text hover:bg-forge-bg"
+                className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:bg-slate-800"
               >
                 ✕
               </button>
             </div>
-            <div className="p-6 overflow-y-auto space-y-4 text-sm text-forge-text leading-relaxed">
+            <div className="p-6 overflow-y-auto space-y-4 text-sm text-slate-900 dark:text-slate-50 leading-relaxed">
               <div className="p-4 rounded-xl bg-brand-blue/5 border border-brand-blue/20">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">Executive Summary</h4>
-                <p className="text-xs text-forge-muted">{activeGuideModal.summary}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">{activeGuideModal.summary}</p>
               </div>
               <div className="prose prose-invert max-w-none text-sm leading-relaxed whitespace-pre-line">
                 {activeGuideModal.content}

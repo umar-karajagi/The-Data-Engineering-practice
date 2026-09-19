@@ -22,10 +22,10 @@ export const DataVedaPricing: React.FC = () => {
           <Gift className="w-3.5 h-3.5" />
           <span>Zero Paywall Guarantee</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-forge-text">
+        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-slate-50">
           100% Free. <span className="text-brand-blue">Lifetime Open Access.</span>
         </h1>
-        <p className="mt-4 text-base sm:text-lg text-forge-muted">
+        <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
           Unlike platforms that lock critical interview prep and projects behind a $279/year subscription, DataVeda offers full access with zero paywalls.
         </p>
       </div>
@@ -34,20 +34,20 @@ export const DataVedaPricing: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         
         {/* Competitor / Proprietary Paywall Card */}
-        <div className="bg-vidhya-card/40 border border-forge-border/40 rounded-3xl p-8 flex flex-col justify-between opacity-80">
+        <div className="bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 flex flex-col justify-between opacity-80">
           <div>
-            <span className="text-xs font-bold text-forge-muted uppercase tracking-wider">Proprietary Platforms</span>
-            <h3 className="text-2xl font-bold text-forge-text mt-1">DataVidhya Pro</h3>
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Proprietary Platforms</span>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">DataVidhya Pro</h3>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="text-3xl font-black text-rose-400 line-through">$349</span>
-              <span className="text-4xl font-black text-forge-text">$279</span>
-              <span className="text-xs text-forge-muted">/ year</span>
+              <span className="text-4xl font-black text-slate-900 dark:text-slate-50">$279</span>
+              <span className="text-xs text-slate-600 dark:text-slate-400">/ year</span>
             </div>
-            <p className="mt-2 text-xs text-forge-muted">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
               Annual recurring charge. Content gated behind paywalls.
             </p>
 
-            <div className="mt-8 space-y-3 text-xs text-forge-muted">
+            <div className="mt-8 space-y-3 text-xs text-slate-600 dark:text-slate-400">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-zinc-500" />
                 <span>3 Career Tracks & Courses</span>
@@ -71,8 +71,8 @@ export const DataVedaPricing: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-forge-border/30">
-            <span className="text-xs text-forge-muted text-center block">Expensive for students and career switchers</span>
+          <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+            <span className="text-xs text-slate-600 dark:text-slate-400 text-center block">Expensive for students and career switchers</span>
           </div>
         </div>
 
@@ -84,16 +84,16 @@ export const DataVedaPricing: React.FC = () => {
 
           <div>
             <span className="text-xs font-bold text-brand-blue uppercase tracking-wider">DataVeda Free</span>
-            <h3 className="text-2xl font-black text-forge-text mt-1">100% Free Open Platform</h3>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-50 mt-1">100% Free Open Platform</h3>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="text-4xl font-black text-emerald-400">$0</span>
               <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Forever Free</span>
             </div>
-            <p className="mt-2 text-xs text-forge-muted">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
               No credit card required. No trials. Lifetime open access for all data engineers.
             </p>
 
-            <div className="mt-8 space-y-3.5 text-xs text-forge-text font-medium">
+            <div className="mt-8 space-y-3.5 text-xs text-slate-900 dark:text-slate-50 font-medium">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Full Career Tracks (DE, Analytics Engineer, Data Analyst)</span>
@@ -121,7 +121,7 @@ export const DataVedaPricing: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-forge-border/30">
+          <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
             <button className="w-full py-3 rounded-xl bg-brand-blue text-white text-xs font-bold hover:bg-brand-hover transition-colors shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2">
               <span>Start Learning Now (100% Free)</span>
               <ArrowRight className="w-4 h-4" />

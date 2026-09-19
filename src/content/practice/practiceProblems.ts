@@ -1,7 +1,7 @@
 export interface PracticeProblem {
   id: string;
   title: string;
-  category: 'SQL' | 'Python' | 'PySpark' | 'Data Modeling';
+  category: 'SQL' | 'Python' | 'PySpark' | 'Data Modeling' | 'DSA';
   difficulty: 'Easy' | 'Medium' | 'Hard';
   company: 'Amazon' | 'Google' | 'Meta' | 'Netflix' | 'Uber' | 'Apple' | 'Snowflake' | 'Microsoft';
   acceptanceRate: string;
@@ -419,5 +419,186 @@ FROM revenue_lags
 WHERE prior_revenue IS NOT NULL
 ORDER BY tier, year;`,
     explanation: 'Uses LAG() partitioned by tier to retrieve the prior year amount, then calculates relative growth formula: ((current - prior) / prior) * 100.'
+  },
+  {
+    id: 'dsa-201',
+    title: 'Two Sum Problem using Hashing',
+    category: 'DSA',
+    difficulty: 'Easy',
+    company: 'Google',
+    acceptanceRate: '68.4%',
+    submissionsCount: '92.1K',
+    tags: ['Hashing', 'Arrays', 'Dictionary', 'Two Sum'],
+    description: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You must solve it in O(N) time complexity using a Hash Map (Python dictionary).',
+    sampleInput: `nums = [2, 7, 11, 15]
+target = 9`,
+    sampleOutput: `[0, 1]  # Because nums[0] + nums[1] == 2 + 7 == 9`,
+    starterCode: `def two_sum(nums: list[int], target: int) -> list[int]:
+    # Use a dictionary to store complement indices in O(N) time
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+# Test execution
+print(two_sum([2, 7, 11, 15], 9))`,
+    solutionCode: `def two_sum(nums: list[int], target: int) -> list[int]:
+    seen = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in seen:
+            return [seen[diff], i]
+        seen[num] = i
+    return []`,
+    explanation: 'Maintains a hash map mapping number values to their array index. For each number, computes target - num and checks if the complement already exists in O(1) average lookup time.'
+  },
+  {
+    id: 'dsa-202',
+    title: 'Reverse a Singly Linked List',
+    category: 'DSA',
+    difficulty: 'Medium',
+    company: 'Amazon',
+    acceptanceRate: '59.8%',
+    submissionsCount: '78.3K',
+    tags: ['Linked List', 'Pointers', 'In-Place'],
+    description: 'Given the head of a singly linked list, reverse the list in-place and return the reversed list head. Must be completed with O(1) auxiliary space.',
+    sampleInput: `Head: 1 -> 2 -> 3 -> 4 -> 5 -> NULL`,
+    sampleOutput: `Head: 5 -> 4 -> 3 -> 2 -> 1 -> NULL`,
+    starterCode: `class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reverse_linked_list(head: ListNode) -> ListNode:
+    prev = None
+    curr = head
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev`,
+    solutionCode: `def reverse_linked_list(head):
+    prev = None
+    curr = head
+    while curr:
+        next_node = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next_node
+    return prev`,
+    explanation: 'Iterates through the linked list with three pointers (prev, curr, next_node), rewiring each node to point backward to prev. Operates in O(N) time and O(1) memory.'
+  },
+  {
+    id: 'py-203',
+    title: 'Lambda Function coupled with map() List Transformation',
+    category: 'Python',
+    difficulty: 'Easy',
+    company: 'Meta',
+    acceptanceRate: '74.2%',
+    submissionsCount: '45.6K',
+    tags: ['Lambda', 'Functional Programming', 'map()'],
+    description: 'Given a list of raw transaction logs with prices in cents, use a Python lambda function paired with map() to normalize all prices into floating-point dollars with tax multiplier (1.0825x).',
+    sampleInput: `raw_cents = [1050, 2400, 999, 15000]`,
+    sampleOutput: `[11.37, 25.98, 10.81, 162.38]`,
+    starterCode: `# Transform raw cents to dollars with tax using lambda and map
+raw_cents = [1050, 2400, 999, 15000]
+
+transformed_prices = list(
+    map(lambda cents: round((cents / 100.0) * 1.0825, 2), raw_cents)
+)
+print(transformed_prices)`,
+    solutionCode: `def normalize_transactions(raw_cents: list[int]) -> list[float]:
+    return list(map(lambda x: round((x / 100.0) * 1.0825, 2), raw_cents))`,
+    explanation: 'Demonstrates functional programming in Python using lambda as an anonymous callable inside map() to avoid explicit loop overhead.'
+  },
+  {
+    id: 'sql-106',
+    title: 'Deduplicate Records using ROW_NUMBER() in CTE',
+    category: 'SQL',
+    difficulty: 'Medium',
+    company: 'Apple',
+    acceptanceRate: '61.3%',
+    submissionsCount: '51.2K',
+    tags: ['CTE', 'ROW_NUMBER', 'Deduplication'],
+    description: 'In an ingested customer events stream, duplicate rows occurred due to network retry bursts. Write a SQL CTE with ROW_NUMBER() to identify duplicate records keeping only the earliest occurrence per (user_id, event_id).',
+    sampleInput: `Table: user_events
+| user_id | event_id | event_timestamp      | payload    |
+|---------|----------|----------------------|------------|
+| U101    | E900     | 2025-04-01 10:00:00  | click_hero |
+| U101    | E900     | 2025-04-01 10:00:01  | click_hero |
+| U202    | E905     | 2025-04-01 10:05:00  | checkout   |`,
+    sampleOutput: `| user_id | event_id | event_timestamp     | payload    |
+|---------|----------|---------------------|------------|
+| U101    | E900     | 2025-04-01 10:00:00 | click_hero |
+| U202    | E905     | 2025-04-01 10:05:00 | checkout   |`,
+    starterCode: `WITH ranked_events AS (
+  SELECT 
+    user_id,
+    event_id,
+    event_timestamp,
+    payload,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id, event_id 
+      ORDER BY event_timestamp ASC
+    ) as row_num
+  FROM user_events
+)
+SELECT user_id, event_id, event_timestamp, payload
+FROM ranked_events
+WHERE row_num = 1;`,
+    solutionCode: `WITH ranked_events AS (
+  SELECT 
+    user_id,
+    event_id,
+    event_timestamp,
+    payload,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id, event_id 
+      ORDER BY event_timestamp ASC
+    ) as row_num
+  FROM user_events
+)
+SELECT user_id, event_id, event_timestamp, payload
+FROM ranked_events
+WHERE row_num = 1
+ORDER BY user_id, event_timestamp;`,
+    explanation: 'Partitions by unique natural key (user_id, event_id) and numbers occurrences in chronological order. Filtering where row_num = 1 isolates the primary record, allowing deduplication in Bronze/Silver pipelines.'
+  },
+  {
+    id: 'spark-301',
+    title: 'Broadcast Join to Eliminate Skew Shuffling',
+    category: 'PySpark',
+    difficulty: 'Hard',
+    company: 'Netflix',
+    acceptanceRate: '42.1%',
+    submissionsCount: '27.4K',
+    tags: ['Broadcast Join', 'Data Skew', 'PySpark', 'AQE'],
+    description: 'A 500GB viewing logs DataFrame is skewed by popular show ID 101. Joining against a 5MB title metadata DataFrame causes OOM on executor shuffle stages. Write the PySpark code using broadcast() to distribute the small DataFrame to all worker nodes without network shuffle.',
+    sampleInput: `large_df: 500GB viewing events (heavily skewed on show_id)
+small_df: 5MB show title metadata`,
+    sampleOutput: `HashJoin without ShuffleExchange (BroadcastHashJoin Exec)`,
+    starterCode: `from pyspark.sql import functions as F
+
+def optimize_skewed_join(large_df, small_df):
+    # Use broadcast to eliminate shuffle exchange
+    result_df = large_df.join(
+        F.broadcast(small_df),
+        on="show_id",
+        how="inner"
+    )
+    return result_df`,
+    solutionCode: `from pyspark.sql import functions as F
+
+def optimize_skewed_join(large_df, small_df):
+    return large_df.join(
+        F.broadcast(small_df),
+        on="show_id",
+        how="inner"
+    )`,
+    explanation: 'Wrapping the small DataFrame in F.broadcast() forces the Spark Catalyst optimizer to select BroadcastHashJoin, replicating the 5MB table in executor memory and eliminating the expensive wide shuffle exchange on the 500GB skewed key.'
   }
 ];

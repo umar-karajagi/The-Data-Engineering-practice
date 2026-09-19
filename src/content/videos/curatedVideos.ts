@@ -28,6 +28,8 @@ export interface CuratedVideo {
     code: string;
     explanation: string;
   };
+  playlist?: any;
+  currentEpisodeId?: string;
 }
 
 export const HERO_MASTERCLASS_VIDEO: CuratedVideo = {
