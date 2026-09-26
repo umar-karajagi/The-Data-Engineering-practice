@@ -38,11 +38,13 @@ import {
 import { StarRatingScoreboard } from './StarRatingScoreboard';
 import { useUserStore } from '../../lib/userStore';
 import { useTheme } from '../../lib/theme';
+import { PracticeArena3D } from '../3d/PracticeArena3D';
 
 export const DataVedaPractice: React.FC = () => {
   const { addXP } = useUserStore();
   const { theme } = useTheme();
   
+  const [viewLayout, setViewLayout] = useState<'arena' | 'table'>('arena');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [selectedMode, setSelectedMode] = useState<PracticeModeNumber | 0>(0); // 0 = All Modes
   const [selectedCompany, setSelectedCompany] = useState<string>('ALL');
@@ -221,6 +223,44 @@ export const DataVedaPractice: React.FC = () => {
           Master actual SQL, Python, DSA, PySpark, and Data Modeling interview problems asked at Google, Netflix, Amazon, Meta, and Snowflake. No locks or restrictions—solve any challenge freely and earn star ratings!
         </p>
       </div>
+
+      {/* View Switcher: 3D Coding Arena vs Table Mode */}
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-6 w-fit">
+        <button
+          onClick={() => setViewLayout('arena')}
+          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            viewLayout === 'arena'
+              ? 'bg-brand-blue text-white shadow-md font-black'
+              : 'text-slate-600 dark:text-slate-400 hover:text-white'
+          }`}
+        >
+          <span>🏛️ 3D Coding Arena (500 Questions)</span>
+        </button>
+        <button
+          onClick={() => setViewLayout('table')}
+          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            viewLayout === 'table'
+              ? 'bg-emerald-500 text-black shadow-md font-black'
+              : 'text-slate-600 dark:text-slate-400 hover:text-white'
+          }`}
+        >
+          <span>📋 Practice Table & Editor</span>
+        </button>
+      </div>
+
+      {viewLayout === 'arena' && (
+        <div className="mb-10">
+          <PracticeArena3D 
+            onSelectProblem={(probId) => {
+              const problem = PRACTICE_PROBLEMS.find(p => p.id === probId);
+              if (problem) {
+                handleOpenProblem(problem);
+                setViewLayout('table');
+              }
+            }}
+          />
+        </div>
+      )}
 
       {/* Star Rating Scoreboard across 5 Topics */}
       <StarRatingScoreboard

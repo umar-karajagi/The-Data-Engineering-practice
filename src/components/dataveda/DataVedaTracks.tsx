@@ -30,6 +30,8 @@ import { RevisionTracker } from './RevisionTracker';
 import { PlaylistTracker } from './PlaylistTracker';
 import { CuratedVideo } from '../../content/videos/curatedVideos';
 import { useUserStore } from '../../lib/userStore';
+import { TerracesMountain3D } from '../3d/TerracesMountain3D';
+import { FinalBossInterviewRoom } from '../interview/FinalBossInterviewRoom';
 
 interface DataVedaTracksProps {
   onOpenVideo: (video: CuratedVideo) => void;
@@ -44,6 +46,8 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
   const [unrestrictedMode, setUnrestrictedMode] = useState<boolean>(true);
   const [activeEpisodeId, setActiveEpisodeId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [viewMode, setViewMode] = useState<'mountain' | 'list'>('mountain');
+  const [isFinalBossOpen, setIsFinalBossOpen] = useState<boolean>(false);
 
   const STORAGE_KEY_COMPLETED = 'dataveda_completed_milestones_v2';
   const STORAGE_KEY_ROLE = 'dataveda_selected_role_v2';
@@ -267,8 +271,51 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
         </div>
       </div>
 
-      {/* Stages List */}
-      <div className="space-y-8">
+      {/* 3D Mountain Terraces vs Detailed List View Mode Selector */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <button
+            onClick={() => setViewMode('mountain')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
+              viewMode === 'mountain'
+                ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/25 font-black'
+                : 'text-slate-600 dark:text-slate-400 hover:text-white'
+            }`}
+          >
+            <span>⛰️ 3D Mountain Terraces (9 Stages)</span>
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer ${
+              viewMode === 'list'
+                ? 'bg-brand-blue text-white shadow-md font-black'
+                : 'text-slate-600 dark:text-slate-400 hover:text-white'
+            }`}
+          >
+            <span>📋 Milestone Stages List</span>
+          </button>
+        </div>
+
+        <button
+          onClick={() => setIsFinalBossOpen(true)}
+          className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black text-xs font-mono font-black flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+        >
+          <Award className="w-4 h-4" />
+          <span>⚔️ Stage 09 Final Boss Interview Gate</span>
+        </button>
+      </div>
+
+      {viewMode === 'mountain' ? (
+        <div className="mb-12">
+          <TerracesMountain3D 
+            onOpenVideo={onOpenVideo}
+            selectedRole={selectedRole}
+            onLaunchInterviewBoss={() => setIsFinalBossOpen(true)}
+          />
+        </div>
+      ) : (
+        /* Stages List */
+        <div className="space-y-8">
         {roleStages.map((stage, trackIdx) => {
           const isCompleted = completedMilestones.includes(stage.milestone);
           const isUnlocked = isStageUnlocked(trackIdx);
@@ -402,6 +449,7 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
           );
         })}
       </div>
+      )}
 
       {/* Bottom Completion Certificate Callout */}
       {roleCompletedCount === roleTotalCount && roleTotalCount > 0 && (
@@ -417,6 +465,12 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
           </p>
         </div>
       )}
+
+      {/* Final Boss Modal */}
+      <FinalBossInterviewRoom 
+        isOpen={isFinalBossOpen}
+        onClose={() => setIsFinalBossOpen(false)}
+      />
 
     </div>
   );

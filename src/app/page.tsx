@@ -19,6 +19,7 @@ import { UserDatabaseInspector } from '../components/auth/UserDatabaseInspector'
 import { QaTestingTracker } from '../components/enterprise/QaTestingTracker';
 import { SentinelMonitorBot } from '../components/enterprise/SentinelMonitorBot';
 import { AuthPage } from '../components/auth/AuthPage';
+import { MentorOrb } from '../components/3d/MentorOrb';
 
 type ActiveTab = 
   | 'home'
@@ -160,6 +161,9 @@ function DataVedaApp() {
         isOpen={isQaTrackerOpen}
         onClose={() => setIsQaTrackerOpen(false)}
       />
+
+      {/* 9. AI Holographic Mentor Orb (Summonable Anywhere) */}
+      <MentorOrb activeTopic={activeTab} />
 
     </div>
   );
