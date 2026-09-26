@@ -9,6 +9,14 @@ import { PRACTICE_PROBLEMS, STAR_TIERS, MODE_CONFIG, PracticeCategory, PracticeM
 import { FOUNDATIONAL_BOOKS } from '../src/content/books';
 import { PORTFOLIO_PROJECTS } from '../src/content/projects/portfolio';
 import { TRACKER_TOPICS } from '../src/content/tracker/topics';
+import { 
+  FOUNDATION_MODULE_VIDEOS, 
+  TRACK_MODULE_VIDEOS, 
+  HERO_MASTERCLASS_VIDEO, 
+  CURATED_PROJECT_VIDEOS, 
+  CURATED_COURSE_VIDEOS 
+} from '../src/content/videos/curatedVideos';
+import { getNodeVideo } from '../src/components/roadmap/NeetCodeRoadmap';
 
 interface TestResult {
   suite: string;
@@ -233,6 +241,100 @@ runTest('2.8 Final Boss Bank', 'BOSS-01', 'Assert high-stakes interview question
   assert(staffQuestions.length >= 5, `Expected at least 5 Staff DE scenarios for Final Boss Gate, found ${staffQuestions.length}`);
   staffQuestions.forEach(q => {
     assert(Boolean(q.keyInterviewQuestions && q.keyInterviewQuestions.length > 0), `Topic ${q.id} missing key interview questions`);
+  });
+});
+
+// -----------------------------------------------------------------------------
+// SUITE 2.9: UI Video Mapping & Duration Integrity Audit
+// -----------------------------------------------------------------------------
+console.log('\n\x1b[36m▶ SUITE 2.9: UI Video Mapping & Duration Integrity Audit\x1b[0m');
+
+runTest('2.9 Video Integrity', 'VID-01', 'Assert all 5 Foundation modules have distinct, authentic videos (no Uber leak)', () => {
+  const modKeys = Object.keys(FOUNDATION_MODULE_VIDEOS);
+  assert(modKeys.length === 5, `Expected 5 foundation module videos, found ${modKeys.length}`);
+  
+  const seenIds = new Set<string>();
+  const seenYt = new Set<string>();
+
+  modKeys.forEach(k => {
+    const v = FOUNDATION_MODULE_VIDEOS[k];
+    assert(Boolean(v.youtubeId && v.youtubeId.length > 5), `Foundation video ${k} has invalid youtubeId`);
+    assert(v.id !== HERO_MASTERCLASS_VIDEO.id, `Foundation video ${k} leaked HERO_MASTERCLASS_VIDEO (Uber project)`);
+    assert(v.youtubeId !== HERO_MASTERCLASS_VIDEO.youtubeId, `Foundation video ${k} must not point to Uber masterclass YouTube ID`);
+    assert(!seenIds.has(v.id), `Duplicate video id in foundation modules: ${v.id}`);
+    assert(!seenYt.has(v.youtubeId), `Duplicate YouTube ID in foundation modules: ${v.youtubeId}`);
+    seenIds.add(v.id);
+    seenYt.add(v.youtubeId);
+  });
+});
+
+runTest('2.9 Video Integrity', 'VID-02', 'Assert Foundation module durations match bite-sized 20-30 min specification', () => {
+  const expectedDurations: Record<string, string> = {
+    'mod-01-python-ds': '24 mins',
+    'mod-02-python-parquet': '28 mins',
+    'mod-03-sql-joins': '26 mins',
+    'mod-04-sql-window': '30 mins',
+    'mod-05-pandas-etl': '25 mins'
+  };
+
+  Object.entries(expectedDurations).forEach(([k, expectedDuration]) => {
+    const v = FOUNDATION_MODULE_VIDEOS[k];
+    assert(v !== undefined, `Missing foundation module video: ${k}`);
+    assert(v.duration === expectedDuration, `Foundation module ${k} duration mismatch: expected ${expectedDuration}, got ${v.duration}`);
+    assert(Array.isArray(v.chapters) && v.chapters.length >= 3, `Foundation module ${k} missing timestamp chapters`);
+  });
+});
+
+runTest('2.9 Video Integrity', 'VID-03', 'Assert all 16 Track modules (6 DE, 5 DA, 5 DS) have valid video configurations', () => {
+  const trackKeys = Object.keys(TRACK_MODULE_VIDEOS);
+  assert(trackKeys.length === 16, `Expected 16 track module videos, found ${trackKeys.length}`);
+  
+  trackKeys.forEach(k => {
+    const v = TRACK_MODULE_VIDEOS[k];
+    assert(Boolean(v.youtubeId && v.youtubeId.length > 5), `Track module ${k} has invalid youtubeId`);
+    assert(Boolean(v.title && v.title.length > 5), `Track module ${k} has empty title`);
+    assert(Boolean(v.duration && v.duration.includes('m')), `Track module ${k} has invalid duration`);
+    assert(Array.isArray(v.chapters) && v.chapters.length >= 2, `Track module ${k} missing chapters`);
+  });
+});
+
+runTest('2.9 Video Integrity', 'VID-04', 'Assert Project Capstones have dedicated, authentic videos matching their domain', () => {
+  const uber = CURATED_PROJECT_VIDEOS.find(v => v.id === 'hero-uber-analytics');
+  const aws = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-aws-masterclass');
+  const dbt = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-dbt-snowflake');
+  const kafka = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-kafka-crash-course');
+
+  assert(Boolean(uber && uber.youtubeId === 'WpQECq5Hx9g'), 'Uber project video missing or invalid ID');
+  assert(Boolean(aws && aws.youtubeId === 'yvAWbbQa8eE' && aws.duration === '1 hr 45 min'), 'AWS project video missing or duration mismatch');
+  assert(Boolean(dbt && dbt.youtubeId === '5rNquRnNb4E' && dbt.duration === '1 hr 12 min'), 'dbt project video missing or duration mismatch');
+  assert(Boolean(kafka && kafka.youtubeId === 'R873BlNVUB4' && kafka.duration === '1 hr 22 min'), 'Kafka project video missing or duration mismatch');
+});
+
+runTest('2.9 Video Integrity', 'VID-05', 'Assert NeetCodeRoadmap nodes map to specialized videos without generic fallback leaks', () => {
+  const sampleNodes = [
+    'python-core',
+    'sql-mastery',
+    'data-modeling',
+    'spark-compute',
+    'kafka-streaming',
+    'lakehouse-formats',
+    'cloud-warehousing',
+    'orchestration-dbt'
+  ];
+
+  sampleNodes.forEach(nodeId => {
+    const video = getNodeVideo(nodeId);
+    assert(Boolean(video && video.youtubeId), `Roadmap node ${nodeId} failed to resolve a valid video`);
+    assert(Boolean(video.duration), `Roadmap node ${nodeId} video missing duration`);
+    if (nodeId === 'python-core') {
+      assert(video.topic === 'Python', `python-core node should point to a Python video`);
+    } else if (nodeId === 'sql-mastery') {
+      assert(video.topic === 'SQL', `sql-mastery node should point to a SQL video`);
+    } else if (nodeId === 'spark-compute') {
+      assert(video.topic === 'Spark', `spark-compute node should point to a Spark video`);
+    } else if (nodeId === 'kafka-streaming') {
+      assert(video.topic === 'Kafka', `kafka-streaming node should point to a Kafka video`);
+    }
   });
 });
 

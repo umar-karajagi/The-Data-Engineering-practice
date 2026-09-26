@@ -23,7 +23,37 @@ import {
   Filter,
   Check
 } from 'lucide-react';
-import { CuratedVideo, HERO_MASTERCLASS_VIDEO, CURATED_PROJECT_VIDEOS } from '../../content/videos/curatedVideos';
+import { 
+  CuratedVideo, 
+  HERO_MASTERCLASS_VIDEO, 
+  CURATED_PROJECT_VIDEOS,
+  CURATED_COURSE_VIDEOS,
+  FOUNDATION_MODULE_VIDEOS,
+  TRACK_MODULE_VIDEOS
+} from '../../content/videos/curatedVideos';
+
+export const getNodeVideo = (nodeId: string): CuratedVideo => {
+  switch (nodeId) {
+    case 'python-core':
+      return CURATED_COURSE_VIDEOS.find(v => v.id === 'course-python-de') || FOUNDATION_MODULE_VIDEOS['mod-01-python-ds'];
+    case 'sql-mastery':
+      return CURATED_COURSE_VIDEOS.find(v => v.id === 'course-sql-masterclass') || FOUNDATION_MODULE_VIDEOS['mod-03-sql-joins'];
+    case 'data-modeling':
+      return CURATED_COURSE_VIDEOS.find(v => v.id === 'course-data-modeling') || HERO_MASTERCLASS_VIDEO;
+    case 'spark-compute':
+      return CURATED_COURSE_VIDEOS.find(v => v.id === 'course-pyspark-full') || TRACK_MODULE_VIDEOS['de-mod-01'];
+    case 'kafka-streaming':
+      return CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-kafka-crash-course') || TRACK_MODULE_VIDEOS['de-mod-05'];
+    case 'lakehouse-formats':
+      return CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-dbt-snowflake') || TRACK_MODULE_VIDEOS['de-mod-03'];
+    case 'cloud-warehousing':
+      return CURATED_COURSE_VIDEOS.find(v => v.id === 'course-snowflake-mastery') || TRACK_MODULE_VIDEOS['de-mod-06'];
+    case 'orchestration-dbt':
+      return CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-twitter-airflow') || TRACK_MODULE_VIDEOS['de-mod-04'];
+    default:
+      return HERO_MASTERCLASS_VIDEO;
+  }
+};
 
 export interface RoadmapNode {
   id: string;
@@ -572,28 +602,33 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                 </div>
 
                 {/* Masterclass Link CTA */}
-                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex items-center justify-between gap-4">
-                  <div>
-                    <h5 className="text-sm font-bold text-slate-900 dark:text-white">
-                      Full Masterclass Video Available
-                    </h5>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                      Watch the step-by-step video lecture with interactive DuckDB exercises.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (onOpenVideo) {
-                        onOpenVideo(HERO_MASTERCLASS_VIDEO);
-                      }
-                      setSelectedNode(null);
-                    }}
-                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-md"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-white" />
-                    <span>Watch HD</span>
-                  </button>
-                </div>
+                {selectedNode && (() => {
+                  const nodeVideo = getNodeVideo(selectedNode.id);
+                  return (
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <h5 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                          {nodeVideo.title}
+                        </h5>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                          {nodeVideo.instructor} • <span className="font-mono text-emerald-500 font-bold">{nodeVideo.duration}</span> • {nodeVideo.views}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          if (onOpenVideo) {
+                            onOpenVideo(nodeVideo);
+                          }
+                          setSelectedNode(null);
+                        }}
+                        className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 shadow-md cursor-pointer transition-all"
+                      >
+                        <Play className="w-3.5 h-3.5 fill-white" />
+                        <span>Watch ({nodeVideo.duration})</span>
+                      </button>
+                    </div>
+                  );
+                })()}
 
               </div>
 

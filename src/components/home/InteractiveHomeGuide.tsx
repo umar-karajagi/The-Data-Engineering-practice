@@ -31,7 +31,13 @@ import {
   Building2, 
   Filter
 } from 'lucide-react';
-import { CuratedVideo, HERO_MASTERCLASS_VIDEO, CURATED_PROJECT_VIDEOS } from '../../content/videos/curatedVideos';
+import { 
+  CuratedVideo, 
+  HERO_MASTERCLASS_VIDEO, 
+  CURATED_PROJECT_VIDEOS,
+  FOUNDATION_MODULE_VIDEOS,
+  TRACK_MODULE_VIDEOS
+} from '../../content/videos/curatedVideos';
 
 interface InteractiveHomeGuideProps {
   onOpenVideo: (video: CuratedVideo) => void;
@@ -108,8 +114,9 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
     }
   ];
 
-  const daVideo = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-dbt-snowflake') || HERO_MASTERCLASS_VIDEO;
-  const dsVideo = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-zomato-ai') || HERO_MASTERCLASS_VIDEO;
+  const deFirstVideo = FOUNDATION_MODULE_VIDEOS['mod-01-python-ds'] || HERO_MASTERCLASS_VIDEO;
+  const daFirstVideo = FOUNDATION_MODULE_VIDEOS['mod-03-sql-joins'] || HERO_MASTERCLASS_VIDEO;
+  const dsFirstVideo = FOUNDATION_MODULE_VIDEOS['mod-05-pandas-etl'] || HERO_MASTERCLASS_VIDEO;
 
   const goalOptions: GoalOption[] = [
     {
@@ -119,7 +126,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
       salaryRange: '₹10L - ₹32L+ CTC in India • $135k+ Global',
       icon: '🚀',
       desc: 'Build massive streaming and batch pipelines using Apache Spark, Kafka, Iceberg, and Airflow.',
-      recommendedFirstVideo: HERO_MASTERCLASS_VIDEO
+      recommendedFirstVideo: deFirstVideo
     },
     {
       id: 'data_analyst',
@@ -128,7 +135,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
       salaryRange: '₹7L - ₹20L+ CTC in India • $95k+ Global',
       icon: '📈',
       desc: 'Master dimensional data modeling (Kimball), advanced SQL window analytics, dbt, and Power BI.',
-      recommendedFirstVideo: daVideo
+      recommendedFirstVideo: daFirstVideo
     },
     {
       id: 'data_scientist',
@@ -137,7 +144,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
       salaryRange: '₹12L - ₹35L+ CTC in India • $145k+ Global',
       icon: '🤖',
       desc: 'Develop predictive models, feature stores, end-to-end MLOps pipelines, and LLM data ingestion.',
-      recommendedFirstVideo: dsVideo
+      recommendedFirstVideo: dsFirstVideo
     }
   ];
 
@@ -493,7 +500,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button
-                      onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                      onClick={() => onOpenVideo(FOUNDATION_MODULE_VIDEOS['mod-01-python-ds'])}
                       className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Play className="w-3 h-3 fill-current" />
@@ -532,7 +539,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button
-                      onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                      onClick={() => onOpenVideo(FOUNDATION_MODULE_VIDEOS['mod-02-python-parquet'])}
                       className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Play className="w-3 h-3 fill-current" />
@@ -571,7 +578,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button
-                      onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                      onClick={() => onOpenVideo(FOUNDATION_MODULE_VIDEOS['mod-03-sql-joins'])}
                       className="flex-1 py-1.5 px-3 rounded-lg bg-brand-blue hover:bg-brand-hover text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Play className="w-3 h-3 fill-current" />
@@ -610,7 +617,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button
-                      onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                      onClick={() => onOpenVideo(FOUNDATION_MODULE_VIDEOS['mod-04-sql-window'])}
                       className="flex-1 py-1.5 px-3 rounded-lg bg-brand-blue hover:bg-brand-hover text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Play className="w-3 h-3 fill-current" />
@@ -649,7 +656,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                   </div>
                   <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button
-                      onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                      onClick={() => onOpenVideo(FOUNDATION_MODULE_VIDEOS['mod-05-pandas-etl'])}
                       className="flex-1 py-1.5 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Play className="w-3 h-3 fill-current" />
@@ -745,6 +752,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
               </div>
 
               {/* TRACK 1: DATA ENGINEER */}
+              {/* TRACK 1: DATA ENGINEER */}
               {selectedTrackTab === 'de' && (
                 <div className="space-y-4">
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-slate-700 dark:text-slate-300 flex items-center justify-between">
@@ -756,12 +764,12 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
-                      { mod: '01', title: 'Apache Spark Distributed Architecture', time: '28m', tech: 'Spark / PySpark', desc: 'Driver vs Executor memory, RDD partitions, and execution stages.' },
-                      { mod: '02', title: 'PySpark Shuffles, Broadcasts & Tuning', time: '29m', tech: 'PySpark', desc: 'Eliminating data skew, broadcast hash joins, and memory spillage.' },
-                      { mod: '03', title: 'Lakehouse ACID Storage (Delta & Iceberg)', time: '25m', tech: 'Delta / Iceberg', desc: 'Metadata transaction logs, time travel, compaction, and schema evolution.' },
-                      { mod: '04', title: 'Workflow Orchestration with Airflow & Mage', time: '27m', tech: 'Airflow / Mage', desc: 'Writing dynamic Python DAGs, sensor triggers, and automated backfills.' },
-                      { mod: '05', title: 'Real-Time Streaming with Apache Kafka', time: '30m', tech: 'Kafka', desc: 'Topic partitions, consumer offsets, consumer groups, and exactly-once semantics.' },
-                      { mod: '06', title: 'Cloud Warehousing on Snowflake & BigQuery', time: '26m', tech: 'Snowflake / GCP', desc: 'Clustering keys, micro-partition pruning, and query cost optimization.' }
+                      { id: 'de-mod-01', mod: '01', title: 'Apache Spark Distributed Architecture', time: '28m', tech: 'Spark / PySpark', desc: 'Driver vs Executor memory, RDD partitions, and execution stages.' },
+                      { id: 'de-mod-02', mod: '02', title: 'PySpark Shuffles, Broadcasts & Tuning', time: '29m', tech: 'PySpark', desc: 'Eliminating data skew, broadcast hash joins, and memory spillage.' },
+                      { id: 'de-mod-03', mod: '03', title: 'Lakehouse ACID Storage (Delta & Iceberg)', time: '25m', tech: 'Delta / Iceberg', desc: 'Metadata transaction logs, time travel, compaction, and schema evolution.' },
+                      { id: 'de-mod-04', mod: '04', title: 'Workflow Orchestration with Airflow & Mage', time: '27m', tech: 'Airflow / Mage', desc: 'Writing dynamic Python DAGs, sensor triggers, and automated backfills.' },
+                      { id: 'de-mod-05', mod: '05', title: 'Real-Time Streaming with Apache Kafka', time: '30m', tech: 'Kafka', desc: 'Topic partitions, consumer offsets, consumer groups, and exactly-once semantics.' },
+                      { id: 'de-mod-06', mod: '06', title: 'Cloud Warehousing on Snowflake & BigQuery', time: '26m', tech: 'Snowflake / GCP', desc: 'Clustering keys, micro-partition pruning, and query cost optimization.' }
                     ].map(item => (
                       <div key={item.mod} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:border-emerald-500/40 transition-colors">
                         <div className="flex items-center justify-between text-xs font-mono">
@@ -772,7 +780,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.desc}</p>
                         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                           <button
-                            onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                            onClick={() => onOpenVideo(TRACK_MODULE_VIDEOS[item.id] || HERO_MASTERCLASS_VIDEO)}
                             className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-1 cursor-pointer"
                           >
                             <Play className="w-3 h-3 fill-current" />
@@ -798,11 +806,11 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
-                      { mod: '01', title: 'Business SQL & Cohort Retention Analytics', time: '24m', tech: 'SQL', desc: 'Calculating Monthly Active Users (MAU), customer churn rates, and LTV.' },
-                      { mod: '02', title: 'Kimball Data Modeling (Star Schemas & SCD)', time: '28m', tech: 'Kimball Modeling', desc: 'Fact tables, dimension tables, degenerate dimensions, and SCD Type 2 history.' },
-                      { mod: '03', title: 'Enterprise Power BI & DAX Measure Modeling', time: '26m', tech: 'Power BI', desc: 'CALCULATE, time intelligence functions, and relationship cardinality.' },
-                      { mod: '04', title: 'Tableau Interactive Dashboards & Storytelling', time: '25m', tech: 'Tableau', desc: 'Parameters, Level of Detail (LOD) expressions, and executive visual layout.' },
-                      { mod: '05', title: 'Analytics Engineering with dbt & Metrics Layer', time: '27m', tech: 'dbt', desc: 'Building staged models, semantic layers, and automated schema tests.' }
+                      { id: 'da-mod-01', mod: '01', title: 'Business SQL & Cohort Retention Analytics', time: '24m', tech: 'SQL', desc: 'Calculating Monthly Active Users (MAU), customer churn rates, and LTV.' },
+                      { id: 'da-mod-02', mod: '02', title: 'Kimball Data Modeling (Star Schemas & SCD)', time: '28m', tech: 'Kimball Modeling', desc: 'Fact tables, dimension tables, degenerate dimensions, and SCD Type 2 history.' },
+                      { id: 'da-mod-03', mod: '03', title: 'Enterprise Power BI & DAX Measure Modeling', time: '26m', tech: 'Power BI', desc: 'CALCULATE, time intelligence functions, and relationship cardinality.' },
+                      { id: 'da-mod-04', mod: '04', title: 'Tableau Interactive Dashboards & Storytelling', time: '25m', tech: 'Tableau', desc: 'Parameters, Level of Detail (LOD) expressions, and executive visual layout.' },
+                      { id: 'da-mod-05', mod: '05', title: 'Analytics Engineering with dbt & Metrics Layer', time: '27m', tech: 'dbt', desc: 'Building staged models, semantic layers, and automated schema tests.' }
                     ].map(item => (
                       <div key={item.mod} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:border-brand-blue/40 transition-colors">
                         <div className="flex items-center justify-between text-xs font-mono">
@@ -813,7 +821,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.desc}</p>
                         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                           <button
-                            onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                            onClick={() => onOpenVideo(TRACK_MODULE_VIDEOS[item.id] || HERO_MASTERCLASS_VIDEO)}
                             className="text-xs font-bold text-brand-blue hover:text-blue-400 flex items-center gap-1 cursor-pointer"
                           >
                             <Play className="w-3 h-3 fill-current" />
@@ -839,11 +847,11 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
-                      { mod: '01', title: 'Applied Statistics, Probability & A/B Testing', time: '25m', tech: 'Statistics', desc: 'Hypothesis testing, p-values, z-scores, and designing statistical sample sizes.' },
-                      { mod: '02', title: 'Supervised ML: Trees, Regression & Forests', time: '28m', tech: 'Scikit-Learn', desc: 'Cost functions, feature scaling, cross-validation, and bias-variance tradeoff.' },
-                      { mod: '03', title: 'Gradient Boosting & XGBoost Hyperparameter Tuning', time: '30m', tech: 'XGBoost', desc: 'Loss reduction, learning rate, tree depth, and early stopping criteria.' },
-                      { mod: '04', title: 'MLOps: Model Registry & FastAPI Serving', time: '27m', tech: 'MLflow / FastAPI', desc: 'Containerizing model artifacts with Docker and deploying real-time prediction REST APIs.' },
-                      { mod: '05', title: 'LLM Data Pipelines & Vector Databases (RAG)', time: '26m', tech: 'LangChain / Chroma', desc: 'Chunking strategies, embedding generation, semantic search, and retrieval pipelines.' }
+                      { id: 'ds-mod-01', mod: '01', title: 'Applied Statistics, Probability & A/B Testing', time: '25m', tech: 'Statistics', desc: 'Hypothesis testing, p-values, z-scores, and designing statistical sample sizes.' },
+                      { id: 'ds-mod-02', mod: '02', title: 'Supervised ML: Trees, Regression & Forests', time: '28m', tech: 'Scikit-Learn', desc: 'Cost functions, feature scaling, cross-validation, and bias-variance tradeoff.' },
+                      { id: 'ds-mod-03', mod: '03', title: 'Gradient Boosting & XGBoost Hyperparameter Tuning', time: '30m', tech: 'XGBoost', desc: 'Loss reduction, learning rate, tree depth, and early stopping criteria.' },
+                      { id: 'ds-mod-04', mod: '04', title: 'MLOps: Model Registry & FastAPI Serving', time: '27m', tech: 'MLflow / FastAPI', desc: 'Containerizing model artifacts with Docker and deploying real-time prediction REST APIs.' },
+                      { id: 'ds-mod-05', mod: '05', title: 'LLM Data Pipelines & Vector Databases (RAG)', time: '26m', tech: 'LangChain / Chroma', desc: 'Chunking strategies, embedding generation, semantic search, and retrieval pipelines.' }
                     ].map(item => (
                       <div key={item.mod} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:border-purple-500/40 transition-colors">
                         <div className="flex items-center justify-between text-xs font-mono">
@@ -854,7 +862,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.desc}</p>
                         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                           <button
-                            onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                            onClick={() => onOpenVideo(TRACK_MODULE_VIDEOS[item.id] || HERO_MASTERCLASS_VIDEO)}
                             className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
                           >
                             <Play className="w-3 h-3 fill-current" />
@@ -971,7 +979,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                         className="flex-1 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                       >
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        <span>Watch Project Modules</span>
+                        <span>Watch Project Masterclass (1h 42m)</span>
                       </button>
                       <button
                         onClick={() => onNavigateTab('projects')}
@@ -990,7 +998,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                       <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-bold font-mono">
                         DATA ENGINEER CAPSTONE
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 17m total</span>
+                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 45m total</span>
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-50">
@@ -1002,26 +1010,29 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                     <div className="space-y-1.5 text-xs font-mono bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 1: Serverless Spotify Ingestion (Lambda)</span>
-                        <span className="text-slate-400">24 min</span>
+                        <span>Module 1: Serverless Ingestion & IAM Policies</span>
+                        <span className="text-slate-400">30 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 2: S3 Event Notification & Staging</span>
-                        <span className="text-slate-400">26 min</span>
+                        <span>Module 2: S3 Event Data Lake & Raw Staging</span>
+                        <span className="text-slate-400">35 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 3: Glue Catalog, Crawler & Athena SQL</span>
-                        <span className="text-slate-400">27 min</span>
+                        <span>Module 3: AWS Glue Catalog, Crawler & Athena SQL</span>
+                        <span className="text-slate-400">40 min</span>
                       </div>
                     </div>
 
                     <div className="pt-2 flex items-center gap-3">
                       <button
-                        onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                        onClick={() => {
+                          const vid = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-aws-masterclass') || HERO_MASTERCLASS_VIDEO;
+                          onOpenVideo(vid);
+                        }}
                         className="flex-1 py-2 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                       >
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        <span>Watch Project Modules</span>
+                        <span>Watch Project Masterclass (1h 45m)</span>
                       </button>
                       <button
                         onClick={() => onNavigateTab('projects')}
@@ -1040,7 +1051,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                       <span className="px-2.5 py-0.5 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold font-mono">
                         DATA ANALYST CAPSTONE
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 15m total</span>
+                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 12m total</span>
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-50">
@@ -1052,26 +1063,29 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                     <div className="space-y-1.5 text-xs font-mono bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 1: Dimensional Schema & SCD Modeling</span>
+                        <span>Module 1: Dimensional Schema & Snowflake Setup</span>
                         <span className="text-slate-400">22 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 2: dbt Transformations & Data Tests</span>
+                        <span>Module 2: dbt Staging, ref() Models & Data Tests</span>
                         <span className="text-slate-400">28 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
                         <span>Module 3: Executive Retention Power BI Dashboard</span>
-                        <span className="text-slate-400">25 min</span>
+                        <span className="text-slate-400">22 min</span>
                       </div>
                     </div>
 
                     <div className="pt-2 flex items-center gap-3">
                       <button
-                        onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                        onClick={() => {
+                          const vid = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-dbt-snowflake') || HERO_MASTERCLASS_VIDEO;
+                          onOpenVideo(vid);
+                        }}
                         className="flex-1 py-2 px-4 rounded-xl bg-brand-blue hover:bg-brand-hover text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                       >
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        <span>Watch Project Modules</span>
+                        <span>Watch Project Masterclass (1h 12m)</span>
                       </button>
                       <button
                         onClick={() => onNavigateTab('projects')}
@@ -1090,7 +1104,7 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
                       <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 text-xs font-bold font-mono">
                         DATA SCIENCE & ML CAPSTONE
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 19m total</span>
+                      <span className="text-xs text-slate-400 font-mono">3 Modules • 1 hr 22m total</span>
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-50">
@@ -1102,26 +1116,29 @@ export const InteractiveHomeGuide: React.FC<InteractiveHomeGuideProps> = ({
 
                     <div className="space-y-1.5 text-xs font-mono bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 1: Real-Time Kafka Transaction Streaming</span>
+                        <span>Module 1: Real-Time Kafka Streaming & Topics</span>
                         <span className="text-slate-400">25 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 2: PySpark Feature Store & XGBoost Model</span>
-                        <span className="text-slate-400">28 min</span>
+                        <span>Module 2: Producer Offsets, Hashing & Partitions</span>
+                        <span className="text-slate-400">30 min</span>
                       </div>
                       <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
-                        <span>Module 3: Containerized FastAPI Inference Endpoint</span>
-                        <span className="text-slate-400">26 min</span>
+                        <span>Module 3: Consumer Groups & Stream Fault Tolerance</span>
+                        <span className="text-slate-400">27 min</span>
                       </div>
                     </div>
 
                     <div className="pt-2 flex items-center gap-3">
                       <button
-                        onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                        onClick={() => {
+                          const vid = CURATED_PROJECT_VIDEOS.find(v => v.id === 'project-kafka-crash-course') || HERO_MASTERCLASS_VIDEO;
+                          onOpenVideo(vid);
+                        }}
                         className="flex-1 py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                       >
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        <span>Watch Project Modules</span>
+                        <span>Watch Project Masterclass (1h 22m)</span>
                       </button>
                       <button
                         onClick={() => onNavigateTab('projects')}
