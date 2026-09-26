@@ -1,58 +1,71 @@
 import { BookReference } from '../../types';
 import { getEnhancedPdfMetadata } from './pdfBookMetadata';
 
-const VAULT_PDF_MAP: Record<string, { fileName: string; fileSizeFormatted: string }> = {
+const VAULT_PDF_MAP: Record<string, { fileName: string; fileSizeFormatted: string; pageCount: number }> = {
   'book-1': {
     fileName: 'The_Data_Warehouse_Toolkit_-_Kimball.pdf',
     fileSizeFormatted: '6.89 MB',
+    pageCount: 601,
   },
   'book-2': {
     fileName: 'Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, and Maintainable Systems by Martin Kleppmann (z-lib.org).pdf',
     fileSizeFormatted: '23.3 MB',
+    pageCount: 613,
   },
   'book-3': {
     fileName: 'spark-the-definitive-guide40www.bigdatabugs.com_.pdf',
     fileSizeFormatted: '18.4 MB',
+    pageCount: 601,
   },
   'book-4': {
     fileName: 'dldg_databricks.pdf',
     fileSizeFormatted: '8.2 MB',
+    pageCount: 382,
   },
   'book-5': {
     fileName: 'Kafka The Definitive Guide Real-Time Data and Stream Processing at Scale, Second Edition by Gwen Shapira, Todd Palino, Rajini Sivaram, Krit Petty (z-lib.org).pdf',
     fileSizeFormatted: '6.9 MB',
+    pageCount: 793,
   },
   'book-6': {
     fileName: 'Fundamentals of Data Engineering (Reis, JoeHousley, Matt) (Z-Library).pdf',
     fileSizeFormatted: '8.4 MB',
+    pageCount: 445,
   },
   'book-7': {
     fileName: "System Design Interview An Insider's Guide by Alex Xu (z-lib.org).pdf",
     fileSizeFormatted: '14.1 MB',
+    pageCount: 269,
   },
   'book-8': {
     fileName: 'system-design-interview-an-insiders-guide-volume-2-1736049119-9781736049112_compress.pdf',
     fileSizeFormatted: '19.8 MB',
+    pageCount: 427,
   },
   'book-9': {
     fileName: 'Data Mesh Delivering Data-Driven Value at Scale.pdf',
     fileSizeFormatted: '5.3 MB',
+    pageCount: 90,
   },
   'book-10': {
     fileName: 'Alan_Beaulieu-Learning_SQL-EN.pdf',
     fileSizeFormatted: '1.8 MB',
+    pageCount: 337,
   },
   'book-11': {
     fileName: 'Python-for-Data-Analysis.pdf',
     fileSizeFormatted: '15.2 MB',
+    pageCount: 582,
   },
   'book-12': {
     fileName: 'Bas_P_Harenslak,_Julian_Rutger_de_Ruiter_Data_Pipelines_with_Apache.pdf',
     fileSizeFormatted: '21.4 MB',
+    pageCount: 482,
   },
   'book-13': {
     fileName: 'AI_ENGINEERING_BUILDING_APPLICATIONS_WITH_FOUNDATION_MODELS_BY_C.pdf',
     fileSizeFormatted: '31.9 MB',
+    pageCount: 535,
   },
 };
 
@@ -370,6 +383,7 @@ export const FOUNDATIONAL_BOOKS: BookReference[] = RAW_FOUNDATIONAL_BOOKS.map(bo
       ...book,
       formatType: 'pdf' as const,
       originalFileName: vaultInfo.fileName,
+      pageCount: vaultInfo.pageCount,
       pdfUrl: `${basePath}/vault_storage/${encodeURIComponent(vaultInfo.fileName)}`,
       fileSizeFormatted: vaultInfo.fileSizeFormatted,
       conceptCards: (enhanced.conceptCards && enhanced.conceptCards.length > 0) ? enhanced.conceptCards : book.conceptCards,

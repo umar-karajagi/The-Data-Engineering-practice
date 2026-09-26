@@ -10,8 +10,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Sparkles, 
-  Download,
-  ExternalLink,
+  ShieldCheck,
+  Lock,
   Volume2,
   VolumeX,
   Play,
@@ -38,7 +38,8 @@ import {
   BookMarked,
   ZoomIn,
   ZoomOut,
-  Loader2
+  Loader2,
+  Monitor
 } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { BookReference, ContentRef } from '../../types';
@@ -48,7 +49,7 @@ import { saveReadingProgress, getReadingProgress, toggleChapterBookmark, getBook
 import { useUserStore } from '../../lib/userStore';
 
 export type BookChapter = BookReference['chapters'][number];
-export type ReaderDisplayMode = 'spiral3d' | 'ereader' | 'pdf';
+export type ReaderDisplayMode = 'spiral3d' | 'ereader' | 'continuous';
 export type ReaderTheme = 'dark' | 'sepia' | 'oled' | 'slate';
 export type ReaderFont = 'serif' | 'sans' | 'mono';
 
@@ -61,6 +62,49 @@ interface Crazy3DBookReaderProps {
   onOpenQuickNote?: (ref?: ContentRef) => void;
 }
 
+// Self-healing multi-candidate PDF fetcher to prevent 404s in static export / GitHub Pages
+async function fetchVaultPdfBuffer(fileName: string, explicitUrl?: string): Promise<{ buffer: ArrayBuffer; sourceUrl: string }> {
+  const isGh = typeof window !== 'undefined' && window.location.pathname.includes('/The-Data-Engineering-practice');
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const ghBase = '/The-Data-Engineering-practice';
+  const envBase = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const enc = encodeURIComponent(fileName);
+
+  const candidates: string[] = [];
+  if (explicitUrl) candidates.push(explicitUrl);
+  if (isGh) {
+    candidates.push(`${origin}${ghBase}/vault_storage/${enc}`);
+    candidates.push(`${ghBase}/vault_storage/${enc}`);
+  }
+  if (envBase) {
+    candidates.push(`${origin}${envBase}/vault_storage/${enc}`);
+    candidates.push(`${envBase}/vault_storage/${enc}`);
+  }
+  candidates.push(`${origin}/vault_storage/${enc}`);
+  candidates.push(`/vault_storage/${enc}`);
+  candidates.push(`./vault_storage/${enc}`);
+  candidates.push(`vault_storage/${enc}`);
+
+  const unique = Array.from(new Set(candidates.filter(Boolean)));
+
+  let lastError: any = null;
+  for (const url of unique) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const buf = await res.arrayBuffer();
+        if (buf && buf.byteLength > 1000) {
+          return { buffer: buf, sourceUrl: url };
+        }
+      }
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  throw new Error(lastError?.message || `Vault literature could not be loaded from ${fileName}`);
+}
+
 export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   book,
   initialChapterId,
@@ -69,7 +113,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   onAddXP,
   onOpenQuickNote
 }) => {
-  // 1. Reading Mode: 3D Spiral Flipbook (Default), E-Reader, or Native PDF
+  // 1. Reading Mode: 3D Spiral Flipbook (Default), E-Reader, or High-DPI Continuous Canvas
   const [displayMode, setDisplayMode] = useState<ReaderDisplayMode>('spiral3d');
   const [show3DCover, setShow3DCover] = useState<boolean>(false);
 
@@ -82,12 +126,15 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   const [isPageRendering, setIsPageRendering] = useState<boolean>(false);
   const [pdfLoadError, setPdfLoadError] = useState<string | null>(null);
   const [zoomScale, setZoomScale] = useState<number>(1.0);
+  const [drmAlert, setDrmAlert] = useState<string | null>(null);
 
-  // Canvases for Left and Right Real PDF Pages
+  // Canvases for Left and Right Real PDF Pages (and Continuous mode)
   const leftCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const rightCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const continuousCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const leftRenderTaskRef = useRef<any>(null);
   const rightRenderTaskRef = useRef<any>(null);
+  const continuousRenderTaskRef = useRef<any>(null);
 
   // Chapter Navigation State (for E-Reader Mode)
   const chapters: BookChapter[] = useMemo(() => {
@@ -139,6 +186,26 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   // Book Primary Vibrant Color
   const themeColor = book.coverColor || '#10B981';
 
+  // DRM Trigger
+  const triggerDrmAlert = useCallback((msg: string) => {
+    setDrmAlert(msg);
+    setTimeout(() => setDrmAlert(null), 3200);
+  }, []);
+
+  // Anti-download Keyboard Interception (Ctrl+S, Ctrl+P, Cmd+S, Cmd+P)
+  useEffect(() => {
+    const handleDrmKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) {
+        e.preventDefault();
+        triggerDrmAlert('🔒 Vault DRM Active: Direct downloads and printing are disabled to protect library literature.');
+        return false;
+      }
+    };
+
+    window.addEventListener('keydown', handleDrmKeyDown);
+    return () => window.removeEventListener('keydown', handleDrmKeyDown);
+  }, [triggerDrmAlert]);
+
   // User store hook
   let storeSetLastActive: any = null;
   let storeAddXP: any = null;
@@ -150,12 +217,12 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     // outside provider
   }
 
-  // 1. Initialize PDF.js Engine & Load Real PDF Document
+  // 1. Initialize PDF.js Engine & Load Real PDF Document via Self-Healing ArrayBuffer
   useEffect(() => {
     let isCancelled = false;
 
     async function loadPdfDocument() {
-      if (!resolvedPdfUrl) {
+      if (!pdfFileName && !resolvedPdfUrl) {
         setIsPdfLoading(false);
         return;
       }
@@ -165,26 +232,41 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
       try {
         if (typeof window !== 'undefined') {
-          // Set Worker Source (Same origin to prevent CORS restriction)
-          pdfjsLib.GlobalWorkerOptions.workerSrc = `${window.location.origin}${basePath}/pdfjs/pdf.worker.min.js`;
+          const isGh = window.location.pathname.includes('/The-Data-Engineering-practice');
+          const base = isGh ? '/The-Data-Engineering-practice' : (process.env.NEXT_PUBLIC_BASE_PATH || '');
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `${window.location.origin}${base}/pdfjs/pdf.worker.min.js`;
         }
 
-        const loadingTask = pdfjsLib.getDocument({
-          url: resolvedPdfUrl,
-          cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
-          cMapPacked: true,
-        });
+        const { buffer } = await fetchVaultPdfBuffer(pdfFileName, resolvedPdfUrl);
 
-        const doc = await loadingTask.promise;
+        let doc: any = null;
+        try {
+          const loadingTask = pdfjsLib.getDocument({
+            data: buffer,
+            cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+            cMapPacked: true,
+          });
+          doc = await loadingTask.promise;
+        } catch (workerErr) {
+          console.warn('Local PDF worker failed, falling back to CDN worker...', workerErr);
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          const loadingTask = pdfjsLib.getDocument({
+            data: buffer,
+            cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+            cMapPacked: true,
+          });
+          doc = await loadingTask.promise;
+        }
+
         if (!isCancelled) {
           setPdfDoc(doc);
           setPdfTotalPages(doc.numPages);
           setIsPdfLoading(false);
         }
       } catch (err: any) {
-        console.warn('PDF.js loading failed, falling back to embedded mode:', err);
+        console.warn('PDF.js loading failed:', err);
         if (!isCancelled) {
-          setPdfLoadError(err?.message || 'Could not load PDF document.');
+          setPdfLoadError(err?.message || 'Could not load PDF document from vault.');
           setIsPdfLoading(false);
         }
       }
@@ -195,7 +277,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [resolvedPdfUrl, basePath]);
+  }, [pdfFileName, resolvedPdfUrl, basePath]);
 
   // 2. Render Real PDF Pages on Left & Right 3D Canvases
   const renderPageToCanvas = useCallback(async (
@@ -253,9 +335,20 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     }
   }, [zoomScale]);
 
-  // Re-render canvases whenever currentPdfPage, pdfDoc, or zoom changes
+  // Re-render canvases whenever currentPdfPage, pdfDoc, displayMode, or zoom changes
   useEffect(() => {
-    if (!pdfDoc || displayMode !== 'spiral3d' || show3DCover) return;
+    if (!pdfDoc) return;
+
+    if (displayMode === 'continuous') {
+      setIsPageRendering(true);
+      renderPageToCanvas(pdfDoc, currentPdfPage, continuousCanvasRef.current, continuousRenderTaskRef).finally(() => {
+        setIsPageRendering(false);
+      });
+      setPageInputValue(currentPdfPage.toString());
+      return;
+    }
+
+    if (displayMode !== 'spiral3d' || show3DCover) return;
 
     setIsPageRendering(true);
 
@@ -360,7 +453,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
-      if (displayMode === 'spiral3d') {
+      if (displayMode === 'spiral3d' || displayMode === 'continuous') {
         if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
           e.preventDefault();
           handleNextPage();
@@ -435,9 +528,13 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
   return (
     <div 
-      className={`relative min-h-[94vh] bg-gradient-to-b from-[#02110B] via-[#041D14] to-[#010906] text-emerald-50 flex flex-col justify-between overflow-hidden antialiased ${
+      className={`relative min-h-[94vh] bg-gradient-to-b from-[#02110B] via-[#041D14] to-[#010906] text-emerald-50 flex flex-col justify-between overflow-hidden antialiased select-none ${
         isTheaterMode ? 'fixed inset-0 z-50 p-2 sm:p-4' : ''
       }`}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        triggerDrmAlert('🔒 Vault Protected: Direct downloads, image extraction, and printing are disabled.');
+      }}
     >
       {/* Dynamic Ambient Color Backlight */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -513,32 +610,30 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
             </button>
 
             <button
+              onClick={() => setDisplayMode('continuous')}
+              className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all ${
+                displayMode === 'continuous'
+                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 scale-[1.02]'
+                  : 'text-emerald-400 hover:text-white'
+              }`}
+              title="High-DPI Single Page Presentation View with vector canvas"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>Canvas View ({pdfTotalPages}p)</span>
+            </button>
+
+            <button
               onClick={() => setDisplayMode('ereader')}
               className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all ${
                 displayMode === 'ereader'
                   ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 scale-[1.02]'
                   : 'text-emerald-400 hover:text-white'
               }`}
-              title="Chapter summary and study notes mode"
+              title="Executive chapter summary notes and practice lab"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Chapter E-Reader</span>
+              <span>Chapter Notes</span>
             </button>
-
-            {resolvedPdfUrl && (
-              <button
-                onClick={() => setDisplayMode('pdf')}
-                className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all ${
-                  displayMode === 'pdf'
-                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 scale-[1.02]'
-                    : 'text-emerald-400 hover:text-white'
-                }`}
-                title="Full original PDF document with native high-DPI engine"
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Full PDF Document</span>
-              </button>
-            )}
           </div>
 
           {/* Right: Controls & Actions */}
@@ -560,7 +655,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
             )}
 
             {/* Zoom Controls */}
-            {displayMode === 'spiral3d' && !show3DCover && (
+            {(displayMode === 'spiral3d' || displayMode === 'continuous') && !show3DCover && (
               <div className="flex items-center bg-emerald-950/80 border border-emerald-800/80 rounded-xl p-0.5 text-xs hidden sm:flex">
                 <button
                   onClick={() => setZoomScale(prev => Math.max(0.75, prev - 0.15))}
@@ -618,22 +713,32 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
               {isTheaterMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
 
-            {/* Raw PDF Download */}
-            {resolvedPdfUrl && (
-              <a
-                href={resolvedPdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-2.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-mono font-extrabold flex items-center gap-1 transition-all shadow-sm"
-                title="Open or Download Original Complete PDF"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Raw PDF</span>
-              </a>
-            )}
+            {/* Anti-Download DRM Protection Badge */}
+            <div 
+              className="px-2.5 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-800/80 text-[11px] font-mono text-emerald-300 font-bold flex items-center gap-1.5 shadow-sm"
+              title="Protected literature: Direct downloading is restricted"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden sm:inline">Protected Vault</span>
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Floating Anti-Download DRM Notification Toast */}
+      <AnimatePresence>
+        {drmAlert && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-2xl bg-amber-400 text-black font-mono text-xs font-black shadow-2xl flex items-center gap-2 border border-amber-300"
+          >
+            <ShieldCheck className="w-4 h-4 text-black" />
+            <span>{drmAlert}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 2. BODY CONTENT: Renders chosen reading mode */}
       <main className="relative z-10 flex-1 flex flex-col justify-between overflow-hidden">
@@ -794,40 +899,52 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                       <ChevronLeft className="w-5 h-5" />
                     </div>
 
-                    {currentPdfPage === 1 ? (
-                      // Front Inner Flap / Title Plate
-                      <div className="w-full h-full bg-gradient-to-br from-[#0c2419] to-[#04150e] flex flex-col items-center justify-center p-8 text-center text-white relative">
-                        <div 
-                          className="w-16 h-16 rounded-2xl border border-white/20 flex items-center justify-center mb-4 shadow-xl"
-                          style={{ backgroundColor: `${themeColor}30` }}
-                        >
-                          <BookOpen className="w-8 h-8 text-emerald-300" />
+                    {/* Real Left PDF Page Canvas (Permanently Mounted) */}
+                    <div className="w-full h-full relative flex items-center justify-center bg-white overflow-hidden">
+                      <canvas 
+                        ref={leftCanvasRef} 
+                        className="w-full h-full object-contain"
+                        style={{ display: currentPdfPage === 1 ? 'none' : 'block' }}
+                      />
+
+                      {currentPdfPage === 1 ? (
+                        // Front Inner Flap / Title Plate
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0c2419] to-[#04150e] flex flex-col items-center justify-center p-8 text-center text-white z-10">
+                          <div 
+                            className="w-16 h-16 rounded-2xl border border-white/20 flex items-center justify-center mb-4 shadow-xl"
+                            style={{ backgroundColor: `${themeColor}30` }}
+                          >
+                            <BookOpen className="w-8 h-8 text-emerald-300" />
+                          </div>
+                          <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase font-bold">
+                            {book.track.toUpperCase()}
+                          </span>
+                          <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1 mb-2">
+                            {book.title}
+                          </h2>
+                          <p className="text-xs text-emerald-200/80 font-serif italic mb-6">
+                            {book.author}
+                          </p>
+                          <span className="text-[10px] font-mono text-emerald-300 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/60 font-bold">
+                            Turn Right to Begin (Page 1) →
+                          </span>
                         </div>
-                        <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase font-bold">
-                          {book.track.toUpperCase()}
-                        </span>
-                        <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1 mb-2">
-                          {book.title}
-                        </h2>
-                        <p className="text-xs text-emerald-200/80 font-serif italic mb-6">
-                          {book.author}
-                        </p>
-                        <span className="text-[10px] font-mono text-emerald-300 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/60 font-bold">
-                          Turn Right to Begin (Page 1) →
-                        </span>
-                      </div>
-                    ) : (
-                      // Real Left PDF Page Canvas
-                      <div className="w-full h-full relative flex items-center justify-center bg-white">
-                        <canvas 
-                          ref={leftCanvasRef} 
-                          className="w-full h-full object-contain"
-                        />
+                      ) : (
                         <div className="absolute bottom-2 left-4 text-[10px] font-mono text-slate-500 bg-white/90 px-2 py-0.5 rounded shadow-sm z-20 border border-slate-200 font-bold">
                           Page {currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1}
                         </div>
-                      </div>
-                    )}
+                      )}
+
+                      {/* Left Page Rendering Indicator */}
+                      {isPageRendering && currentPdfPage > 1 && (
+                        <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1.5 z-30">
+                          <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
+                          <span className="text-[11px] font-mono font-bold text-slate-700">
+                            Rendering Page {currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1}...
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* ================= 3D SPIRAL SPINE ================= */}
@@ -864,7 +981,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     </div>
 
                     {/* Real Right PDF Page Canvas */}
-                    <div className="w-full h-full relative flex items-center justify-center bg-white">
+                    <div className="w-full h-full relative flex items-center justify-center bg-white overflow-hidden">
                       <canvas 
                         ref={rightCanvasRef} 
                         className="w-full h-full object-contain"
@@ -872,6 +989,16 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                       <div className="absolute bottom-2 right-4 text-[10px] font-mono text-slate-500 bg-white/90 px-2 py-0.5 rounded shadow-sm z-20 border border-slate-200 font-bold">
                         Page {currentPdfPage === 1 ? 1 : (currentPdfPage % 2 === 0 ? currentPdfPage + 1 : currentPdfPage)}
                       </div>
+
+                      {/* Right Page Rendering Indicator */}
+                      {isPageRendering && (
+                        <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1.5 z-30">
+                          <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
+                          <span className="text-[11px] font-mono font-bold text-slate-700">
+                            Rendering Page {currentPdfPage === 1 ? 1 : (currentPdfPage % 2 === 0 ? currentPdfPage + 1 : currentPdfPage)}...
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -1163,29 +1290,89 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
         )}
 
         {/* ============================================================ */}
-        {/* MODE C: FULL NATIVE PDF DOCUMENT VIEWER (All 600+ pages)     */}
+        {/* MODE C: HIGH-DPI CANVAS PRESENTATION VIEW (All 600+ pages)   */}
         {/* ============================================================ */}
-        {displayMode === 'pdf' && resolvedPdfUrl && (
-          <div className="flex-1 w-full h-[85vh] p-2 sm:p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2 px-2 text-xs font-mono text-emerald-400">
-              <span className="font-bold">Native PDF Document Viewer (All {pdfTotalPages} Pages Active)</span>
-              <a
-                href={resolvedPdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-emerald-300 hover:text-white underline font-bold"
-              >
-                <span>Open in Full Browser Window</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+        {displayMode === 'continuous' && (
+          <div className="flex-1 w-full max-w-5xl mx-auto p-2 sm:p-4 flex flex-col items-center justify-start overflow-y-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between w-full max-w-3xl px-4 py-2 bg-emerald-950/90 border border-emerald-800 rounded-2xl text-xs font-mono shadow-md backdrop-blur-md gap-2">
+              <span className="text-emerald-300 font-bold flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Zero-Download Protected Canvas View</span>
+              </span>
+              <span className="text-emerald-400 font-bold">
+                Page {currentPdfPage} of {pdfTotalPages}
+              </span>
             </div>
 
-            <div className="flex-1 w-full bg-neutral-900 rounded-2xl overflow-hidden border border-emerald-800 shadow-2xl relative">
-              <iframe
-                src={`${resolvedPdfUrl}#toolbar=1&navpanes=1`}
-                className="w-full h-full border-0 rounded-2xl"
-                title={book.title}
+            {/* High-DPI Single Page Canvas Frame */}
+            <div 
+              className="relative w-full max-w-2xl aspect-[1/1.414] bg-white rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden border-2 border-emerald-800/80 flex items-center justify-center p-1"
+              style={{
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+                textRendering: 'optimizeLegibility',
+              }}
+            >
+              <canvas 
+                ref={continuousCanvasRef} 
+                className="w-full h-full object-contain"
               />
+
+              {isPageRendering && (
+                <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2 z-30">
+                  <Loader2 className="w-7 h-7 animate-spin text-emerald-600" />
+                  <span className="text-xs font-mono font-bold text-slate-800">
+                    Rendering High-DPI Page {currentPdfPage} of {pdfTotalPages}...
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Navigation & Scrubber for Canvas View */}
+            <div className="flex flex-wrap items-center justify-between gap-3 w-full max-w-2xl px-3 py-2 bg-emerald-950/80 border border-emerald-900 rounded-2xl text-xs font-mono">
+              <button
+                onClick={() => handleJumpToPage(Math.max(1, currentPdfPage - 1))}
+                disabled={currentPdfPage <= 1}
+                className="px-3 py-1.5 rounded-xl bg-emerald-900/80 hover:bg-emerald-800 disabled:opacity-40 text-emerald-300 font-bold flex items-center gap-1 transition-all"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Prev Page</span>
+              </button>
+
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-300 font-bold">Page</span>
+                <input
+                  type="text"
+                  value={pageInputValue}
+                  onChange={(e) => setPageInputValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const p = parseInt(pageInputValue, 10);
+                      if (!isNaN(p)) handleJumpToPage(p);
+                    }
+                  }}
+                  className="w-12 text-center py-0.5 rounded bg-emerald-900 border border-emerald-700 text-white font-bold"
+                />
+                <span className="text-emerald-400 font-bold">/ {pdfTotalPages}</span>
+                <input
+                  type="range"
+                  min={1}
+                  max={pdfTotalPages}
+                  value={currentPdfPage}
+                  onChange={(e) => handleJumpToPage(parseInt(e.target.value, 10))}
+                  className="w-28 sm:w-44 h-1.5 bg-emerald-900 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                />
+              </div>
+
+              <button
+                onClick={() => handleJumpToPage(Math.min(pdfTotalPages, currentPdfPage + 1))}
+                disabled={currentPdfPage >= pdfTotalPages}
+                className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-black font-extrabold flex items-center gap-1 transition-all shadow-md shadow-emerald-500/20"
+              >
+                <span>Next Page</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         )}
