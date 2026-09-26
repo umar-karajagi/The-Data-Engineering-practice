@@ -32,6 +32,10 @@ import {
   Trophy,
   Filter
 } from 'lucide-react';
+import { Hero3DCanvas } from '../3d/Hero3DCanvas';
+import { CardContainer, CardBody, CardItem } from '../3d/Card3D';
+import { HeroParallaxContainer } from '../3d/HeroParallaxContainer';
+import { NeetCodeRoadmap } from '../roadmap/NeetCodeRoadmap';
 
 interface DataVedaHomeProps {
   onOpenVideo: (video: CuratedVideo) => void;
@@ -223,6 +227,9 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       <section className="relative overflow-hidden pt-12 pb-20 md:pt-16 md:pb-28">
         
+        {/* Interactive Three.js 3D WebGL Background Constellation */}
+        <Hero3DCanvas />
+
         {/* Subtle Background Glows */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#0050FF]/12 blur-[140px] pointer-events-none rounded-full" />
         <div className="absolute top-12 left-10 w-48 h-48 bg-emerald-500/5 blur-[90px] pointer-events-none rounded-full" />
@@ -284,65 +291,67 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           </div>
 
           {/* ========================================================================= */}
-          {/* BROWSER CHROME HERO VIDEO MOCKUP (INTERACTIVE PLAYABLE PREVIEW) */}
+          {/* BROWSER CHROME HERO VIDEO MOCKUP (INTERACTIVE PLAYABLE PREVIEW WITH 3D PERSPECTIVE) */}
           {/* ========================================================================= */}
           <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden group relative">
-              
-              {/* Browser Window Header */}
-              <div className="px-4 py-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-                  <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-                  <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
-                </div>
+            <HeroParallaxContainer>
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden group relative">
+                
+                {/* Browser Window Header */}
+                <div className="px-4 py-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
+                    <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                    <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
+                  </div>
 
-                <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
-                  <span className="text-slate-500 dark:text-slate-500">https://</span>
-                  <span className="text-slate-900 dark:text-white">dataveda.io</span>
-                  <span className="text-slate-500 dark:text-slate-500">/masterclass/uber-data-analytics</span>
-                </div>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
+                    <span className="text-slate-500 dark:text-slate-500">https://</span>
+                    <span className="text-slate-900 dark:text-white">dataveda.io</span>
+                    <span className="text-slate-500 dark:text-slate-500">/masterclass/uber-data-analytics</span>
+                  </div>
 
-                <div className="text-[11px] font-mono text-emerald-400 font-semibold hidden sm:inline">
-                  WATCH MASTERCLASS
-                </div>
-              </div>
-
-              {/* Video Thumbnail with Play Button */}
-              <div 
-                onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
-                className="relative aspect-video w-full bg-black cursor-pointer overflow-hidden group"
-              >
-                {/* Background Poster Image */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-[#0050FF] hover:bg-[#1C449A] text-white flex items-center justify-center shadow-2xl shadow-[#0050FF]/60 group-hover:scale-110 transition-transform">
-                    <Play className="w-8 h-8 fill-white translate-x-0.5" />
+                  <div className="text-[11px] font-mono text-emerald-400 font-semibold hidden sm:inline">
+                    WATCH MASTERCLASS
                   </div>
                 </div>
 
-                {/* Video Info Overlay */}
-                <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
-                  <div>
-                    <span className="px-2.5 py-1 rounded-full bg-[#0050FF] text-white text-[11px] font-bold uppercase tracking-wider">
-                      Featured Project Masterclass
+                {/* Video Thumbnail with Play Button */}
+                <div 
+                  onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
+                  className="relative aspect-video w-full bg-black cursor-pointer overflow-hidden group"
+                >
+                  {/* Background Poster Image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-[#0050FF] hover:bg-[#1C449A] text-white flex items-center justify-center shadow-2xl shadow-[#0050FF]/60 group-hover:scale-110 transition-transform">
+                      <Play className="w-8 h-8 fill-white translate-x-0.5" />
+                    </div>
+                  </div>
+
+                  {/* Video Info Overlay */}
+                  <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
+                    <div>
+                      <span className="px-2.5 py-1 rounded-full bg-[#0050FF] text-white text-[11px] font-bold uppercase tracking-wider">
+                        Featured Project Masterclass
+                      </span>
+                      <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
+                        Uber Data Analytics End-to-End Pipeline
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1 max-w-xl">
+                        GCP, Mage AI, BigQuery & Looker Studio • 1 hr 42 min • 1.2M+ Views
+                      </p>
+                    </div>
+
+                    <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-900 dark:text-slate-100 shrink-0 self-start sm:self-auto flex items-center gap-1.5">
+                      <span>Click to Play in HD</span>
+                      <span>▶</span>
                     </span>
-                    <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
-                      Uber Data Analytics End-to-End Pipeline
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1 max-w-xl">
-                      GCP, Mage AI, BigQuery & Looker Studio • 1 hr 42 min • 1.2M+ Views • Darshil Parmar
-                    </p>
                   </div>
-
-                  <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-900 dark:text-slate-100 shrink-0 self-start sm:self-auto flex items-center gap-1.5">
-                    <span>Click to Play in HD</span>
-                    <span>▶</span>
-                  </span>
                 </div>
-              </div>
 
-            </div>
+              </div>
+            </HeroParallaxContainer>
           </div>
 
         </div>
@@ -369,6 +378,14 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           </div>
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 2.5: NEETCODE-STYLE INTERACTIVE 3D DATA ENGINEERING ROADMAP */}
+      {/* ========================================================================= */}
+      <NeetCodeRoadmap 
+        onOpenVideo={onOpenVideo} 
+        onNavigateTab={onNavigateTab} 
+      />
 
       {/* ========================================================================= */}
       {/* SECTION 3: PICK THE ROLE. FOLLOW THE PATH. */}
@@ -415,129 +432,150 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           </div>
         </div>
 
-        {/* 3 Career Track Cards */}
+        {/* 3 Career Track Cards with 3D Tilt & Specular Glare */}
         {roleTab === 'tracks' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Track 1: Data Engineer */}
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold">
-                    Beginner → Advanced
-                  </span>
-                  <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
-                    ★ 4.9 (1.8k reviews)
-                  </span>
+            <CardContainer containerClassName="w-full" className="w-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+                <div className="space-y-4">
+                  <CardItem translateZ={25} className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold">
+                      Beginner → Advanced
+                    </span>
+                    <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
+                      ★ 4.9 (1.8k reviews)
+                    </span>
+                  </CardItem>
+
+                  <CardItem translateZ={35}>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                      Data Engineer
+                    </h3>
+                  </CardItem>
+
+                  <CardItem translateZ={20}>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      Zero to job-ready data engineer — fundamentals, Python and SQL, modeling and warehousing, then Spark, orchestration, streaming, and the cloud, finishing with system design.
+                    </p>
+                  </CardItem>
+
+                  <CardItem translateZ={25} className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
+                    <span><strong>120+</strong> hours</span>
+                    <span>•</span>
+                    <span><strong>25</strong> courses</span>
+                    <span>•</span>
+                    <span><strong>12</strong> projects</span>
+                  </CardItem>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
-                  Data Engineer
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Zero to job-ready data engineer — fundamentals, Python and SQL, modeling and warehousing, then Spark, orchestration, streaming, and the cloud, finishing with system design.
-                </p>
-
-                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
-                  <span><strong>120+</strong> hours</span>
-                  <span>•</span>
-                  <span><strong>25</strong> courses</span>
-                  <span>•</span>
-                  <span><strong>12</strong> projects</span>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
-                <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
-                  className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
-                >
-                  <span>Explore Track</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                <CardItem translateZ={30} className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
+                  <button
+                    onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
+                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                  >
+                    <span>Explore Track</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </CardItem>
+              </CardBody>
+            </CardContainer>
 
             {/* Track 2: Analytics Engineer */}
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-semibold">
-                    Beginner → Intermediate
-                  </span>
-                  <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
-                    ★ 4.8 (950 reviews)
-                  </span>
+            <CardContainer containerClassName="w-full" className="w-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+                <div className="space-y-4">
+                  <CardItem translateZ={25} className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-semibold">
+                      Beginner → Intermediate
+                    </span>
+                    <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
+                      ★ 4.8 (950 reviews)
+                    </span>
+                  </CardItem>
+
+                  <CardItem translateZ={35}>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                      Analytics Engineer
+                    </h3>
+                  </CardItem>
+
+                  <CardItem translateZ={20}>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      Model and transform data for analytics — start with Python and SQL, then move through dimensional modeling, warehousing on Snowflake, and dbt for production transformations.
+                    </p>
+                  </CardItem>
+
+                  <CardItem translateZ={25} className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
+                    <span><strong>60+</strong> hours</span>
+                    <span>•</span>
+                    <span><strong>8</strong> courses</span>
+                    <span>•</span>
+                    <span><strong>6</strong> projects</span>
+                  </CardItem>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
-                  Analytics Engineer
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Model and transform data for analytics — start with Python and SQL, then move through dimensional modeling, warehousing on Snowflake, and dbt for production transformations.
-                </p>
-
-                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
-                  <span><strong>60+</strong> hours</span>
-                  <span>•</span>
-                  <span><strong>8</strong> courses</span>
-                  <span>•</span>
-                  <span><strong>6</strong> projects</span>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
-                <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
-                  className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
-                >
-                  <span>Explore Track</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                <CardItem translateZ={30} className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
+                  <button
+                    onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
+                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                  >
+                    <span>Explore Track</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </CardItem>
+              </CardBody>
+            </CardContainer>
 
             {/* Track 3: Streaming Systems Engineer */}
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[11px] font-semibold">
-                    Intermediate → Advanced
-                  </span>
-                  <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
-                    ★ 4.9 (820 reviews)
-                  </span>
+            <CardContainer containerClassName="w-full" className="w-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+                <div className="space-y-4">
+                  <CardItem translateZ={25} className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[11px] font-semibold">
+                      Intermediate → Advanced
+                    </span>
+                    <span className="text-xs font-medium text-amber-400 flex items-center gap-1">
+                      ★ 4.9 (820 reviews)
+                    </span>
+                  </CardItem>
+
+                  <CardItem translateZ={35}>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                      Streaming Systems Engineer
+                    </h3>
+                  </CardItem>
+
+                  <CardItem translateZ={20}>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      Build event-driven distributed systems using Apache Kafka, Spark Structured Streaming, Flink, and cloud messaging for sub-second data processing.
+                    </p>
+                  </CardItem>
+
+                  <CardItem translateZ={25} className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
+                    <span><strong>90+</strong> hours</span>
+                    <span>•</span>
+                    <span><strong>7</strong> courses</span>
+                    <span>•</span>
+                    <span><strong>5</strong> projects</span>
+                  </CardItem>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
-                  Streaming Systems Engineer
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Build event-driven distributed systems using Apache Kafka, Spark Structured Streaming, Flink, and cloud messaging for sub-second data processing.
-                </p>
-
-                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300">
-                  <span><strong>90+</strong> hours</span>
-                  <span>•</span>
-                  <span><strong>7</strong> courses</span>
-                  <span>•</span>
-                  <span><strong>5</strong> projects</span>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
-                <button
-                  onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
-                  className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
-                >
-                  <span>Explore Track</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+                <CardItem translateZ={30} className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
+                  <button
+                    onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
+                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                  >
+                    <span>Explore Track</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </CardItem>
+              </CardBody>
+            </CardContainer>
 
           </div>
         )}
