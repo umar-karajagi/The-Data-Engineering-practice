@@ -17,7 +17,8 @@ import {
   Tv,
   Terminal,
   Trophy,
-  Check
+  Check,
+  Smartphone
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useAuth, SubscriptionPlan } from '../../lib/authStore';
@@ -39,8 +40,9 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
 }) => {
   const { currentUser, upgradeSubscription, isAuthenticated } = useAuth();
 
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan>('lifetime_vault');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'stripe'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'stripe'>('upi');
   const [couponCode, setCouponCode] = useState<string>('');
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [discountPercent, setDiscountPercent] = useState<number>(0);
@@ -48,22 +50,33 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
   const [successReceipt, setSuccessReceipt] = useState<{
     txId: string;
     amount: number;
+    currency: string;
     plan: SubscriptionPlan;
   } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  // Plan pricing
-  const basePrices: Record<SubscriptionPlan, number> = {
+  const isINR = currency === 'INR';
+
+  // Regional Pricing Matrix
+  const basePricesINR: Record<SubscriptionPlan, number> = {
+    free_preview: 0,
+    pro_monthly: 499,
+    pro_annual: 1499,
+    lifetime_vault: 3499
+  };
+
+  const basePricesUSD: Record<SubscriptionPlan, number> = {
     free_preview: 0,
     pro_monthly: 29,
     pro_annual: 199,
     lifetime_vault: 399
   };
 
-  const currentBasePrice = basePrices[selectedPlan] || 399;
+  const currentBasePrice = isINR ? basePricesINR[selectedPlan] : basePricesUSD[selectedPlan];
   const finalPrice = Math.max(0, Math.round(currentBasePrice * (1 - discountPercent / 100)));
+  const currencySymbol = isINR ? '₹' : '$';
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,11 +113,10 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
       setIsProcessing(false);
 
       if (res.success) {
-        // Fire confetti celebration
         try {
           confetti({
-            particleCount: 100,
-            spread: 70,
+            particleCount: 110,
+            spread: 80,
             origin: { y: 0.6 }
           });
         } catch (e) {}
@@ -112,6 +124,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
         setSuccessReceipt({
           txId: res.transactionId,
           amount: finalPrice,
+          currency: isINR ? 'INR' : 'USD',
           plan: selectedPlan
         });
 
@@ -121,7 +134,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
       } else {
         setErrorMsg(res.message);
       }
-    }, 1200);
+    }, 1100);
   };
 
   const getReasonHeading = () => {
@@ -130,7 +143,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
         return {
           badge: 'Preview Limit Reached',
           title: 'Unlock Full 600+ Pages of The Vault',
-          desc: `You’ve enjoyed the free preview of ${targetTitle ? `"${targetTitle}"` : 'this book'}. Upgrade to Pro or Lifetime to read all 600+ pages, access all 13 classical data engineering books, and download zero-compromise interactive exercises.`
+          desc: `You’ve enjoyed the free preview of ${targetTitle ? `"${targetTitle}"` : 'this book'}. Upgrade to read all 600+ pages of all 13 classical data engineering books with zero downloads and interactive exercises.`
         };
       case 'video_masterclass':
         return {
@@ -159,15 +172,31 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
       >
         {/* Modal Top Bar */}
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/30">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               <span>{heading.badge}</span>
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Enterprise DRM Protected Platform
-            </span>
+
+            {/* Currency Pill */}
+            <div className="flex p-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-[10px] font-bold">
+              <button
+                type="button"
+                onClick={() => setCurrency('INR')}
+                className={`px-2 py-0.5 rounded-md transition-colors ${isINR ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500'}`}
+              >
+                ₹ INR
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency('USD')}
+                className={`px-2 py-0.5 rounded-md transition-colors ${!isINR ? 'bg-brand-blue text-white shadow-sm' : 'text-slate-500'}`}
+              >
+                $ USD
+              </button>
+            </div>
           </div>
+
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -203,7 +232,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>Amount Paid:</span>
-                  <span className="text-slate-900 dark:text-slate-200 font-bold">${successReceipt.amount} USD</span>
+                  <span className="text-slate-900 dark:text-slate-200 font-bold">{isINR ? `₹${successReceipt.amount}` : `$${successReceipt.amount} USD`}</span>
                 </div>
               </div>
 
@@ -246,7 +275,9 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                       {selectedPlan === 'pro_monthly' && <Check className="w-4 h-4 text-brand-blue" />}
                     </div>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">$29</span>
+                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">
+                        {isINR ? '₹499' : '$29'}
+                      </span>
                       <span className="text-[11px] text-slate-400">/ month</span>
                     </div>
                     <ul className="mt-3 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400">
@@ -276,7 +307,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   }`}
                 >
                   <div className="absolute -top-2.5 right-3 px-2 py-0.2 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase tracking-wider">
-                    Save 43%
+                    Save 75%
                   </div>
                   <div>
                     <div className="flex items-center justify-between">
@@ -284,7 +315,9 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                       {selectedPlan === 'pro_annual' && <Check className="w-4 h-4 text-purple-500" />}
                     </div>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">$199</span>
+                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">
+                        {isINR ? '₹1,499' : '$199'}
+                      </span>
                       <span className="text-[11px] text-slate-400">/ year</span>
                     </div>
                     <ul className="mt-3 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400">
@@ -294,7 +327,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                       </li>
                       <li className="flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                        <span>Verified Certificates</span>
+                        <span>Verified Track Certificates</span>
                       </li>
                       <li className="flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
@@ -322,7 +355,9 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                       {selectedPlan === 'lifetime_vault' && <Check className="w-4 h-4 text-emerald-500" />}
                     </div>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">$399</span>
+                      <span className="text-2xl font-black text-slate-900 dark:text-slate-50">
+                        {isINR ? '₹3,499' : '$399'}
+                      </span>
                       <span className="text-[11px] text-slate-400">one-time</span>
                     </div>
                     <ul className="mt-3 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-400">
@@ -359,7 +394,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   </div>
                   <button
                     type="submit"
-                    className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                   >
                     Apply
                   </button>
@@ -384,10 +419,12 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   <div className="text-xs">
                     <span className="text-slate-500 dark:text-slate-400">Total Due Today: </span>
                     {discountPercent > 0 && (
-                      <span className="line-through text-slate-400 mr-1.5">${currentBasePrice}</span>
+                      <span className="line-through text-slate-400 mr-1.5">
+                        {currencySymbol}{currentBasePrice}
+                      </span>
                     )}
                     <span className="text-base font-black text-slate-900 dark:text-slate-50">
-                      ${finalPrice} USD
+                      {currencySymbol}{finalPrice} {isINR ? 'INR' : 'USD'}
                     </span>
                   </div>
 
@@ -395,30 +432,53 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   <div className="flex gap-1.5">
                     <button
                       type="button"
+                      onClick={() => setPaymentMethod('upi')}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors flex items-center gap-1 ${
+                        paymentMethod === 'upi'
+                          ? 'border-emerald-500 bg-emerald-500/10 text-emerald-500'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-500'
+                      }`}
+                    >
+                      <QrCode className="w-3 h-3" />
+                      <span>UPI / QR</span>
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setPaymentMethod('card')}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors ${
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors flex items-center gap-1 ${
                         paymentMethod === 'card'
                           ? 'border-brand-blue bg-brand-blue/10 text-brand-blue'
                           : 'border-slate-200 dark:border-slate-700 text-slate-500'
                       }`}
                     >
-                      Credit Card
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('upi')}
-                      className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors ${
-                        paymentMethod === 'upi'
-                          ? 'border-brand-blue bg-brand-blue/10 text-brand-blue'
-                          : 'border-slate-200 dark:border-slate-700 text-slate-500'
-                      }`}
-                    >
-                      UPI / QR
+                      <CreditCard className="w-3 h-3" />
+                      <span>Card / Razorpay</span>
                     </button>
                   </div>
                 </div>
 
-                {paymentMethod === 'card' ? (
+                {paymentMethod === 'upi' ? (
+                  <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-center space-y-2">
+                    <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto border border-emerald-500/30">
+                      <QrCode className="w-5 h-5" />
+                    </div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      Scan to Pay via Any UPI App (GPay, PhonePe, Paytm, BHIM)
+                    </div>
+                    <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono font-bold bg-emerald-500/10 py-1 px-3 rounded-lg inline-block border border-emerald-500/20 select-all">
+                      dataforge.payments@okhdfcbank
+                    </div>
+                    <div className="text-[10px] text-slate-400 flex items-center justify-center gap-2 pt-1">
+                      <span>Google Pay</span>
+                      <span>•</span>
+                      <span>PhonePe</span>
+                      <span>•</span>
+                      <span>Paytm</span>
+                      <span>•</span>
+                      <span>BHIM UPI</span>
+                    </div>
+                  </div>
+                ) : (
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="col-span-2">
                       <input
@@ -448,16 +508,6 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                       />
                     </div>
                   </div>
-                ) : (
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-center space-y-1">
-                    <QrCode className="w-8 h-8 text-brand-blue mx-auto" />
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                      Scan to Pay via UPI / PhonePe / GPay
-                    </div>
-                    <div className="text-[10px] text-slate-400 font-mono">
-                      dataforge.payments@okhdfcbank
-                    </div>
-                  </div>
                 )}
 
                 <button
@@ -472,7 +522,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                     </div>
                   ) : (
                     <>
-                      <span>Complete Purchase & Unlock All 600+ Pages (${finalPrice})</span>
+                      <span>Pay {currencySymbol}{finalPrice} & Unlock All 600+ Pages Instantly</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

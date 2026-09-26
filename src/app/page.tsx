@@ -18,6 +18,7 @@ import { AuthModal } from '../components/auth/AuthModal';
 import { UserDatabaseInspector } from '../components/auth/UserDatabaseInspector';
 import { QaTestingTracker } from '../components/enterprise/QaTestingTracker';
 import { SentinelMonitorBot } from '../components/enterprise/SentinelMonitorBot';
+import { AuthPage } from '../components/auth/AuthPage';
 
 type ActiveTab = 
   | 'home'
@@ -26,7 +27,9 @@ type ActiveTab =
   | 'projects'
   | 'library'
   | 'resources'
-  | 'pricing';
+  | 'pricing'
+  | 'login'
+  | 'signup';
 
 function DataVedaApp() {
   const { user, addXP } = useUserStore();
@@ -60,7 +63,7 @@ function DataVedaApp() {
       {/* 2. Main Page Views */}
       <main className="flex-1 pt-20 pb-16">
         
-        {/* VIEW 1: HOME (Exact 13 Sections Clone of DataVidhya) */}
+        {/* VIEW 1: HOME (Comprehensive 13 Production Sections) */}
         {activeTab === 'home' && (
           <DataVedaHome
             onOpenVideo={(video) => setActiveVideoModal(video)}
@@ -106,6 +109,15 @@ function DataVedaApp() {
         {/* VIEW 7: PRICING (Commercial SaaS Tiers & Lifetime Vault Access) */}
         {activeTab === 'pricing' && (
           <DataVedaPricing />
+        )}
+
+        {/* VIEW 8: DEDICATED SIGN IN & ACCOUNT PORTAL */}
+        {(activeTab === 'login' || activeTab === 'signup') && (
+          <AuthPage
+            onNavigateHome={() => handleNavigateTab('home')}
+            onNavigateLibrary={() => handleNavigateTab('library')}
+            initialMode={activeTab === 'signup' ? 'signup' : 'signin'}
+          />
         )}
 
       </main>

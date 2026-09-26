@@ -243,6 +243,19 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
           >
             Pricing
           </button>
+
+          {/* SIGN IN / ACCOUNT */}
+          <button
+            onClick={() => handleLinkClick('login')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'login' || activeTab === 'signup'
+                ? 'text-brand-blue bg-brand-blue/10 dark:bg-brand-blue/15 font-bold' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+            }`}
+          >
+            <User className="w-4 h-4 text-emerald-500" />
+            <span>{isAuthenticated ? 'Account' : 'Sign In'}</span>
+          </button>
         </nav>
 
         {/* Right Utility Bar: Streak, XP, Identity & CTA */}
@@ -338,10 +351,12 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
             </div>
           ) : (
             <button
-              onClick={onOpenAuthModal}
-              className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition-colors cursor-pointer"
+              onClick={() => handleLinkClick('login')}
+              className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 flex items-center gap-1.5 cursor-pointer ring-2 ring-emerald-500/40"
+              title="Sign In to DataForge Vault"
             >
-              Sign In
+              <Lock className="w-3.5 h-3.5" />
+              <span>Sign In</span>
             </button>
           )}
 

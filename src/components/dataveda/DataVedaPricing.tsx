@@ -15,13 +15,16 @@ import {
   Video,
   Terminal,
   Trophy,
-  Check
+  Check,
+  CreditCard,
+  QrCode
 } from 'lucide-react';
 import { useAuth, SubscriptionPlan } from '../../lib/authStore';
 import { PaywallModal } from '../monetization/PaywallModal';
 
 export const DataVedaPricing: React.FC = () => {
   const { currentUser, isPro } = useAuth();
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
   const [selectedPlanForModal, setSelectedPlanForModal] = useState<SubscriptionPlan | null>(null);
   const [isPaywallOpen, setIsPaywallOpen] = useState<boolean>(false);
 
@@ -30,14 +33,16 @@ export const DataVedaPricing: React.FC = () => {
     setIsPaywallOpen(true);
   };
 
+  const isINR = currency === 'INR';
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-3">
+      <div className="text-center max-w-3xl mx-auto mb-10">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-3">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Transparent Commercial SaaS Pricing</span>
+          <span>Transparent Commercial SaaS Pricing • Built for India & Global</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-slate-50">
           Accelerate Your Career to <span className="text-brand-blue">Staff Data Engineer</span>
@@ -45,24 +50,48 @@ export const DataVedaPricing: React.FC = () => {
         <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400">
           Unrestricted access to the 600+ page 3D classical literature vault, real-world Medallion pipelines, and 850+ company interview problems.
         </p>
+
+        {/* Currency Switcher Toggle */}
+        <div className="mt-6 inline-flex items-center p-1 rounded-2xl bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold shadow-inner">
+          <button
+            onClick={() => setCurrency('INR')}
+            className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+              isINR
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            }`}
+          >
+            <span>🇮🇳 ₹ INR (India & UPI)</span>
+          </button>
+          <button
+            onClick={() => setCurrency('USD')}
+            className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+              !isINR
+                ? 'bg-brand-blue text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            }`}
+          >
+            <span>🌐 $ USD (International)</span>
+          </button>
+        </div>
       </div>
 
       {/* Early Launch Coupon Banner */}
-      <div className="max-w-3xl mx-auto mb-10 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-brand-blue/15 border border-amber-500/30 flex items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5">
-          <Gift className="w-5 h-5 text-amber-500 shrink-0" />
+      <div className="max-w-3xl mx-auto mb-10 p-4 rounded-3xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-brand-blue/15 border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-lg">
+        <div className="flex items-center gap-3">
+          <Gift className="w-6 h-6 text-amber-500 shrink-0" />
           <div>
-            <strong className="text-slate-900 dark:text-slate-100">Launch Celebration: </strong>
-            <span className="text-slate-600 dark:text-slate-300">
-              Apply code <code className="font-mono font-bold bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-600 dark:text-amber-400">DATAFORGE50</code> at checkout for 50% off any plan.
-            </span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">Launch Celebration: </strong>
+            <p className="text-slate-600 dark:text-slate-300 mt-0.5">
+              Apply code <code className="font-mono font-bold bg-amber-500/20 px-2 py-0.5 rounded text-amber-600 dark:text-amber-400">DATAFORGE50</code> at checkout for 50% off any plan.
+            </p>
           </div>
         </div>
         <button
           onClick={() => handleOpenCheckout('lifetime_vault')}
-          className="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-[11px] transition-colors"
+          className="shrink-0 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs transition-colors shadow-md cursor-pointer"
         >
-          Claim 50% Off
+          Claim 50% Off (Instant Unlock)
         </button>
       </div>
 
@@ -75,7 +104,7 @@ export const DataVedaPricing: React.FC = () => {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Free Preview</span>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">Free Student</h3>
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-4xl font-black text-slate-900 dark:text-slate-50">$0</span>
+              <span className="text-4xl font-black text-slate-900 dark:text-slate-50">{isINR ? '₹0' : '$0'}</span>
               <span className="text-xs text-slate-400">/ forever</span>
             </div>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
@@ -85,7 +114,7 @@ export const DataVedaPricing: React.FC = () => {
             <div className="mt-8 space-y-3.5 text-xs text-slate-600 dark:text-slate-400">
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Pages 1 to 5 preview on all 13 books</span>
+                <span>Pages 1 to 5 preview on all 13 classical books</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -93,11 +122,11 @@ export const DataVedaPricing: React.FC = () => {
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Stage 1 Video Masterclass preview</span>
+                <span>Creative Commons & freeCodeCamp Masterclass preview</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-400">
                 <X className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>Full 600+ page books locked</span>
+                <span>Full 600+ page books locked (Pages 6+)</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-400">
                 <X className="w-4 h-4 text-slate-400 shrink-0" />
@@ -126,9 +155,11 @@ export const DataVedaPricing: React.FC = () => {
             <span className="text-xs font-bold text-brand-blue uppercase tracking-wider">Full Access</span>
             <h3 className="text-2xl font-black text-slate-900 dark:text-slate-50 mt-1">Pro Engineer</h3>
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-4xl font-black text-slate-900 dark:text-slate-50">$199</span>
+              <span className="text-4xl font-black text-slate-900 dark:text-slate-50">{isINR ? '₹1,499' : '$199'}</span>
               <span className="text-xs text-slate-500">/ year</span>
-              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">or $29/mo</span>
+              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">
+                or {isINR ? '₹499/mo' : '$29/mo'}
+              </span>
             </div>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               For active data practitioners seeking complete mastery of pipelines and interview preparation.
@@ -155,6 +186,10 @@ export const DataVedaPricing: React.FC = () => {
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                 <span>Verified DataForge Track Certifications</span>
               </div>
+              <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400 font-bold">
+                <QrCode className="w-4 h-4 shrink-0" />
+                <span>UPI (GPay / PhonePe / Paytm) & Cards Accepted</span>
+              </div>
             </div>
           </div>
 
@@ -163,7 +198,7 @@ export const DataVedaPricing: React.FC = () => {
               onClick={() => handleOpenCheckout('pro_annual')}
               className="w-full py-3 rounded-xl bg-brand-blue text-white text-xs font-bold hover:bg-brand-hover transition-colors shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>{isPro ? 'Manage / Renew Pro ($199/yr)' : 'Subscribe to Pro ($199/yr)'}</span>
+              <span>{isPro ? 'Manage / Renew Pro' : `Subscribe to Pro (${isINR ? '₹1,499/yr' : '$199/yr'})`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -179,7 +214,7 @@ export const DataVedaPricing: React.FC = () => {
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Unlimited Forever</span>
             <h3 className="text-2xl font-black text-slate-900 dark:text-slate-50 mt-1">Lifetime Vault Access</h3>
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-4xl font-black text-emerald-500">$399</span>
+              <span className="text-4xl font-black text-emerald-500">{isINR ? '₹3,499' : '$399'}</span>
               <span className="text-xs font-bold text-emerald-500 uppercase tracking-wider">One-Time Payment</span>
             </div>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
@@ -205,7 +240,11 @@ export const DataVedaPricing: React.FC = () => {
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Lifetime VIP Badge on All Public Profiles</span>
+                <span>Zero-Download DRM Hardened Reader License</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400 font-bold">
+                <QrCode className="w-4 h-4 shrink-0" />
+                <span>Instant QR Scan & Pay via Any UPI App</span>
               </div>
             </div>
           </div>
@@ -215,7 +254,7 @@ export const DataVedaPricing: React.FC = () => {
               onClick={() => handleOpenCheckout('lifetime_vault')}
               className="w-full py-3 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Get Lifetime Vault ($399)</span>
+              <span>Get Lifetime Vault ({isINR ? '₹3,499' : '$399'})</span>
               <Sparkles className="w-4 h-4" />
             </button>
           </div>

@@ -293,9 +293,9 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            The NeetCode-Style <br className="hidden sm:inline" />
+            The DataForge Master <br className="hidden sm:inline" />
             <span className="text-emerald-500 bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400">
-              Data Engineering 150
+              Engineering DAG 150
             </span>
           </h2>
 
@@ -475,7 +475,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* NODE DETAIL MODAL (NEETCODE STYLE DRAWER) */}
+      {/* NODE DETAIL MODAL (DATAFORGE DAG DRAWER) */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {selectedNode && (

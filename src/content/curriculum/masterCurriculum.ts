@@ -254,7 +254,7 @@ export const MASTER_CURRICULUM: CurriculumStage[] = [
         {
           id: "s02-ep07",
           order: 7,
-          title: "Python LIVE: Data Structures & Algorithms + NeetCode + Two Sum",
+          title: "Python LIVE: Data Structures & Algorithms + LeetCode Patterns + Two Sum",
           duration: "3 hr 30 min",
           durationMinutes: 210,
           youtubeId: "p35CcLiCOGU",

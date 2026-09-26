@@ -384,7 +384,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2.5: NEETCODE-STYLE INTERACTIVE 3D DATA ENGINEERING ROADMAP */}
+      {/* SECTION 2.5: DATAFORGE INTERACTIVE 3D DATA ENGINEERING ROADMAP */}
       {/* ========================================================================= */}
       <NeetCodeRoadmap 
         onOpenVideo={onOpenVideo} 
@@ -742,7 +742,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 5: HOW DATAVIDHYA WORKS (4-STEP PROGRESSION) */}
+      {/* SECTION 5: HOW DATAFORGE WORKS (4-STEP PROGRESSION) */}
       {/* ========================================================================= */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-2">
