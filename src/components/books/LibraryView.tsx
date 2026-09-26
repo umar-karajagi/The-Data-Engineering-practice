@@ -181,17 +181,6 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
   // Active Reading View
   if (activeBook) {
-    if (activeBook.formatType === 'pdf' || activeBook.pdfUrl) {
-      return (
-        <FunPdfReader
-          book={activeBook}
-          onBackToLibrary={() => setActiveBook(null)}
-          onAddXP={onAddXP}
-          onOpenQuickNote={onOpenQuickNote}
-        />
-      );
-    }
-
     if (activeBook.isNotebook || activeBook.formatType === 'notebook') {
       return (
         <NotebookReader

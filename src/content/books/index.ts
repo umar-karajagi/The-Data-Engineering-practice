@@ -366,9 +366,8 @@ export const FOUNDATIONAL_BOOKS: BookReference[] = RAW_FOUNDATIONAL_BOOKS.map(bo
     const enhanced = getEnhancedPdfMetadata(vaultInfo.fileName, 0);
     return {
       ...book,
-      formatType: 'pdf' as const,
+      formatType: 'book' as const,
       originalFileName: vaultInfo.fileName,
-      pdfUrl: `/api/vault/pdf?file=${encodeURIComponent(vaultInfo.fileName)}`,
       fileSizeFormatted: vaultInfo.fileSizeFormatted,
       conceptCards: (enhanced.conceptCards && enhanced.conceptCards.length > 0) ? enhanced.conceptCards : book.conceptCards,
       quizQuestions: (enhanced.quizQuestions && enhanced.quizQuestions.length > 0) ? enhanced.quizQuestions : book.quizQuestions,
