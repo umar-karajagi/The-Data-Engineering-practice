@@ -30,7 +30,8 @@ import {
   Zap, 
   Flame, 
   Trophy,
-  Filter
+  Filter,
+  FolderGit2
 } from 'lucide-react';
 import { Hero3DCanvas } from '../3d/Hero3DCanvas';
 import { TreeBranchesCanvas } from '../3d/TreeBranchesCanvas';
@@ -303,63 +304,160 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
           </div>
 
           {/* ========================================================================= */}
-          {/* BROWSER CHROME HERO VIDEO MOCKUP (INTERACTIVE PLAYABLE PREVIEW WITH 3D PERSPECTIVE) */}
+          {/* PURE DATA ENGINEERING TELEMETRY & SYSTEM ARCHITECTURE COCKPIT (NO VIDEO EMBEDS) */}
           {/* ========================================================================= */}
           <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
             <HeroParallaxContainer>
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden group relative">
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl overflow-hidden relative">
                 
-                {/* Browser Window Header */}
-                <div className="px-4 py-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                {/* Console Window Header */}
+                <div className="px-4 py-3 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
                     <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
                     <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
+                    <span className="ml-2 text-xs font-mono text-slate-500 hidden sm:inline">
+                      dataforge-lakehouse-v4.2 ~ telemetry-console
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 font-mono">
-                    <span className="text-slate-500 dark:text-slate-500">https://</span>
-                    <span className="text-slate-900 dark:text-white">dataveda.io</span>
-                    <span className="text-slate-500 dark:text-slate-500">/masterclass/uber-data-analytics</span>
+                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-slate-900 dark:text-emerald-400 font-semibold">DUCKDB WASM ENGINE: ACTIVE</span>
                   </div>
 
-                  <div className="text-[11px] font-mono text-emerald-400 font-semibold hidden sm:inline">
-                    WATCH MASTERCLASS
+                  <div className="text-[11px] font-mono text-slate-500 font-semibold hidden md:inline">
+                    LATENCY: 1.4ms
                   </div>
                 </div>
 
-                {/* Video Thumbnail with Play Button */}
-                <div 
-                  onClick={() => onOpenVideo(HERO_MASTERCLASS_VIDEO)}
-                  className="relative aspect-video w-full bg-black cursor-pointer overflow-hidden group"
-                >
-                  {/* Background Poster Image */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-                  <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-[#10B981] hover:bg-[#059669] text-white flex items-center justify-center shadow-2xl shadow-[#10B981]/60 group-hover:scale-110 transition-transform">
-                      <Play className="w-8 h-8 fill-white translate-x-0.5" />
+                {/* Architecture Cockpit Body */}
+                <div className="p-6 sm:p-8 space-y-6">
+                  
+                  {/* Top Stats Banner */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 text-left">
+                      <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">Curriculum Depth</span>
+                      <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono">9 Terraces</span>
+                      <span className="text-[11px] text-emerald-500 font-medium block">61 Videos • 167.6h</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 text-left">
+                      <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">The Crucible</span>
+                      <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono">500 Problems</span>
+                      <span className="text-[11px] text-emerald-500 font-medium block">5 Topics × 5 Modes</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 text-left">
+                      <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">The Codex Vault</span>
+                      <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono">16 Texts</span>
+                      <span className="text-[11px] text-amber-500 font-medium block">3D Interactive Readers</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 text-left">
+                      <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">Execution Layer</span>
+                      <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono">Zero Setup</span>
+                      <span className="text-[11px] text-blue-400 font-medium block">In-Browser DuckDB</span>
                     </div>
                   </div>
 
-                  {/* Video Info Overlay */}
-                  <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
-                    <div>
-                      <span className="px-2.5 py-1 rounded-full bg-[#10B981] text-white text-[11px] font-bold uppercase tracking-wider">
-                        Featured Project Masterclass
+                  {/* Interactive Lakehouse Medallion Pipeline Schematic */}
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80 p-5 text-left space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-emerald-500" />
+                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+                          Sovereign Lakehouse Architecture DAG
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                        PRODUCTION GRADE
                       </span>
-                      <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
-                        Uber Data Analytics End-to-End Pipeline
-                      </h3>
-                      <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1 max-w-xl">
-                        GCP, Mage AI, BigQuery & Looker Studio • 1 hr 42 min • 1.2M+ Views
-                      </p>
                     </div>
 
-                    <span className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-900 dark:text-slate-100 shrink-0 self-start sm:self-auto flex items-center gap-1.5">
-                      <span>Click to Play in HD</span>
-                      <span>▶</span>
-                    </span>
+                    {/* 3 Tier Pipeline Flow */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                      
+                      {/* Bronze Tier */}
+                      <div className="p-3.5 rounded-lg border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
+                        <div className="flex items-center justify-between text-xs mb-1.5">
+                          <span className="font-bold text-amber-600 dark:text-amber-400 font-mono">BRONZE LAYER</span>
+                          <span className="text-[10px] font-mono text-slate-500">INGESTION</span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                          Raw event streams & batch extracts via Kafka, Azure Data Factory, & Cloud Storage.
+                        </p>
+                        <div className="mt-2.5 flex flex-wrap gap-1 text-[10px] font-mono">
+                          <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-500">Kafka</span>
+                          <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-500">ADF</span>
+                          <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-500">CDC</span>
+                        </div>
+                      </div>
+
+                      {/* Silver Tier */}
+                      <div className="p-3.5 rounded-lg border border-slate-400/30 bg-slate-400/5 hover:bg-slate-400/10 transition-colors">
+                        <div className="flex items-center justify-between text-xs mb-1.5">
+                          <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">SILVER LAYER</span>
+                          <span className="text-[10px] font-mono text-slate-500">CURATED</span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                          Cleaned, deduplicated, & partitioned datasets using Apache Spark & dbt transformations.
+                        </p>
+                        <div className="mt-2.5 flex flex-wrap gap-1 text-[10px] font-mono">
+                          <span className="px-1.5 py-0.5 rounded bg-slate-500/15 text-slate-400">PySpark</span>
+                          <span className="px-1.5 py-0.5 rounded bg-slate-500/15 text-slate-400">Delta Lake</span>
+                          <span className="px-1.5 py-0.5 rounded bg-slate-500/15 text-slate-400">dbt Core</span>
+                        </div>
+                      </div>
+
+                      {/* Gold Tier */}
+                      <div className="p-3.5 rounded-lg border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors">
+                        <div className="flex items-center justify-between text-xs mb-1.5">
+                          <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">GOLD LAYER</span>
+                          <span className="text-[10px] font-mono text-slate-500">ANALYTICS & AI</span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                          Star schemas, aggregated business marts, & sub-second DuckDB WASM queries.
+                        </p>
+                        <div className="mt-2.5 flex flex-wrap gap-1 text-[10px] font-mono">
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">Databricks</span>
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">Iceberg</span>
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">DuckDB</span>
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
+
+                  {/* Terminal Action Links */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onNavigateTab('practice')}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold font-mono transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer"
+                      >
+                        <Terminal className="w-3.5 h-3.5" />
+                        <span>Launch The Crucible (500 Questions) →</span>
+                      </button>
+
+                      <button
+                        onClick={() => onNavigateTab('tracks')}
+                        className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs font-bold font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Compass className="w-3.5 h-3.5 text-blue-400" />
+                        <span>Inspect The 9 Terraces</span>
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => onNavigateTab('library')}
+                      className="text-xs font-mono font-semibold text-amber-500 hover:text-amber-400 transition-colors flex items-center gap-1"
+                    >
+                      <span>Open The Codex Vault (16 Texts)</span>
+                      <span>→</span>
+                    </button>
+                  </div>
+
                 </div>
 
               </div>
@@ -628,11 +726,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <span className="text-xs text-slate-600 dark:text-slate-400">{course.instructor}</span>
                   <button
-                    onClick={() => onOpenVideo(course)}
-                    className="text-xs font-bold text-[#10B981] hover:underline flex items-center gap-1"
+                    onClick={() => onNavigateTab('tracks')}
+                    className="text-xs font-bold text-emerald-500 hover:text-emerald-400 flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Watch Masterclass</span>
-                    <span>▶</span>
+                    <span>Inspect Syllabus</span>
+                    <span>→</span>
                   </button>
                 </div>
               </div>
@@ -745,11 +843,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
                     <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">★ {project.rating} ({project.views})</span>
                     <button
-                      onClick={() => onOpenVideo(project)}
-                      className="px-3 py-1.5 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                      onClick={() => onNavigateTab('projects')}
+                      className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
                     >
-                      <Play className="w-3 h-3 fill-white" />
-                      <span>Watch Walkthrough</span>
+                      <FolderGit2 className="w-3 h-3 text-white" />
+                      <span>Inspect Blueprint →</span>
                     </button>
                   </div>
                 </div>
