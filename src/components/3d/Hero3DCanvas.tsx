@@ -31,15 +31,15 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({ className = '' }) =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Node definitions (Data Engineering Stack Pipeline)
+    // Node definitions (Botanical Light Green Data Engineering Pipeline)
     const nodeDefs = [
-      { name: 'Kafka', pos: new THREE.Vector3(-14, 4, -2), color: 0xa855f7, shape: 'octahedron' },
-      { name: 'Spark', pos: new THREE.Vector3(-6, 7, 2), color: 0xf59e0b, shape: 'dodecahedron' },
-      { name: 'Iceberg', pos: new THREE.Vector3(2, 5, -1), color: 0x06b6d4, shape: 'icosahedron' },
-      { name: 'Snowflake', pos: new THREE.Vector3(12, 6, 1), color: 0x3b82f6, shape: 'octahedron' },
-      { name: 'Airflow', pos: new THREE.Vector3(-8, -4, 0), color: 0x10b981, shape: 'box' },
-      { name: 'dbt', pos: new THREE.Vector3(4, -5, -3), color: 0xf97316, shape: 'icosahedron' },
-      { name: 'DuckDB', pos: new THREE.Vector3(13, -3, 2), color: 0xeab308, shape: 'dodecahedron' }
+      { name: 'Kafka', pos: new THREE.Vector3(-14, 4, -2), color: 0x10b981, shape: 'octahedron' },
+      { name: 'Spark', pos: new THREE.Vector3(-6, 7, 2), color: 0x34d399, shape: 'dodecahedron' },
+      { name: 'Iceberg', pos: new THREE.Vector3(2, 5, -1), color: 0x6ee7b7, shape: 'icosahedron' },
+      { name: 'Snowflake', pos: new THREE.Vector3(12, 6, 1), color: 0x059669, shape: 'octahedron' },
+      { name: 'Airflow', pos: new THREE.Vector3(-8, -4, 0), color: 0x047857, shape: 'box' },
+      { name: 'dbt', pos: new THREE.Vector3(4, -5, -3), color: 0xa7f3d0, shape: 'icosahedron' },
+      { name: 'DuckDB', pos: new THREE.Vector3(13, -3, 2), color: 0x86efac, shape: 'dodecahedron' }
     ];
 
     const nodesGroup = new THREE.Group();
@@ -104,21 +104,21 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({ className = '' }) =>
       const curve = new THREE.CatmullRomCurve3([p1, mid, p2]);
       curves.push(curve);
 
-      // Tube/Line representation
+      // Branch / Pipeline Line representation (Emerald glow)
       const points = curve.getPoints(50);
       const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
       const lineMat = new THREE.LineBasicMaterial({
-        color: 0x0050ff,
+        color: 0x10b981,
         transparent: true,
-        opacity: 0.35
+        opacity: 0.45
       });
       const line = new THREE.Line(lineGeom, lineMat);
       scene.add(line);
 
-      // Data packet (pulsing glowing sphere flowing along pipeline)
+      // Data packet (pulsing glowing mint sphere flowing along branch)
       const packetGeom = new THREE.SphereGeometry(0.28, 8, 8);
       const packetMat = new THREE.MeshBasicMaterial({
-        color: 0x38bdf8,
+        color: 0x6ee7b7,
         transparent: true,
         opacity: 0.95
       });

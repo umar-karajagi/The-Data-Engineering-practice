@@ -57,7 +57,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
       <section className="bg-brand-blue py-1.5 px-4 text-center text-xs tracking-tight">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-3">
           <p className="text-white font-medium truncate">
-            ✨ DataVeda • 100% Free Open-Access Data Engineering Platform • YouTube Masterclasses Embedded
+            🌿 DataVeda Botanical • 🔓 All Courses 100% Unlocked • 📖 Crazy 3D Book Reader & Interactive DAG Roadmap
           </p>
           <button 
             onClick={() => handleLinkClick('pricing')}

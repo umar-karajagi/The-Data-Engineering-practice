@@ -41,7 +41,7 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
   const { addXP } = useUserStore();
   const [selectedRole, setSelectedRole] = useState<RoleId>('engineer');
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
-  const [unrestrictedMode, setUnrestrictedMode] = useState<boolean>(false);
+  const [unrestrictedMode, setUnrestrictedMode] = useState<boolean>(true);
   const [activeEpisodeId, setActiveEpisodeId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -99,12 +99,9 @@ export const DataVedaTracks: React.FC<DataVedaTracksProps> = ({ onOpenVideo }) =
   const roleTotalCount = roleStages.length;
   const roleProgressPercent = Math.round((roleCompletedCount / roleTotalCount) * 100);
 
-  // Helper to check if a stage is unlocked in sequential order
-  const isStageUnlocked = (stageIndexInTrack: number) => {
-    if (unrestrictedMode) return true;
-    if (stageIndexInTrack === 0) return true;
-    const prevStage = roleStages[stageIndexInTrack - 1];
-    return completedMilestones.includes(prevStage.milestone);
+  // All courses and milestones are 100% unlocked
+  const isStageUnlocked = (_stageIndexInTrack: number) => {
+    return true;
   };
 
   const handlePlayEpisode = (stage: CurriculumStage, episode: PlaylistEpisode) => {

@@ -270,13 +270,13 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
   const progressPct = Math.round((completedCount / displayedNodes.length) * 100) || 0;
 
   return (
-    <section className="relative py-20 bg-slate-50 dark:bg-slate-950 border-t border-b border-slate-200 dark:border-slate-800/80 overflow-hidden">
+    <section className="relative py-20 bg-slate-50 dark:bg-[#03140E] border-t border-b border-emerald-100 dark:border-emerald-900/60 overflow-hidden">
       
       {/* Background Tech Graph Grid */}
       <div 
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07] pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(#0050FF 1px, transparent 1px), radial-gradient(#0050FF 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(#10B981 1px, transparent 1px), radial-gradient(#10B981 1px, transparent 1px)',
           backgroundSize: '36px 36px',
           backgroundPosition: '0 0, 18px 18px'
         }}
@@ -287,32 +287,32 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
           
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-[#0050FF] dark:text-blue-400 mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-4 shadow-sm">
             <Network className="w-3.5 h-3.5" />
-            <span>Interactive Data Engineering Roadmap</span>
+            <span>Interactive Data Engineering Roadmap • 100% Unlocked</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             The NeetCode-Style <br className="hidden sm:inline" />
-            <span className="text-[#0050FF] bg-clip-text text-transparent bg-gradient-to-r from-[#0050FF] via-indigo-500 to-cyan-400">
+            <span className="text-emerald-500 bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400">
               Data Engineering 150
             </span>
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-            Stop guessing what to learn next. A structured dependency DAG tree designed for interview readiness and production-grade mastery.
+            Stop guessing what to learn next. A structured dependency DAG tree designed for interview readiness and production-grade mastery — all nodes 100% unlocked.
           </p>
 
           {/* Filter Pills & Live Progress */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 w-full">
             
-            <div className="flex items-center p-1 rounded-xl bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800">
+            <div className="flex items-center p-1 rounded-xl bg-slate-200/80 dark:bg-emerald-950 border border-slate-300 dark:border-emerald-800">
               <button
                 onClick={() => setFilterMode('de75')}
                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   filterMode === 'de75'
-                    ? 'bg-[#0050FF] text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-600 dark:text-emerald-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 DE 75 (Speedrun Core)
@@ -321,8 +321,8 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                 onClick={() => setFilterMode('all')}
                 className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   filterMode === 'all'
-                    ? 'bg-[#0050FF] text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-600 dark:text-emerald-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 DE 150 (Full Production Tree)
@@ -330,21 +330,21 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
             </div>
 
             {/* Live Mastery Meter */}
-            <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <Trophy className="w-4 h-4 text-amber-500" />
+            <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white dark:bg-emerald-950 border border-slate-200 dark:border-emerald-800 shadow-sm">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-emerald-200">
+                <Trophy className="w-4 h-4 text-emerald-400" />
                 <span>Mastered:</span>
-                <span className="font-bold text-[#0050FF] dark:text-blue-400">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {completedCount}/{displayedNodes.length} Nodes
                 </span>
               </div>
-              <div className="w-24 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+              <div className="w-24 h-2 rounded-full bg-slate-200 dark:bg-emerald-900 overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-[#0050FF] to-emerald-400 transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
                   style={{ width: `${progressPct}%` }}
                 />
               </div>
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-bold text-slate-500 dark:text-emerald-400">
                 {progressPct}%
               </span>
             </div>
@@ -370,10 +370,10 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 onClick={() => setSelectedNode(node)}
-                className={`group relative p-6 rounded-2xl bg-white dark:bg-slate-900/90 border transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl ${
+                className={`group relative p-6 rounded-2xl bg-white dark:bg-emerald-950/80 border transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl ${
                   isCompleted 
-                    ? 'border-emerald-500/50 bg-emerald-500/[0.02]' 
-                    : 'border-slate-200 dark:border-slate-800 hover:border-[#0050FF]/50'
+                    ? 'border-emerald-500/50 bg-emerald-500/[0.04]' 
+                    : 'border-slate-200 dark:border-emerald-900/60 hover:border-emerald-500/60'
                 } ${node.borderGlow}`}
               >
                 
@@ -407,7 +407,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                     <IconComponent className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#0050FF] dark:group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                       {node.title}
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 leading-relaxed">
@@ -446,7 +446,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
 
                 {/* Node Footer */}
                 <div className="flex items-center justify-between pt-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                  <span className="flex items-center gap-1 text-[#0050FF] dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform">
                     <span>Explore Node</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
@@ -495,7 +495,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#0050FF]/10 text-[#0050FF] dark:text-blue-400">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                         STAGE 0{selectedNode.stageNumber}
                       </span>
                       <span className="text-xs text-slate-500 font-medium">
@@ -537,7 +537,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                         className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between gap-3 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <Terminal className="w-4 h-4 text-[#0050FF] dark:text-blue-400 shrink-0" />
+                          <Terminal className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
                           <div>
                             <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 block">
                               {topic.name}
@@ -572,7 +572,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                 </div>
 
                 {/* Masterclass Link CTA */}
-                <div className="p-4 rounded-xl bg-gradient-to-r from-[#0050FF]/10 to-indigo-500/10 border border-[#0050FF]/20 flex items-center justify-between gap-4">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex items-center justify-between gap-4">
                   <div>
                     <h5 className="text-sm font-bold text-slate-900 dark:text-white">
                       Full Masterclass Video Available
@@ -588,7 +588,7 @@ export const NeetCodeRoadmap: React.FC<NeetCodeRoadmapProps> = ({
                       }
                       setSelectedNode(null);
                     }}
-                    className="px-4 py-2 rounded-lg bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-md"
+                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-md"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>Watch HD</span>

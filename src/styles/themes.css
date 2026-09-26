@@ -1,95 +1,93 @@
-/* DataForge Foundry Three-Theme Token System */
-/* Industrial Control Room, Technical Blueprint, Research Notebook Aesthetic */
+/* DataForge Foundry Light Green Botanical & Cyber Branch Theme Token System */
 
 :root {
-  /* Dark Mode (DataVeda Slate Dark / Default) */
-  --bg-primary: #020617; /* slate-950 */
-  --bg-secondary: #0F172A; /* slate-900 */
-  --bg-tertiary: #1E293B; /* slate-800 */
-  --bg-canvas: #020617;
-  --border-color: #1E293B; /* slate-800 */
-  --border-subtle: #334155; /* slate-700 */
-  --text-primary: #F8FAFC; /* slate-50 */
-  --text-secondary: #94A3B8; /* slate-400 */
-  --text-muted: #64748B; /* slate-500 */
-  --accent-glow: rgba(200, 255, 74, 0.15);
+  /* Dark Cyber Green / Matrix Botanical Mode */
+  --bg-primary: #03140E; /* Deep forest night */
+  --bg-secondary: #072219; /* Rich emerald card */
+  --bg-tertiary: #0D3326; /* Elevated jade surface */
+  --bg-canvas: #020C08;
+  --border-color: #104230; /* Emerald border */
+  --border-subtle: #1C5942;
+  --text-primary: #ECFDF5; /* Bright mint text */
+  --text-secondary: #A7F3D0; /* Soft mint text */
+  --text-muted: #6EE7B7; /* Muted sage */
+  --accent-glow: rgba(16, 185, 129, 0.25);
 
-  /* Foundry Accent & Track Tokens */
-  --track-sql: #C8FF4A;          /* Signal Lime */
-  --track-python: #56D8FF;       /* Data Cyan */
-  --track-pyspark: #FFB14A;      /* Foundry Amber */
-  --track-warehousing: #56D8FF;  /* Data Cyan */
-  --track-architecture: #C8FF4A; /* Signal Lime */
-  --track-dsa: #FF6B5E;          /* Alert Coral */
-  --track-azure: #56D8FF;        /* Electric Blue */
-  --track-behavioral: #FFB14A;   /* Foundry Amber */
+  /* Foundry Accent & Track Tokens (Luminous Green Palette) */
+  --track-sql: #10B981;          /* Signal Emerald */
+  --track-python: #34D399;       /* Mint Cyan */
+  --track-pyspark: #F59E0B;      /* Foundry Amber */
+  --track-warehousing: #059669;  /* Deep Jade */
+  --track-architecture: #10B981; /* Signal Emerald */
+  --track-dsa: #F43F5E;          /* Rose Coral */
+  --track-azure: #2DD4BF;        /* Luminous Teal */
+  --track-behavioral: #FBBF24;   /* Warm Gold */
 
   /* Semantic UI Tokens */
-  --color-signal-lime: #C8FF4A;
-  --color-data-cyan: #56D8FF;
-  --color-amber: #FFB14A;
-  --color-alert-coral: #FF6B5E;
+  --color-signal-lime: #10B981;
+  --color-data-cyan: #34D399;
+  --color-amber: #F59E0B;
+  --color-alert-coral: #F43F5E;
 }
 
-/* Light Mode (Engineering Blueprint) */
+/* Light Green Mode (Fresh Botanical Mint & Sage Blueprint) */
 html.theme-light {
-  --bg-primary: #F8FAFC; /* slate-50 */
-  --bg-secondary: #FFFFFF; /* white card */
-  --bg-tertiary: #F1F5F9; /* slate-100 */
-  --bg-canvas: #FFFFFF;
-  --border-color: #E2E8F0; /* slate-200 */
-  --border-subtle: #CBD5E1; /* slate-300 */
-  --text-primary: #0F172A; /* slate-900 */
-  --text-secondary: #475569; /* slate-600 */
-  --text-muted: #64748B; /* slate-500 */
-  --accent-glow: rgba(14, 165, 233, 0.15);
+  --bg-primary: #F0FDF4; /* Crisp light mint pearlescent */
+  --bg-secondary: #FFFFFF; /* Pure white card with green accent */
+  --bg-tertiary: #E8F8F0; /* Soft light sage */
+  --bg-canvas: #F4FBF7;
+  --border-color: #D1FAE5; /* Soft emerald border */
+  --border-subtle: #A7F3D0; /* Mint border */
+  --text-primary: #064E3B; /* Deep rich forest green */
+  --text-secondary: #065F46; /* Medium forest green */
+  --text-muted: #047857; /* Deep sage */
+  --accent-glow: rgba(16, 185, 129, 0.18);
 
-  /* Adjusted high-contrast tokens */
-  --track-sql: #0284C7;
+  /* Adjusted high-contrast botanical tokens */
+  --track-sql: #059669;
   --track-python: #0D9488;
   --track-pyspark: #D97706;
-  --track-warehousing: #0284C7;
-  --track-architecture: #7C3AED;
-  --track-dsa: #DC2626;
-  --track-azure: #0369A1;
-  --track-behavioral: #D97706;
+  --track-warehousing: #047857;
+  --track-architecture: #059669;
+  --track-dsa: #E11D48;
+  --track-azure: #0F766E;
+  --track-behavioral: #B45309;
 
-  --color-signal-lime: #0284C7;
+  --color-signal-lime: #059669;
   --color-data-cyan: #0D9488;
   --color-amber: #D97706;
-  --color-alert-coral: #DC2626;
+  --color-alert-coral: #E11D48;
 }
 
-/* Focus / Learner Mode (Research Notebook Warm Paper) */
+/* Focus / Learner Mode (Research Botanical Warm Parchment) */
 html.theme-focus {
-  --bg-primary: #F4F0E7;
-  --bg-secondary: #EBE5D8;
-  --bg-tertiary: #E0D9C8;
-  --bg-canvas: #FAF6ED;
-  --border-color: #D3C9B4;
-  --border-subtle: #DFD5BF;
-  --text-primary: #1D2324;
-  --text-secondary: #4A5658;
-  --text-muted: #728082;
-  --accent-glow: rgba(180, 83, 9, 0.12);
+  --bg-primary: #F2F7F2;
+  --bg-secondary: #E5EFE7;
+  --bg-tertiary: #D8E7DB;
+  --bg-canvas: #F8FBF8;
+  --border-color: #BED8C3;
+  --border-subtle: #A7C9AE;
+  --text-primary: #143523;
+  --text-secondary: #254F37;
+  --text-muted: #416B51;
+  --accent-glow: rgba(16, 185, 129, 0.15);
 
-  /* Warm tuned track colors */
   --track-sql: #15803D;
-  --track-python: #0369A1;
+  --track-python: #0F766E;
   --track-pyspark: #C2410C;
-  --track-warehousing: #0F766E;
-  --track-architecture: #7E22CE;
+  --track-warehousing: #166534;
+  --track-architecture: #15803D;
   --track-dsa: #BE123C;
-  --track-azure: #0284C7;
+  --track-azure: #0D9488;
   --track-behavioral: #B45309;
 
   --color-signal-lime: #15803D;
-  --color-data-cyan: #0369A1;
+  --color-data-cyan: #0F766E;
   --color-amber: #C2410C;
   --color-alert-coral: #BE123C;
 }
 
-/* Custom Foundry industrial scrollbars */
+/* Custom Botanical Green scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -100,10 +98,10 @@ html.theme-focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--border-subtle);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--track-sql);
 }

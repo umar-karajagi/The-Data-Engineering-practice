@@ -33,6 +33,7 @@ import {
   Filter
 } from 'lucide-react';
 import { Hero3DCanvas } from '../3d/Hero3DCanvas';
+import { TreeBranchesCanvas } from '../3d/TreeBranchesCanvas';
 import { CardContainer, CardBody, CardItem } from '../3d/Card3D';
 import { HeroParallaxContainer } from '../3d/HeroParallaxContainer';
 import { NeetCodeRoadmap } from '../roadmap/NeetCodeRoadmap';
@@ -220,8 +221,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-[#0050FF] selection:text-white pt-24 pb-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#03140E] text-slate-900 dark:text-emerald-50 font-sans selection:bg-emerald-500 selection:text-white pt-24 pb-20 relative overflow-hidden">
       
+      {/* Living Light-Green Tree Branches Background */}
+      <TreeBranchesCanvas />
+
       {/* ========================================================================= */}
       {/* SECTION 1: HERO SECTION WITH FLOATING BADGES & PLAYABLE VIDEO BROWSER CHROME */}
       {/* ========================================================================= */}
@@ -230,9 +234,9 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         {/* Interactive Three.js 3D WebGL Background Constellation */}
         <Hero3DCanvas />
 
-        {/* Subtle Background Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#0050FF]/12 blur-[140px] pointer-events-none rounded-full" />
-        <div className="absolute top-12 left-10 w-48 h-48 bg-emerald-500/5 blur-[90px] pointer-events-none rounded-full" />
+        {/* Subtle Background Emerald & Mint Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/15 blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute top-12 left-10 w-48 h-48 bg-emerald-400/10 blur-[90px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           
@@ -254,22 +258,22 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
               Everything you need to become <br className="hidden sm:block" />
               a job-ready{' '}
-              <span className="relative inline-flex items-baseline text-[#0050FF]">
+              <span className="relative inline-flex items-baseline text-emerald-500 dark:text-emerald-400">
                 Data Engineer
-                <span className="ml-1 inline-block h-8 w-1 animate-pulse bg-[#0050FF] align-middle" />
+                <span className="ml-1 inline-block h-8 w-1 animate-pulse bg-emerald-500 align-middle" />
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-              Learn the fundamentals, build 23 real projects, practice 850+ company-tagged problems, and master modern cloud stacks — curated with top-tier masterclasses, start to hired.
+            <p className="max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+              Learn the fundamentals, build 23 real projects, practice 850+ company-tagged problems, and master modern cloud stacks — <strong>all 28+ courses 100% unlocked</strong> with zero paywalls.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md pt-2">
               <button
                 onClick={onOpenAssessment}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-sm font-semibold tracking-tight shadow-xl shadow-[#0050FF]/25 hover:shadow-[#0050FF]/40 transition-all flex items-center justify-center gap-2 group"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold tracking-tight shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 transition-all flex items-center justify-center gap-2 group"
               >
                 <span>Take Free Assessment</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -324,7 +328,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   {/* Background Poster Image */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
                   <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-[#0050FF] hover:bg-[#1C449A] text-white flex items-center justify-center shadow-2xl shadow-[#0050FF]/60 group-hover:scale-110 transition-transform">
+                    <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-[#10B981] hover:bg-[#059669] text-white flex items-center justify-center shadow-2xl shadow-[#10B981]/60 group-hover:scale-110 transition-transform">
                       <Play className="w-8 h-8 fill-white translate-x-0.5" />
                     </div>
                   </div>
@@ -332,7 +336,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   {/* Video Info Overlay */}
                   <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
                     <div>
-                      <span className="px-2.5 py-1 rounded-full bg-[#0050FF] text-white text-[11px] font-bold uppercase tracking-wider">
+                      <span className="px-2.5 py-1 rounded-full bg-[#10B981] text-white text-[11px] font-bold uppercase tracking-wider">
                         Featured Project Masterclass
                       </span>
                       <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
@@ -393,7 +397,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       <section className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
+          <span className="text-xs uppercase tracking-widest text-[#10B981] font-bold">
             Choose Your Path
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -408,7 +412,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <button
               onClick={() => setRoleTab('tracks')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'tracks' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
+                roleTab === 'tracks' ? 'bg-[#10B981] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Career Tracks
@@ -416,7 +420,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <button
               onClick={() => setRoleTab('courses')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'courses' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
+                roleTab === 'courses' ? 'bg-[#10B981] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Courses (28)
@@ -424,7 +428,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <button
               onClick={() => setRoleTab('skills')}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                roleTab === 'skills' ? 'bg-[#0050FF] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
+                roleTab === 'skills' ? 'bg-[#10B981] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-brand-blue'
               }`}
             >
               Skill Tracks
@@ -438,7 +442,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             
             {/* Track 1: Data Engineer */}
             <CardContainer containerClassName="w-full" className="w-full">
-              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#10B981]/60 transition-all group relative shadow-lg h-full">
                 <div className="space-y-4">
                   <CardItem translateZ={25} className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold">
@@ -450,7 +454,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </CardItem>
 
                   <CardItem translateZ={35}>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#10B981] transition-colors">
                       Data Engineer
                     </h3>
                   </CardItem>
@@ -474,7 +478,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                   <button
                     onClick={() => onSelectCourse ? onSelectCourse('CP-01') : onNavigateTab('projects')}
-                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                    className="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#10B981]/20"
                   >
                     <span>Explore Track</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -485,7 +489,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
             {/* Track 2: Analytics Engineer */}
             <CardContainer containerClassName="w-full" className="w-full">
-              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#10B981]/60 transition-all group relative shadow-lg h-full">
                 <div className="space-y-4">
                   <CardItem translateZ={25} className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-semibold">
@@ -497,7 +501,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </CardItem>
 
                   <CardItem translateZ={35}>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#10B981] transition-colors">
                       Analytics Engineer
                     </h3>
                   </CardItem>
@@ -521,7 +525,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                   <button
                     onClick={() => onSelectCourse ? onSelectCourse('CP-02') : onNavigateTab('projects')}
-                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                    className="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#10B981]/20"
                   >
                     <span>Explore Track</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -532,7 +536,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
             {/* Track 3: Streaming Systems Engineer */}
             <CardContainer containerClassName="w-full" className="w-full">
-              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#0050FF]/60 transition-all group relative shadow-lg h-full">
+              <CardBody className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 flex flex-col justify-between hover:border-[#10B981]/60 transition-all group relative shadow-lg h-full">
                 <div className="space-y-4">
                   <CardItem translateZ={25} className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[11px] font-semibold">
@@ -544,7 +548,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </CardItem>
 
                   <CardItem translateZ={35}>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#10B981] transition-colors">
                       Streaming Systems Engineer
                     </h3>
                   </CardItem>
@@ -568,7 +572,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   <span className="text-xs text-slate-600 dark:text-slate-400">Curator: Umar Karajagi</span>
                   <button
                     onClick={() => onSelectCourse ? onSelectCourse('CP-03') : onNavigateTab('projects')}
-                    className="px-4 py-2 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#0050FF]/20"
+                    className="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-md shadow-[#10B981]/20"
                   >
                     <span>Explore Track</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -586,11 +590,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             {CURATED_COURSE_VIDEOS.map(course => (
               <div 
                 key={course.id}
-                className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF]/60 transition-all flex flex-col justify-between"
+                className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#10B981]/60 transition-all flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="px-2 py-0.5 rounded bg-[#0050FF]/15 text-[#0050FF] font-semibold">
+                    <span className="px-2 py-0.5 rounded bg-[#10B981]/15 text-[#10B981] font-semibold">
                       {course.topic}
                     </span>
                     <span className="text-slate-600 dark:text-slate-400">{course.duration}</span>
@@ -607,7 +611,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   <span className="text-xs text-slate-600 dark:text-slate-400">{course.instructor}</span>
                   <button
                     onClick={() => onOpenVideo(course)}
-                    className="text-xs font-bold text-[#0050FF] hover:underline flex items-center gap-1"
+                    className="text-xs font-bold text-[#10B981] hover:underline flex items-center gap-1"
                   >
                     <span>Watch Masterclass</span>
                     <span>▶</span>
@@ -634,13 +638,13 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               <div 
                 key={i}
                 onClick={() => onNavigateTab('projects')}
-                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF] cursor-pointer transition-all space-y-2"
+                className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#10B981] cursor-pointer transition-all space-y-2"
               >
-                <span className="text-[11px] font-semibold text-[#0050FF]">{skill.tag}</span>
+                <span className="text-[11px] font-semibold text-[#10B981]">{skill.tag}</span>
                 <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">{skill.title}</h4>
                 <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between pt-1">
                   <span>{skill.count}</span>
-                  <span className="text-[#0050FF]">Explore →</span>
+                  <span className="text-[#10B981]">Explore →</span>
                 </div>
               </div>
             ))}
@@ -675,7 +679,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                 onClick={() => setSelectedTech(t.name)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
                   selectedTech === t.name 
-                    ? 'bg-[#0050FF] text-white shadow-md shadow-[#0050FF]/25' 
+                    ? 'bg-[#10B981] text-white shadow-md shadow-[#10B981]/25' 
                     : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-brand-blue border border-slate-200 dark:border-slate-800'
                 }`}
               >
@@ -692,11 +696,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               .map(project => (
                 <div 
                   key={project.id}
-                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden hover:border-[#0050FF]/60 transition-all flex flex-col justify-between group"
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden hover:border-[#10B981]/60 transition-all flex flex-col justify-between group"
                 >
                   <div className="p-5 space-y-3">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#0050FF]/15 text-[#0050FF] font-semibold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] font-semibold">
                         {project.topic}
                       </span>
                       <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1">
@@ -704,7 +708,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                       </span>
                     </div>
 
-                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-base group-hover:text-[#0050FF] transition-colors line-clamp-2">
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-base group-hover:text-[#10B981] transition-colors line-clamp-2">
                       {project.title}
                     </h4>
                     <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3">
@@ -724,7 +728,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                     <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">★ {project.rating} ({project.views})</span>
                     <button
                       onClick={() => onOpenVideo(project)}
-                      className="px-3 py-1.5 rounded-lg bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
                     >
                       <Play className="w-3 h-3 fill-white" />
                       <span>Watch Walkthrough</span>
@@ -742,7 +746,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-2">
-          <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
+          <span className="text-xs uppercase tracking-widest text-[#10B981] font-bold">
             How DataVeda Works
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -766,11 +770,11 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               onClick={() => setActiveStep(parseInt(step.num))}
               className={`p-6 rounded-2xl border transition-all cursor-pointer space-y-3 ${
                 activeStep === parseInt(step.num)
-                  ? 'bg-white dark:bg-slate-900 border-[#0050FF] shadow-lg shadow-[#0050FF]/10'
+                  ? 'bg-white dark:bg-slate-900 border-[#10B981] shadow-lg shadow-[#10B981]/10'
                   : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700'
               }`}
             >
-              <span className={`text-2xl font-mono font-bold ${activeStep === parseInt(step.num) ? 'text-[#0050FF]' : 'text-slate-500 dark:text-slate-500'}`}>
+              <span className={`text-2xl font-mono font-bold ${activeStep === parseInt(step.num) ? 'text-[#10B981]' : 'text-slate-500 dark:text-slate-500'}`}>
                 {step.num}
               </span>
               <h4 className="text-base font-bold text-slate-900 dark:text-slate-50">{step.title}</h4>
@@ -782,7 +786,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         {/* Step Detail Highlight Card */}
         <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
-            <span className="text-xs font-mono font-bold text-[#0050FF] uppercase">
+            <span className="text-xs font-mono font-bold text-[#10B981] uppercase">
               Step {activeStep} / 4
             </span>
             <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
@@ -798,7 +802,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
           <button
             onClick={onOpenAssessment}
-            className="px-6 py-3 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-bold shrink-0 transition-colors shadow-lg shadow-[#0050FF]/20"
+            className="px-6 py-3 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold shrink-0 transition-colors shadow-lg shadow-[#10B981]/20"
           >
             Build My Free Plan →
           </button>
@@ -813,7 +817,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center space-y-2 max-w-2xl mx-auto">
-            <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
+            <span className="text-xs uppercase tracking-widest text-[#10B981] font-bold">
               All-In-One Platform
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -830,16 +834,16 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               <div 
                 key={idx}
                 onClick={() => onNavigateTab(tool.tabTarget)}
-                className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#0050FF]/60 cursor-pointer transition-all flex flex-col justify-between group space-y-4"
+                className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#10B981]/60 cursor-pointer transition-all flex flex-col justify-between group space-y-4"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono text-slate-500 dark:text-slate-500 font-bold">0{idx + 1}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-[#0050FF]/15 text-[#0050FF] text-[10px] font-bold">
+                    <span className="px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] text-[10px] font-bold">
                       {tool.tag}
                     </span>
                   </div>
-                  <h4 className="text-base font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#0050FF] transition-colors">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#10B981] transition-colors">
                     {tool.title}
                   </h4>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -847,7 +851,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-center text-xs font-bold text-[#0050FF] group-hover:translate-x-1 transition-transform">
+                <div className="flex items-center text-xs font-bold text-[#10B981] group-hover:translate-x-1 transition-transform">
                   <span>Explore Tool</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </div>
@@ -863,7 +867,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* ========================================================================= */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-2">
-          <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
+          <span className="text-xs uppercase tracking-widest text-[#10B981] font-bold">
             Testimonials
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -882,7 +886,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               </p>
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
                 <div className="font-bold text-slate-900 dark:text-slate-100 text-xs">{item.name}</div>
-                <div className="text-[11px] text-[#0050FF] font-medium">{item.role}</div>
+                <div className="text-[11px] text-[#10B981] font-medium">{item.role}</div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-500">{item.company}</div>
               </div>
             </div>
@@ -955,7 +959,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
               <span className="text-xs text-slate-600 dark:text-slate-400">Join 25,000+ engineers leveling up today.</span>
               <button
                 onClick={onOpenAssessment}
-                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#0050FF] hover:bg-[#1C449A] text-white text-xs font-bold transition-colors shadow-lg shadow-[#0050FF]/25"
+                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold transition-colors shadow-lg shadow-[#10B981]/25"
               >
                 Start Learning Now (Free) →
               </button>
@@ -969,7 +973,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
       {/* SECTION 9: FOUNDER'S MEMO */}
       {/* ========================================================================= */}
       <section className="py-20 max-w-4xl mx-auto px-4 text-center space-y-6">
-        <span className="text-xs uppercase tracking-widest text-[#0050FF] font-bold">
+        <span className="text-xs uppercase tracking-widest text-[#10B981] font-bold">
           Founder's Vision
         </span>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
@@ -980,7 +984,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
         </p>
         <div>
           <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">Umar Karajagi</div>
-          <div className="text-xs text-[#0050FF]">Founder & Creator, DataVeda</div>
+          <div className="text-xs text-[#10B981]">Founder & Creator, DataVeda</div>
         </div>
       </section>
 

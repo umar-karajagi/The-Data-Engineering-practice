@@ -11,6 +11,7 @@ import {
   CheckCircle2, 
   Trash2, 
   Lock, 
+  Unlock,
   BookMarked,
   ArrowRight,
   ShieldCheck,
@@ -20,10 +21,12 @@ import {
   Table as TableIcon,
   LayoutGrid,
   Terminal,
-  FolderSync
+  FolderSync,
+  Rotate3d
 } from 'lucide-react';
 import { FOUNDATIONAL_BOOKS } from '../../content/books';
 import { BookReference, TrackType } from '../../types';
+import { Crazy3DBookReader } from './Crazy3DBookReader';
 import { BookReader } from './BookReader';
 import { NotebookReader } from './NotebookReader';
 import { FunPdfReader } from './FunPdfReader';
@@ -199,11 +202,11 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
     }
 
     return (
-      <BookReader
+      <Crazy3DBookReader
         book={activeBook}
         onBackToLibrary={() => setActiveBook(null)}
         onNavigatePractice={onNavigatePractice}
-        onOpenQuickNote={onOpenQuickNote}
+        onAddXP={onAddXP}
       />
     );
   }
@@ -215,13 +218,13 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
       <div className="bg-forge-card border border-forge-border rounded-3xl p-6 sm:p-10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-2 max-w-2xl">
           <div className="flex items-center gap-2 font-mono text-xs text-track-sql">
-            <span className="px-2 py-0.5 rounded bg-track-sql/10 border border-track-sql/30 font-bold uppercase">
+            <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold uppercase">
               Digital Library & Notebook Vault
             </span>
             <span>•</span>
-            <span className="text-forge-secondary flex items-center gap-1">
-              <Lock className="w-3.5 h-3.5 text-track-warehousing" />
-              100–200MB Protected Vault
+            <span className="text-emerald-400 flex items-center gap-1 font-bold">
+              <Unlock className="w-3.5 h-3.5" />
+              100% Unlocked Open Access Vault
             </span>
           </div>
 
@@ -230,7 +233,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
           </h1>
 
           <p className="text-xs sm:text-sm text-forge-secondary leading-relaxed">
-            Distraction-free e-reader and interactive Jupyter Notebook studio. Upload complete `.ipynb` notebooks, research papers, and technical books up to 200MB. Zero external downloads, DRM protected.
+            Distraction-free Crazy 3D interactive e-reader and Jupyter Notebook studio. Read complete technical books, research papers, and interactive notebooks with true 3D page flip physics and unlocked open access.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-mono text-forge-muted">

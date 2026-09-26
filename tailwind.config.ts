@@ -32,10 +32,10 @@ const config: Config = {
           behavioral: "var(--track-behavioral)",
         },
         brand: {
-          blue: "#0050FF",
-          hover: "#1C449A",
-          light: "rgba(0, 80, 255, 0.08)",
-          subtle: "rgba(0, 80, 255, 0.15)",
+          blue: "#10B981",
+          hover: "#059669",
+          light: "rgba(16, 185, 129, 0.08)",
+          subtle: "rgba(16, 185, 129, 0.18)",
         },
         vidhya: {
           bg: "#0C0C0C",
