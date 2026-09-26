@@ -370,6 +370,40 @@ Data engineering bridges software applications and downstream intelligence. The 
     description: 'Designing production data engineering pipelines for Generative AI and Foundation Models.',
     keyTakeaways: ['RAG pipelines require careful chunking, metadata enrichment, and vector similarity search optimization.'],
     chapters: []
+  },
+  {
+    id: 'book-14',
+    title: 'Databricks Certified Data Engineer Associate Prep Guide',
+    author: 'DataVeda Engineering Faculty',
+    coverColor: '#F97316',
+    track: 'azure',
+    coreConcepts: ['Delta Live Tables', 'Unity Catalog', 'Medallion Architecture', 'Auto Loader', 'Spark SQL'],
+    description: 'Complete hands-on exam prep and blueprint for passing the Databricks Certified Data Engineer Associate certification.',
+    keyTakeaways: ['Master declarative DLT expectations, Auto Loader cloudFiles, and Unity Catalog three-level namespaces.'],
+    chapters: []
+  },
+  {
+    id: 'book-15',
+    title: 'Enterprise Cloud Data Architecture Blueprint',
+    author: 'DataVeda Architecture Council',
+    coverColor: '#6366F1',
+    track: 'architecture',
+    coreConcepts: ['Modern Data Stack', 'Zero-Trust Governance', 'Multi-Cloud Lakehouse', 'Event-Driven Ingestion', 'Cost Optimization'],
+    description: 'Field manual for designing petabyte-scale cloud data platforms across AWS, Azure, and GCP.',
+    keyTakeaways: ['Decouple compute from storage and enforce strict schema contracts at ingestion boundaries.'],
+    chapters: []
+  },
+  {
+    id: 'book-16',
+    title: 'Distributed PySpark Lakehouse Architecture Notebook',
+    author: 'DataVeda Open Source Lab',
+    coverColor: '#EAB308',
+    track: 'pyspark',
+    formatType: 'notebook',
+    coreConcepts: ['Interactive PySpark Execution', 'Delta Lake ACID Time Travel', 'Partition Pruning', 'Z-Order Clustering'],
+    description: 'Interactive runnable Jupyter notebook (.ipynb) demonstrating distributed lakehouse transformations.',
+    keyTakeaways: ['Run live PySpark operations directly in the browser with step-by-step code cells and visual outputs.'],
+    chapters: []
   }
 ];
 
