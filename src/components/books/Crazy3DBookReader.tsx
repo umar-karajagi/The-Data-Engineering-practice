@@ -39,7 +39,9 @@ import {
   ZoomIn,
   ZoomOut,
   Loader2,
-  Monitor
+  Monitor,
+  Headphones,
+  Square
 } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 import { BookReference, ContentRef } from '../../types';
@@ -501,28 +503,103 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   });
 
-  // Text-to-Speech
-  const handleToggleSpeech = () => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  // Text-to-Speech (Extracts and reads real PDF pages, E-Reader chapters, and key takeaways)
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const [isSpeechPaused, setIsSpeechPaused] = useState<boolean>(false);
+  const [readingStatusText, setReadingStatusText] = useState<string | null>(null);
 
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+  // Clean up speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleToggleSpeech = async () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      alert('Speech synthesis is not supported in this browser.');
       return;
     }
 
-    if (!currentChapter) return;
+    if (isSpeaking) {
+      if (isSpeechPaused) {
+        window.speechSynthesis.resume();
+        setIsSpeechPaused(false);
+      } else {
+        window.speechSynthesis.pause();
+        setIsSpeechPaused(true);
+      }
+      return;
+    }
 
     window.speechSynthesis.cancel();
-    const cleanText = currentChapter.content.replace(/[#*_`]/g, '');
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    setReadingStatusText(`Extracting page ${currentPdfPage} text...`);
+
+    let textToSpeak = '';
+
+    // If in PDF mode (3D Spiral or Continuous canvas), extract text directly from the current PDF page
+    if (pdfDoc && (displayMode === 'spiral3d' || displayMode === 'continuous')) {
+      try {
+        const page = await pdfDoc.getPage(currentPdfPage);
+        const textContent = await page.getTextContent();
+        const itemsText = textContent.items
+          .map((item: any) => item.str)
+          .filter((s: string) => s && s.trim().length > 0)
+          .join(' ');
+        
+        if (itemsText.trim().length > 30) {
+          textToSpeak = itemsText;
+        }
+      } catch (err) {
+        console.warn('Could not extract text from current PDF page, falling back to chapter summary', err);
+      }
+    }
+
+    // Fallback to chapter content or book summary
+    if (!textToSpeak) {
+      if (currentChapter) {
+        const cleanContent = currentChapter.content.replace(/[#*_`]/g, '');
+        textToSpeak = `${currentChapter.title}. ${currentChapter.summary}. ${cleanContent}`;
+      } else {
+        textToSpeak = `Page ${currentPdfPage} of ${book.title} by ${book.author}. ${book.description}. Key architectural concepts: ${(book.coreConcepts || []).join(', ')}.`;
+      }
+    }
+
+    setReadingStatusText(`Reading aloud: ${book.title} (Page ${currentPdfPage})`);
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.rate = speechRate;
+    utterance.pitch = 1.0;
+
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setIsSpeechPaused(false);
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setIsSpeechPaused(false);
+      setReadingStatusText(null);
+    };
+
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      setIsSpeechPaused(false);
+      setReadingStatusText(null);
+    };
 
     speechUtteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
+  };
+
+  const handleStopSpeech = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+    setIsSpeechPaused(false);
+    setReadingStatusText(null);
   };
 
   // Bookmark Toggle
@@ -662,6 +739,57 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
           {/* Right: Controls & Actions */}
           <div className="flex items-center gap-2">
+            
+            {/* AI Text-to-Speech Audio Narrator (Reads Real PDF Pages Out Loud) */}
+            <div className="flex items-center gap-1 bg-[#010D08] border border-emerald-500/50 rounded-xl px-2 py-1 shadow-md shadow-emerald-500/10">
+              <button
+                onClick={handleToggleSpeech}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  isSpeaking && !isSpeechPaused
+                    ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/30 font-black'
+                    : 'bg-emerald-950/80 text-emerald-300 hover:bg-emerald-900 border border-emerald-800/80'
+                }`}
+                title="AI Audio Narrator: Read this PDF page out loud"
+              >
+                <Headphones className={`w-3.5 h-3.5 ${isSpeaking && !isSpeechPaused ? 'animate-bounce text-black' : 'text-emerald-400'}`} />
+                <span>
+                  {isSpeaking ? (isSpeechPaused ? 'Paused (Resume)' : 'Reading Page...') : 'Read Page Out Loud'}
+                </span>
+                {isSpeaking && !isSpeechPaused && (
+                  <span className="flex items-center gap-0.5 ml-1">
+                    <span className="w-1 h-2.5 bg-black animate-pulse rounded-full" />
+                    <span className="w-1 h-3.5 bg-black animate-pulse delay-75 rounded-full" />
+                    <span className="w-1 h-2 bg-black animate-pulse delay-150 rounded-full" />
+                  </span>
+                )}
+              </button>
+
+              {isSpeaking && (
+                <>
+                  <button
+                    onClick={handleStopSpeech}
+                    className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/10 text-xs font-mono cursor-pointer transition-colors"
+                    title="Stop Audio Reading"
+                  >
+                    <Square className="w-3.5 h-3.5 fill-rose-400" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const nextRate = speechRate === 1.0 ? 1.25 : speechRate === 1.25 ? 1.5 : 1.0;
+                      setSpeechRate(nextRate);
+                      handleStopSpeech();
+                      setTimeout(handleToggleSpeech, 150);
+                    }}
+                    className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 cursor-pointer hover:bg-emerald-900"
+                    title="Toggle Speech Speed (1x, 1.25x, 1.5x)"
+                  >
+                    {speechRate}x
+                  </button>
+                </>
+              )}
+            </div>
+
             {/* 3D Cover Toggle */}
             {displayMode === 'spiral3d' && (
               <button

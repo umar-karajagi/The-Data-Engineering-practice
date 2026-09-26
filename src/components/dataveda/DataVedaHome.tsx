@@ -37,6 +37,7 @@ import { TreeBranchesCanvas } from '../3d/TreeBranchesCanvas';
 import { CardContainer, CardBody, CardItem } from '../3d/Card3D';
 import { HeroParallaxContainer } from '../3d/HeroParallaxContainer';
 import { NeetCodeRoadmap } from '../roadmap/NeetCodeRoadmap';
+import { InteractiveHomeGuide } from '../home/InteractiveHomeGuide';
 
 interface DataVedaHomeProps {
   onOpenVideo: (video: CuratedVideo) => void;
@@ -272,10 +273,17 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md pt-2">
               <button
-                onClick={onOpenAssessment}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold tracking-tight shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 transition-all flex items-center justify-center gap-2 group"
+                onClick={() => {
+                  const el = document.getElementById('interactive-guide');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    onOpenAssessment();
+                  }
+                }}
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold tracking-tight shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Take Free Assessment</span>
+                <span>Interactive Career Guide</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
 
@@ -381,6 +389,16 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <span>Meesho</span>
           </div>
         </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 2.2: INTERACTIVE 4-STAGE CAREER GUIDE (PROFILE, FOUNDATIONS, TRACKS, PROJECTS) */}
+      {/* ========================================================================= */}
+      <section id="interactive-guide" className="py-8 bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-200/80 dark:border-slate-800/80">
+        <InteractiveHomeGuide 
+          onOpenVideo={onOpenVideo} 
+          onNavigateTab={onNavigateTab} 
+        />
       </section>
 
       {/* ========================================================================= */}
