@@ -150,17 +150,21 @@ function DataVedaApp() {
         onClose={() => setIsAuthModalOpen(false)}
       />
 
-      {/* 7. Admin & Multi-User Database Inspector Console */}
-      <UserDatabaseInspector
-        isOpen={isDatabaseInspectorOpen}
-        onClose={() => setIsDatabaseInspectorOpen(false)}
-      />
+      {/* 7. Admin & Multi-User Database Inspector Console (Strictly Restricted to Founder Super-Admin Umar) */}
+      {isSuperAdmin && (
+        <UserDatabaseInspector
+          isOpen={isDatabaseInspectorOpen}
+          onClose={() => setIsDatabaseInspectorOpen(false)}
+        />
+      )}
 
-      {/* 8. MNC QA Testing Tracker & Release Pipeline (DEV -> TESTING -> PROD) */}
-      <QaTestingTracker
-        isOpen={isQaTrackerOpen}
-        onClose={() => setIsQaTrackerOpen(false)}
-      />
+      {/* 8. MNC QA Testing Tracker & Release Pipeline (Strictly Restricted to Founder Super-Admin Umar) */}
+      {isSuperAdmin && (
+        <QaTestingTracker
+          isOpen={isQaTrackerOpen}
+          onClose={() => setIsQaTrackerOpen(false)}
+        />
+      )}
 
       {/* 9. AI Holographic Mentor Orb (Summonable Anywhere) */}
       <MentorOrb activeTopic={activeTab} />

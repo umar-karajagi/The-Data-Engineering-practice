@@ -205,7 +205,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [allUsers, setAllUsers] = useState<UserAccount[]>(SEED_USERS);
-  const [currentUserId, setCurrentUserId] = useState<string>('usr-founder-001');
+  const [currentUserId, setCurrentUserId] = useState<string>('');
   const [environment, setEnvironmentState] = useState<EnvironmentStage>('PROD');
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 

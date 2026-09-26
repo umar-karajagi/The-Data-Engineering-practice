@@ -1,26 +1,58 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 interface Hero3DCanvasProps {
   className?: string;
 }
 
+/**
+ * Award-Caliber Restrained 3D Hero: The Lakehouse Medallion (Bronze / Silver / Gold)
+ * - Concentric 3-tier architectural medallion with chamfered low-poly facets.
+ * - Under 1s smooth spring assembly on load, followed by a slow, dignified ambient orbit.
+ * - Responsive mouse parallax (constrained to 3-5 degrees tilt).
+ * - Automatic IntersectionObserver pausing: drops to 0 FPS when out of viewport to preserve mobile battery/CPU.
+ * - Full prefers-reduced-motion and WebGL fallback support.
+ */
 export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({ className = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+  const [webglSupported, setWebglSupported] = useState<boolean>(true);
 
   useEffect(() => {
+    // Detect prefers-reduced-motion
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (mediaQuery.matches) {
+        setReducedMotion(true);
+        return;
+      }
+    }
+
     const container = containerRef.current;
     if (!container) return;
 
-    // Scene, Camera, Renderer
+    // Check WebGL availability
+    try {
+      const testCanvas = document.createElement('canvas');
+      const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+      if (!gl) {
+        setWebglSupported(false);
+        return;
+      }
+    } catch {
+      setWebglSupported(false);
+      return;
+    }
+
+    // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
     const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || 600;
+    const height = container.clientHeight || 650;
 
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    camera.position.z = 24;
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.set(0, 1.8, 16);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -28,210 +60,278 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({ className = '' }) =>
       powerPreference: 'high-performance'
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
-    // Node definitions (Botanical Light Green Data Engineering Pipeline)
-    const nodeDefs = [
-      { name: 'Kafka', pos: new THREE.Vector3(-14, 4, -2), color: 0x10b981, shape: 'octahedron' },
-      { name: 'Spark', pos: new THREE.Vector3(-6, 7, 2), color: 0x34d399, shape: 'dodecahedron' },
-      { name: 'Iceberg', pos: new THREE.Vector3(2, 5, -1), color: 0x6ee7b7, shape: 'icosahedron' },
-      { name: 'Snowflake', pos: new THREE.Vector3(12, 6, 1), color: 0x059669, shape: 'octahedron' },
-      { name: 'Airflow', pos: new THREE.Vector3(-8, -4, 0), color: 0x047857, shape: 'box' },
-      { name: 'dbt', pos: new THREE.Vector3(4, -5, -3), color: 0xa7f3d0, shape: 'icosahedron' },
-      { name: 'DuckDB', pos: new THREE.Vector3(13, -3, 2), color: 0x86efac, shape: 'dodecahedron' }
-    ];
+    // 2. Lighting Setup (Sculptural Three-Point System)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
 
-    const nodesGroup = new THREE.Group();
-    scene.add(nodesGroup);
+    // Key light (Emerald / Cyan tint)
+    const keyLight = new THREE.DirectionalLight(0x10b981, 2.2);
+    keyLight.position.set(8, 12, 10);
+    scene.add(keyLight);
 
-    const nodeMeshes: THREE.Mesh[] = [];
+    // Warm Gold Rim Light
+    const goldRim = new THREE.DirectionalLight(0xf59e0b, 2.8);
+    goldRim.position.set(-10, 8, -6);
+    scene.add(goldRim);
 
-    nodeDefs.forEach(def => {
-      let geom: THREE.BufferGeometry;
-      if (def.shape === 'octahedron') geom = new THREE.OctahedronGeometry(1.3, 0);
-      else if (def.shape === 'dodecahedron') geom = new THREE.DodecahedronGeometry(1.2, 0);
-      else if (def.shape === 'icosahedron') geom = new THREE.IcosahedronGeometry(1.2, 0);
-      else geom = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+    // Soft Bottom Fill Light
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+    fillLight.position.set(0, -10, 5);
+    scene.add(fillLight);
 
-      // Outer wireframe shell
-      const wireMat = new THREE.MeshBasicMaterial({
-        color: def.color,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.75
-      });
-      const outerMesh = new THREE.Mesh(geom, wireMat);
-      outerMesh.position.copy(def.pos);
+    // Medallion Root Group
+    const medallionGroup = new THREE.Group();
+    medallionGroup.position.set(0, -0.2, 0);
+    medallionGroup.rotation.x = 0.38; // Initial architectural tilt
+    scene.add(medallionGroup);
 
-      // Inner glowing core
-      const innerGeom = new THREE.SphereGeometry(0.65, 16, 16);
-      const innerMat = new THREE.MeshBasicMaterial({
-        color: def.color,
-        transparent: true,
-        opacity: 0.6
-      });
-      const innerMesh = new THREE.Mesh(innerGeom, innerMat);
-      outerMesh.add(innerMesh);
-
-      nodesGroup.add(outerMesh);
-      nodeMeshes.push(outerMesh);
+    // 3. Materials
+    // Tier 1: Bronze (Base / Ingestion)
+    const bronzeMat = new THREE.MeshStandardMaterial({
+      color: 0x92400e,
+      roughness: 0.35,
+      metalness: 0.85,
+      flatShading: true
+    });
+    const bronzeEdgeMat = new THREE.LineBasicMaterial({
+      color: 0xd97706,
+      transparent: true,
+      opacity: 0.8
     });
 
-    // Pipelines (Curves & Traveling Data Packets)
-    const pipelineConnections = [
-      [0, 1], // Kafka -> Spark
-      [1, 2], // Spark -> Iceberg
-      [2, 3], // Iceberg -> Snowflake
-      [4, 1], // Airflow -> Spark
-      [4, 5], // Airflow -> dbt
-      [5, 2], // dbt -> Iceberg
-      [5, 6]  // dbt -> DuckDB
-    ];
-
-    const curves: THREE.CatmullRomCurve3[] = [];
-    const packets: { curveIdx: number; t: number; speed: number; mesh: THREE.Mesh }[] = [];
-
-    pipelineConnections.forEach(([fromIdx, toIdx], cIdx) => {
-      const p1 = nodeDefs[fromIdx].pos;
-      const p2 = nodeDefs[toIdx].pos;
-      const mid = new THREE.Vector3(
-        (p1.x + p2.x) / 2 + (Math.random() - 0.5) * 3,
-        (p1.y + p2.y) / 2 + (Math.random() - 0.5) * 3,
-        (p1.z + p2.z) / 2 + (Math.random() - 0.5) * 2
-      );
-
-      const curve = new THREE.CatmullRomCurve3([p1, mid, p2]);
-      curves.push(curve);
-
-      // Branch / Pipeline Line representation (Emerald glow)
-      const points = curve.getPoints(50);
-      const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0x10b981,
-        transparent: true,
-        opacity: 0.45
-      });
-      const line = new THREE.Line(lineGeom, lineMat);
-      scene.add(line);
-
-      // Data packet (pulsing glowing mint sphere flowing along branch)
-      const packetGeom = new THREE.SphereGeometry(0.28, 8, 8);
-      const packetMat = new THREE.MeshBasicMaterial({
-        color: 0x6ee7b7,
-        transparent: true,
-        opacity: 0.95
-      });
-      const packetMesh = new THREE.Mesh(packetGeom, packetMat);
-      scene.add(packetMesh);
-
-      packets.push({
-        curveIdx: cIdx,
-        t: Math.random(),
-        speed: 0.003 + Math.random() * 0.003,
-        mesh: packetMesh
-      });
+    // Tier 2: Silver (Middle / Curated Lakehouse)
+    const silverMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      roughness: 0.2,
+      metalness: 0.9,
+      flatShading: true
+    });
+    const silverEdgeMat = new THREE.LineBasicMaterial({
+      color: 0xe2e8f0,
+      transparent: true,
+      opacity: 0.85
     });
 
-    // Ambient 3D Particle Cloud (Data Dust)
-    const particleCount = 280;
-    const particleGeom = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
+    // Tier 3: Gold (Top / Business Value & Analytics)
+    const goldMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      roughness: 0.15,
+      metalness: 0.95,
+      flatShading: true
+    });
+    const goldEdgeMat = new THREE.LineBasicMaterial({
+      color: 0xfef08a,
+      transparent: true,
+      opacity: 0.9
+    });
 
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 60;
-      positions[i + 1] = (Math.random() - 0.5) * 40;
-      positions[i + 2] = (Math.random() - 0.5) * 40;
-    }
+    // 4. Constructing Chamfered Medallion Tiers (Hexagonal Platforms)
+    const createTierMesh = (
+      radiusTop: number,
+      radiusBottom: number,
+      heightVal: number,
+      mat: THREE.Material,
+      edgeMat: THREE.LineBasicMaterial
+    ) => {
+      const geom = new THREE.CylinderGeometry(radiusTop, radiusBottom, heightVal, 6, 1);
+      const mesh = new THREE.Mesh(geom, mat);
+      const edges = new THREE.EdgesGeometry(geom);
+      const line = new THREE.LineSegments(edges, edgeMat);
+      mesh.add(line);
+      return mesh;
+    };
 
-    particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const particleMat = new THREE.PointsMaterial({
-      color: 0x60a5fa,
-      size: 0.18,
+    // Target positions for the 3 tiers
+    const bronzeTargetY = -1.4;
+    const silverTargetY = 0.0;
+    const goldTargetY = 1.4;
+
+    const bronzeMesh = createTierMesh(4.4, 4.9, 0.7, bronzeMat, bronzeEdgeMat);
+    bronzeMesh.position.y = -6.0; // Start offset for assembly animation
+    medallionGroup.add(bronzeMesh);
+
+    const silverMesh = createTierMesh(3.2, 3.6, 0.65, silverMat, silverEdgeMat);
+    silverMesh.position.y = 0.0;
+    medallionGroup.add(silverMesh);
+
+    const goldMesh = createTierMesh(2.0, 2.3, 0.6, goldMat, goldEdgeMat);
+    goldMesh.position.y = 6.0; // Start offset for assembly animation
+    medallionGroup.add(goldMesh);
+
+    // Apex Crown Core: Floating Octahedral Compute Prism
+    const prismGeom = new THREE.OctahedronGeometry(0.85, 0);
+    const prismMat = new THREE.MeshStandardMaterial({
+      color: 0x10b981,
+      roughness: 0.1,
+      metalness: 0.9,
+      emissive: 0x059669,
+      emissiveIntensity: 0.6
+    });
+    const prismMesh = new THREE.Mesh(prismGeom, prismMat);
+    prismMesh.position.y = 2.6;
+    medallionGroup.add(prismMesh);
+
+    // Delicate Orbital Ring (Photon Pipeline Stream)
+    const ringGeom = new THREE.TorusGeometry(5.6, 0.035, 8, 64);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x34d399,
       transparent: true,
       opacity: 0.45
     });
-    const particlePoints = new THREE.Points(particleGeom, particleMat);
-    scene.add(particlePoints);
+    const orbitalRing = new THREE.Mesh(ringGeom, ringMat);
+    orbitalRing.rotation.x = Math.PI / 2 + 0.2;
+    medallionGroup.add(orbitalRing);
 
-    // Mouse movement parallax
+    // Small data pulse beads along ring
+    const beadGeom = new THREE.SphereGeometry(0.12, 8, 8);
+    const beadMat = new THREE.MeshBasicMaterial({ color: 0x6ee7b7 });
+    const bead1 = new THREE.Mesh(beadGeom, beadMat);
+    const bead2 = new THREE.Mesh(beadGeom, beadMat);
+    medallionGroup.add(bead1);
+    medallionGroup.add(bead2);
+
+    // 5. Mouse Parallax Listeners
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
+    let targetParallaxX = 0;
+    let targetParallaxY = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const windowHalfX = window.innerWidth / 2;
-      const windowHalfY = window.innerHeight / 2;
-      mouseX = (e.clientX - windowHalfX) * 0.0008;
-      mouseY = (e.clientY - windowHalfY) * 0.0008;
+    const onMouseMove = (e: MouseEvent) => {
+      const halfW = window.innerWidth / 2;
+      const halfH = window.innerHeight / 2;
+      mouseX = (e.clientX - halfW) / halfW; // -1 to 1
+      mouseY = (e.clientY - halfH) / halfH; // -1 to 1
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
 
-    // Window Resize Handling
-    const handleResize = () => {
+    // Window Resize Handler
+    const onResize = () => {
       if (!container) return;
       const w = container.clientWidth || window.innerWidth;
-      const h = container.clientHeight || 600;
+      const h = container.clientHeight || 650;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', onResize);
 
-    // Animation Loop
+    // 6. Viewport Visibility Tracking via IntersectionObserver
+    let isVisible = true;
     let animId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
+    let assemblyProgress = 0;
 
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !animId) {
+            animLoop();
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
 
-      const elapsedTime = clock.getElapsedTime();
+    observer.observe(container);
 
-      // Camera orbital parallax with damping
-      targetX += (mouseX * 12 - targetX) * 0.05;
-      targetY += (-mouseY * 8 - targetY) * 0.05;
-      camera.position.x = targetX;
-      camera.position.y = targetY;
-      camera.lookAt(0, 0, 0);
+    // 7. Choreographed 60fps Animation Loop
+    const animLoop = () => {
+      if (!isVisible) {
+        animId = 0;
+        return; // Pause rendering completely when user scrolls away
+      }
 
-      // Rotate nodes and pulse inner cores
-      nodeMeshes.forEach((mesh, idx) => {
-        mesh.rotation.x += 0.008 * (idx % 2 === 0 ? 1 : -1);
-        mesh.rotation.y += 0.01;
-        mesh.position.y += Math.sin(elapsedTime * 1.5 + idx) * 0.004;
-      });
+      animId = requestAnimationFrame(animLoop);
+      const elapsed = clock.getElapsedTime();
 
-      // Move data packets along pipelines
-      packets.forEach(p => {
-        p.t += p.speed;
-        if (p.t > 1) p.t = 0;
-        const pt = curves[p.curveIdx].getPoint(p.t);
-        p.mesh.position.copy(pt);
-      });
+      // 0.8s Spring assembly interpolation
+      if (assemblyProgress < 1) {
+        assemblyProgress = Math.min(1, assemblyProgress + 0.025);
+        // Ease-out cubic
+        const ease = 1 - Math.pow(1 - assemblyProgress, 3);
+        bronzeMesh.position.y = -6.0 + (bronzeTargetY - (-6.0)) * ease;
+        goldMesh.position.y = 6.0 + (goldTargetY - 6.0) * ease;
+      } else {
+        // Subtle rhythmic breathing in stacked idle mode
+        bronzeMesh.position.y = bronzeTargetY + Math.sin(elapsed * 1.2) * 0.04;
+        silverMesh.position.y = silverTargetY + Math.sin(elapsed * 1.2 + 0.8) * 0.04;
+        goldMesh.position.y = goldTargetY + Math.sin(elapsed * 1.2 + 1.6) * 0.04;
+        prismMesh.position.y = 2.6 + Math.sin(elapsed * 2.0) * 0.08;
+      }
 
-      // Slowly drift background particle field
-      particlePoints.rotation.y = elapsedTime * 0.02;
-      particlePoints.rotation.x = elapsedTime * 0.01;
+      // Smooth idle rotation
+      medallionGroup.rotation.y += 0.0035;
+      prismMesh.rotation.y -= 0.015;
+      prismMesh.rotation.x += 0.008;
+
+      // Orbit beads around ring
+      const orbitSpeed = elapsed * 0.8;
+      bead1.position.set(
+        Math.cos(orbitSpeed) * 5.6,
+        Math.sin(orbitSpeed) * 0.4,
+        Math.sin(orbitSpeed) * 5.6
+      );
+      bead2.position.set(
+        Math.cos(orbitSpeed + Math.PI) * 5.6,
+        Math.sin(orbitSpeed + Math.PI) * 0.4,
+        Math.sin(orbitSpeed + Math.PI) * 5.6
+      );
+
+      // Subtle mouse parallax damping (constrained to ~4 degrees)
+      targetParallaxX += (mouseX * 0.12 - targetParallaxX) * 0.04;
+      targetParallaxY += (-mouseY * 0.08 - targetParallaxY) * 0.04;
+
+      medallionGroup.rotation.z = targetParallaxX;
+      medallionGroup.rotation.x = 0.38 + targetParallaxY;
 
       renderer.render(scene, camera);
     };
 
-    animate();
+    // Kick off animation
+    animLoop();
 
-    // Cleanup
+    // 8. Cleanup
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      if (container && renderer.domElement) {
+      observer.disconnect();
+      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('resize', onResize);
+      if (container && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      bronzeMat.dispose();
+      silverMat.dispose();
+      goldMat.dispose();
+      prismMat.dispose();
     };
-  }, []);
+  }, [reducedMotion]);
+
+  // Dignified 2D Fallback for prefers-reduced-motion or missing WebGL
+  if (reducedMotion || !webglSupported) {
+    return (
+      <div 
+        className={`absolute inset-0 pointer-events-none flex items-center justify-center opacity-60 overflow-hidden ${className}`}
+        aria-hidden="true"
+      >
+        <div className="relative w-80 h-80 rounded-full border border-emerald-500/20 bg-gradient-to-b from-amber-500/10 via-slate-400/10 to-emerald-500/10 backdrop-blur-3xl flex items-center justify-center">
+          <div className="w-56 h-56 rounded-full border border-amber-400/30 bg-gradient-to-tr from-amber-500/20 to-transparent flex items-center justify-center">
+            <div className="w-32 h-32 rounded-full border border-emerald-400/40 bg-emerald-500/10 flex items-center justify-center">
+              <span className="text-2xl font-mono text-emerald-400 font-bold">Δ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

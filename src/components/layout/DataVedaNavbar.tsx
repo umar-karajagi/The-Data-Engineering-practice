@@ -220,7 +220,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
             <span>Tracks</span>
           </button>
 
-          {/* PRACTICE (850+ PROBLEMS) */}
+          {/* PRACTICE (500 PROBLEMS) */}
           <button
             onClick={() => handleLinkClick('practice')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
@@ -231,7 +231,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
           >
             <Terminal className="w-4 h-4 text-emerald-500" />
             <span>Practice</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">850+</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold">500</span>
           </button>
 
           {/* PROJECTS */}
@@ -472,7 +472,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
             onClick={() => handleLinkClick('practice')}
             className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            Practice Arena (850+ Problems)
+            Practice Arena (500 Industrial Problems)
           </button>
           <button
             onClick={() => handleLinkClick('projects')}
@@ -484,7 +484,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
             onClick={() => handleLinkClick('library')}
             className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
-            The Library (3D 600+ Page Vault)
+            The Library (16 Architecture Texts & Manuals)
           </button>
           <button
             onClick={() => handleLinkClick('resources')}

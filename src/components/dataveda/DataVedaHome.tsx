@@ -87,9 +87,9 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
   const thirteenTools = [
     {
       title: 'Coding Problems',
-      description: '850+ company-tagged SQL, Python & PySpark problems turn interviews into reruns — you walk in having already solved what Google, Meta and Amazon will ask.',
-      tag: '850+ Problems',
-      tabTarget: 'tracks'
+      description: '500 industrial SQL, Python, PySpark, Data Modeling & System Design problems (5 topics × 5 modes) with zero-setup in-browser DuckDB WASM execution.',
+      tag: '500 Problems',
+      tabTarget: 'practice'
     },
     {
       title: 'Curated Video Tutorials',
@@ -135,8 +135,8 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
     },
     {
       title: 'The Vault (Book Library)',
-      description: 'Read the complete industry textbooks online: Kimball Data Warehouse Toolkit, Designing Data-Intensive Applications, and more.',
-      tag: 'Full Books',
+      description: 'Read the complete industry textbooks online: Kimball Data Warehouse Toolkit, Designing Data-Intensive Applications, Databricks Lakehouse, and 13 other canonical works.',
+      tag: '16 Texts',
       tabTarget: 'library'
     },
     {
@@ -200,24 +200,24 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
   const faqs = [
     {
-      q: 'What is DataVeda?',
-      a: 'DataVeda is a comprehensive, guided learning and interview-preparation platform for data careers. It includes 3 career tracks, 28+ courses, curated YouTube video masterclasses, 850+ coding problems, in-browser DuckDB execution, 23 real-world projects, The Vault online book library, and AI-powered interview tools — all in one unified platform.'
+      q: 'What is DataForge?',
+      a: 'DataForge is an industrial-grade learning and interview-preparation platform for data engineers. It features a 9-stage master curriculum (61 videos • 167.6 hours), zero-setup in-browser DuckDB WASM execution for 500 industrial problems, real-world portfolio capstones, and The Vault containing 16 canonical architecture texts.'
     },
     {
       q: 'Who is this for?',
-      a: 'Anyone looking to become a Data Engineer, Analytics Engineer, or Data Analyst; prepare for technical interviews; or upskill in tools like SQL, Python, Spark, dbt, Kafka, Airflow, Snowflake, AWS, and GCP. Complete beginners and seasoned engineers alike will find a clear, prerequisite-ordered path.'
+      a: 'Anyone looking to become a production-ready Data Engineer; prepare for technical interviews; or master modern tools like SQL, Python, PySpark, dbt, Kafka, Azure Data Factory, Databricks, and Microsoft Fabric. Complete beginners start at Stage 01, while experienced practitioners can jump straight into distributed streaming and lakehouse engines.'
     },
     {
       q: 'Do I need any prerequisites?',
-      a: 'No. The Data Engineering Fundamentals and SQL courses start from absolute zero. If you already have programming or SQL experience, you can take the free Placement Diagnostic to test out of introductory modules and jump straight into advanced distributed pipelines.'
+      a: 'No. The curriculum starts with Stage 01 Cloud & DP-900 foundations, followed by foundational Python and ANSI SQL. No prior computer science degree or infrastructure experience is required.'
     },
     {
-      q: 'Is it really 100% free with zero paywalls?',
-      a: 'Yes! While other platforms charge $279+/year for isolated video access, this DataVeda edition offers 100% free open access across all 28+ courses, video masterclasses, 850+ problems, 23 projects, and online book readers with zero paywalls.'
+      q: 'Is the core curriculum free with zero paywalls?',
+      a: 'Yes! The 9-stage master curriculum, 61 curated masterclasses, and in-browser DuckDB execution are completely accessible with zero hidden fees.'
     },
     {
       q: 'How is this different from generic YouTube playlists?',
-      a: 'Random YouTube playlists teach concepts in isolation without structured order, exercise data, or validation. DataVeda curates the highest-rated, verified YouTube masterclasses and wraps them inside an authentic engineering environment: timestamp chapters, key architecture takeaways, in-browser DuckDB SQL execution, GitHub repos, notes, and career tracks.'
+      a: 'Random YouTube playlists teach concepts in isolation without structured sequencing or verified validation. DataForge organizes elite masterclasses into an industrial pipeline: timestamp chapters, key architecture takeaways, in-browser DuckDB SQL execution, GitHub repos, and deep interview prep.'
     }
   ];
 
@@ -267,7 +267,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
 
             {/* Subtitle */}
             <p className="max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-              Learn the fundamentals, build 23 real projects, practice 850+ company-tagged problems, and master modern cloud stacks — <strong>all 28+ courses 100% unlocked</strong> with zero paywalls.
+              Master the 9-stage engineering curriculum (61 videos • 167.6 hours), execute 500 industrial coding problems with in-browser DuckDB WASM, and deploy production portfolio capstones — <strong>100% unlocked</strong> with zero paywalls.
             </p>
 
             {/* CTAs */}
