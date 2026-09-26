@@ -422,19 +422,27 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                     {/* 3D Spine & Title */}
                     <div className="flex items-start gap-4">
                       <div 
-                        className="w-16 h-22 rounded-xl flex flex-col justify-between p-2 text-white font-bold shadow-xl shrink-0 group-hover:scale-105 transition-transform"
+                        className="w-20 h-28 rounded-xl flex flex-col justify-between p-2.5 text-white font-bold shadow-2xl shrink-0 group-hover:scale-105 group-hover:-rotate-2 transition-all relative overflow-hidden border border-white/20"
                         style={{ 
-                          background: `linear-gradient(135deg, ${book.coverColor} 0%, #0D1117 140%)`,
-                          borderLeft: '3px solid rgba(255,255,255,0.3)'
+                          background: `linear-gradient(145deg, ${book.coverColor} 0%, #03140E 130%)`,
+                          boxShadow: `0 12px 25px -4px ${book.coverColor}40, 0 8px 10px -6px rgba(0,0,0,0.5)`
                         }}
                       >
-                        {isNb ? <Terminal className="w-4 h-4 opacity-80" /> : <BookMarked className="w-4 h-4 opacity-80" />}
-                        <span className="text-[9px] font-mono font-extrabold uppercase leading-tight line-clamp-2">
+                        {/* Spine 3D depth highlight */}
+                        <div className="absolute top-0 bottom-0 left-0 w-2.5 bg-gradient-to-r from-white/40 to-transparent pointer-events-none" />
+                        <div className="flex items-center justify-between z-10">
+                          {isNb ? <Terminal className="w-3.5 h-3.5 text-emerald-200" /> : <BookMarked className="w-3.5 h-3.5 text-amber-200" />}
+                          <span className="text-[8px] font-mono tracking-widest text-white/70 uppercase font-bold">Vault</span>
+                        </div>
+                        <span className="text-[9.5px] font-mono font-black uppercase leading-tight line-clamp-3 text-white drop-shadow z-10">
                           {book.title}
+                        </span>
+                        <span className="text-[8px] font-mono text-emerald-200/80 truncate z-10">
+                          {book.author}
                         </span>
                       </div>
 
-                      <div className="space-y-1 min-w-0 flex-1">
+                      <div className="space-y-1.5 min-w-0 flex-1">
                         <h3 className="text-base font-extrabold text-forge-text group-hover:text-track-sql transition-colors line-clamp-2">
                           {book.title}
                         </h3>
