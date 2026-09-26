@@ -47,6 +47,8 @@ import { SpiralBinding3D, SpiralTheme } from './SpiralBinding3D';
 import { playPageFlipSound, isSoundEnabled, toggleSound, playSuccessChime } from '../../lib/sound';
 import { saveReadingProgress, getReadingProgress, toggleChapterBookmark, getBookmarkedChapters } from '../../lib/libraryStorage';
 import { useUserStore } from '../../lib/userStore';
+import { useAuth } from '../../lib/authStore';
+import { PaywallModal } from '../monetization/PaywallModal';
 
 export type BookChapter = BookReference['chapters'][number];
 export type ReaderDisplayMode = 'spiral3d' | 'ereader' | 'continuous';
@@ -127,6 +129,8 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   const [pdfLoadError, setPdfLoadError] = useState<string | null>(null);
   const [zoomScale, setZoomScale] = useState<number>(1.0);
   const [drmAlert, setDrmAlert] = useState<string | null>(null);
+  const [isPaywallOpen, setIsPaywallOpen] = useState<boolean>(false);
+  const { isPro, currentUser } = useAuth();
 
   // Canvases for Left and Right Real PDF Pages (and Continuous mode)
   const leftCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -382,6 +386,12 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     const step = currentPdfPage === 1 ? 1 : 2;
     const targetPage = Math.min(pdfTotalPages, currentPdfPage + step);
 
+    // Free Preview Limit (Pages 1-5 free, page 6+ requires Pro/Lifetime Vault)
+    if (!isPro && targetPage > 5) {
+      setIsPaywallOpen(true);
+      return;
+    }
+
     if (targetPage > currentPdfPage) {
       setFlipDirection('next');
       setIsFlipping(true);
@@ -417,6 +427,10 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
   const handleJumpToPage = (p: number) => {
     const valid = Math.max(1, Math.min(pdfTotalPages, p));
+    if (!isPro && valid > 5) {
+      setIsPaywallOpen(true);
+      return;
+    }
     if (soundOn) playPageFlipSound();
     setCurrentPdfPage(valid);
     setPageInputValue(valid.toString());
@@ -583,9 +597,19 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   <span className="text-xs font-semibold text-emerald-300/80 hidden sm:inline">
                     {book.author}
                   </span>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 font-bold hidden md:inline">
-                    📖 {pdfTotalPages} Pages Unlocked
-                  </span>
+                  {isPro ? (
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 font-bold hidden md:inline">
+                      📖 All {pdfTotalPages} Pages Unlocked (Vault Member)
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setIsPaywallOpen(true)}
+                      className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/40 font-bold hidden md:flex items-center gap-1 transition-all cursor-pointer"
+                    >
+                      <Lock className="w-3 h-3 text-amber-400" />
+                      <span>Free Preview (Pages 1-5) • Unlock All {pdfTotalPages} Pages</span>
+                    </button>
+                  )}
                 </div>
                 <h2 className="text-xs sm:text-sm font-extrabold text-white truncate max-w-xs sm:max-w-md pt-0.5 tracking-tight">
                   {book.title}
@@ -1462,6 +1486,15 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Paywall Gate for Full Literature Access */}
+      <PaywallModal
+        isOpen={isPaywallOpen}
+        onClose={() => setIsPaywallOpen(false)}
+        reason="book_page_limit"
+        targetTitle={book.title}
+        onUnlockSuccess={() => setIsPaywallOpen(false)}
+      />
 
     </div>
   );
