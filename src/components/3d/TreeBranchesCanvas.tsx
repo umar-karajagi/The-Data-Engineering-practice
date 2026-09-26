@@ -107,11 +107,11 @@ export const TreeBranchesCanvas: React.FC<TreeBranchesCanvasProps> = ({ classNam
       const lineWidth = Math.max(1, 4.5 - b.depth * 0.8);
       ctx.lineWidth = lineWidth;
 
-      // Soft light green gradient
-      const alpha = Math.max(0.18, 0.45 - b.depth * 0.07);
-      ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
-      ctx.shadowColor = 'rgba(52, 211, 153, 0.4)';
-      ctx.shadowBlur = 8;
+      // Soft ambient cyber-mesh trace
+      const alpha = Math.max(0.04, 0.12 - b.depth * 0.02);
+      ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+      ctx.shadowColor = 'rgba(16, 185, 129, 0.15)';
+      ctx.shadowBlur = 4;
 
       ctx.beginPath();
       ctx.moveTo(b.x1, b.y1);

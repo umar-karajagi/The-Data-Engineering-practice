@@ -223,29 +223,29 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#03140E] text-slate-900 dark:text-emerald-50 font-sans selection:bg-emerald-500 selection:text-white pt-24 pb-20 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white pt-20 pb-20 relative overflow-hidden">
       
-      {/* Living Light-Green Tree Branches Background */}
+      {/* Delicate Ambient Cyber Mesh Background */}
       <TreeBranchesCanvas />
 
       {/* ========================================================================= */}
-      {/* SECTION 1: HERO SECTION WITH FLOATING BADGES & PLAYABLE VIDEO BROWSER CHROME */}
+      {/* SECTION 1: HERO SECTION WITH SOVEREIGN FALCON & ARCHITECTURE COCKPIT */}
       {/* ========================================================================= */}
       <section className="relative overflow-hidden pt-12 pb-20 md:pt-16 md:pb-28">
         
-        {/* Interactive Three.js 3D WebGL Background Constellation */}
+        {/* Interactive Three.js 3D WebGL Sovereign Falcon & Medallion */}
         <Hero3DCanvas />
 
-        {/* Subtle Background Emerald & Mint Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/15 blur-[140px] pointer-events-none rounded-full" />
-        <div className="absolute top-12 left-10 w-48 h-48 bg-emerald-400/10 blur-[90px] pointer-events-none rounded-full" />
+        {/* Subtle Background Cosmic Emerald & Cyan Ambient Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-emerald-500/10 via-cyan-500/10 to-transparent blur-[140px] pointer-events-none rounded-full" />
+        <div className="absolute top-12 left-10 w-56 h-56 bg-cyan-500/10 blur-[100px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           
           <div className="flex flex-col items-center gap-6 text-center max-w-4xl mx-auto">
             
             {/* Live Counter Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1 text-xs text-slate-700 dark:text-slate-300 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 text-xs text-slate-700 dark:text-slate-300 shadow-sm">
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
                 <span className="relative flex size-1.5">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
@@ -260,9 +260,9 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
               Everything you need to become <br className="hidden sm:block" />
               a job-ready{' '}
-              <span className="relative inline-flex items-baseline text-emerald-500 dark:text-emerald-400">
+              <span className="relative inline-flex items-baseline bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
                 Data Engineer
-                <span className="ml-1 inline-block h-8 w-1 animate-pulse bg-emerald-500 align-middle" />
+                <span className="ml-1 inline-block h-8 w-1 animate-pulse bg-emerald-400 align-middle" />
               </span>
             </h1>
 
@@ -282,7 +282,7 @@ export const DataVedaHome: React.FC<DataVedaHomeProps> = ({
                     onOpenAssessment();
                   }
                 }}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold tracking-tight shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-sm font-black tracking-tight shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>Interactive Career Guide</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
