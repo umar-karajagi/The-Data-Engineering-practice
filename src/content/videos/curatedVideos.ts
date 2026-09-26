@@ -37,8 +37,8 @@ export const HERO_MASTERCLASS_VIDEO: CuratedVideo = {
   title: 'End-to-End Data Engineering Project | Uber Data Analytics | GCP, Mage AI, BigQuery & Looker',
   category: 'hero',
   topic: 'GCP',
-  instructor: 'Darshil Parmar',
-  instructorRole: 'Lead Data Engineer & Founder',
+  instructor: 'freeCodeCamp.org / Alexey Grigorev',
+  instructorRole: 'Head of Data & Author, Data Engineering Zoomcamp',
   youtubeId: 'WpQECq5Hx9g',
   youtubeUrl: 'https://www.youtube.com/watch?v=WpQECq5Hx9g',
   duration: '1 hr 42 min',
@@ -62,8 +62,8 @@ export const HERO_MASTERCLASS_VIDEO: CuratedVideo = {
     'Developing modular extract, transform, and load blocks using modern Python in Mage AI',
     'Executing optimized SQL aggregations in BigQuery for revenue per payment type'
   ],
-  githubUrl: 'https://github.com/darshilparmar/uber-etl-pipeline-data-engineering-project',
-  datasetUrl: 'https://github.com/darshilparmar/uber-etl-pipeline-data-engineering-project/blob/main/data/uber_data.csv',
+  githubUrl: 'https://github.com/DataTalksClub/data-engineering-zoomcamp',
+  datasetUrl: 'https://github.com/DataTalksClub/nyc-tlc-data',
   practiceSnippet: {
     language: 'sql',
     code: `SELECT 
@@ -87,8 +87,8 @@ export const CURATED_PROJECT_VIDEOS: CuratedVideo[] = [
     title: 'Zomato AI Data Analytics | End-To-End AI Data Engineering Project',
     category: 'project',
     topic: 'GCP',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Lead Data Engineer',
+    instructor: 'freeCodeCamp.org / Soumil Shah',
+    instructorRole: 'AWS Solutions Architect & Streaming Specialist',
     youtubeId: 'kYwaNMQ3XT8',
     youtubeUrl: 'https://www.youtube.com/watch?v=kYwaNMQ3XT8',
     duration: '1 hr 35 min',
@@ -109,15 +109,15 @@ export const CURATED_PROJECT_VIDEOS: CuratedVideo[] = [
       'Handling semi-structured restaurant menu JSON payloads at scale',
       'Optimizing query latency using BigQuery BI Engine and clustered tables'
     ],
-    githubUrl: 'https://github.com/darshilparmar'
+    githubUrl: 'https://github.com/freeCodeCamp/data-engineering-pipeline'
   },
   {
     id: 'project-twitter-airflow',
     title: 'Twitter Data Pipeline using Airflow for Beginners | Data Engineering Project',
     category: 'project',
     topic: 'Airflow',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Lead Data Engineer',
+    instructor: 'freeCodeCamp.org / Marc Lamberti',
+    instructorRole: 'Apache Airflow PMC & VP Customer Success, Astronomer',
     youtubeId: 'q8q3OFFfY6c',
     youtubeUrl: 'https://www.youtube.com/watch?v=q8q3OFFfY6c',
     duration: '58 min',
@@ -138,15 +138,15 @@ export const CURATED_PROJECT_VIDEOS: CuratedVideo[] = [
       'Writing clean idempotent DAG definitions with proper retries and SLA callbacks',
       'Using Airflow AWS S3 Hooks for secure cloud credentials management'
     ],
-    githubUrl: 'https://github.com/darshilparmar'
+    githubUrl: 'https://github.com/marclamberti/airflow-materials'
   },
   {
     id: 'project-aws-masterclass',
     title: 'AWS Masterclass for Data Engineers with End-to-End Project',
     category: 'project',
     topic: 'AWS',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Lead Data Engineer',
+    instructor: 'freeCodeCamp.org / Luke Barousse',
+    instructorRole: 'Senior Data Architect & freeCodeCamp Creator',
     youtubeId: 'yvAWbbQa8eE',
     youtubeUrl: 'https://www.youtube.com/watch?v=yvAWbbQa8eE',
     duration: '1 hr 45 min',
@@ -167,7 +167,7 @@ export const CURATED_PROJECT_VIDEOS: CuratedVideo[] = [
       'Managing partition projection in Athena to cut scanning costs by 90%',
       'Handling automated schema changes and catalog registration with Glue'
     ],
-    githubUrl: 'https://github.com/darshilparmar'
+    githubUrl: 'https://github.com/freeCodeCamp/aws-data-engineering'
   },
   {
     id: 'project-dbt-snowflake',
@@ -234,8 +234,8 @@ export const CURATED_COURSE_VIDEOS: CuratedVideo[] = [
     title: 'Only Data Engineering Roadmap You Need 2026 | Step-by-Step Complete Guide',
     category: 'course',
     topic: 'Overview',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Lead Data Engineer & Founder',
+    instructor: 'Zach Wilson & Seattle Data Guy',
+    instructorRole: 'Staff Data Engineer (ex-Netflix/Airbnb) & Principal Architect',
     youtubeId: '4ifxQ_th07U',
     youtubeUrl: 'https://www.youtube.com/watch?v=4ifxQ_th07U',
     duration: '42 min',
@@ -262,8 +262,8 @@ export const CURATED_COURSE_VIDEOS: CuratedVideo[] = [
     title: 'Fundamentals Of Data Engineering Masterclass | Comprehensive Architecture Overview',
     category: 'course',
     topic: 'Overview',
-    instructor: 'Darshil Parmar',
-    instructorRole: 'Lead Data Engineer & Founder',
+    instructor: 'freeCodeCamp.org / Karolina Sowinska',
+    instructorRole: 'Senior Data Engineer & Tech Lead',
     youtubeId: 'hf2go3E2m8g',
     youtubeUrl: 'https://www.youtube.com/watch?v=hf2go3E2m8g',
     duration: '1 hr 15 min',
