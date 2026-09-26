@@ -11,6 +11,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: isGithubActions ? '/The-Data-Engineering-practice' : '',
   },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    return config;
+  },
 };
 
 module.exports = nextConfig;

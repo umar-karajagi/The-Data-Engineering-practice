@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
   ArrowLeft, 
   ChevronLeft, 
   ChevronRight, 
+  ChevronsLeft,
+  ChevronsRight,
   Sparkles, 
   Download,
   ExternalLink,
@@ -33,8 +35,12 @@ import {
   X,
   Compass,
   Eye,
-  BookMarked
+  BookMarked,
+  ZoomIn,
+  ZoomOut,
+  Loader2
 } from 'lucide-react';
+import * as pdfjsLib from 'pdfjs-dist';
 import { BookReference, ContentRef } from '../../types';
 import { SpiralBinding3D, SpiralTheme } from './SpiralBinding3D';
 import { playPageFlipSound, isSoundEnabled, toggleSound, playSuccessChime } from '../../lib/sound';
@@ -42,7 +48,7 @@ import { saveReadingProgress, getReadingProgress, toggleChapterBookmark, getBook
 import { useUserStore } from '../../lib/userStore';
 
 export type BookChapter = BookReference['chapters'][number];
-export type ReaderDisplayMode = 'ereader' | 'spiral3d' | 'pdf';
+export type ReaderDisplayMode = 'spiral3d' | 'ereader' | 'pdf';
 export type ReaderTheme = 'dark' | 'sepia' | 'oled' | 'slate';
 export type ReaderFont = 'serif' | 'sans' | 'mono';
 
@@ -63,11 +69,27 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   onAddXP,
   onOpenQuickNote
 }) => {
-  // 1. Reading Mode: E-Reader, 3D Spiral Flipbook, or Native PDF
+  // 1. Reading Mode: 3D Spiral Flipbook (Default), E-Reader, or Native PDF
   const [displayMode, setDisplayMode] = useState<ReaderDisplayMode>('spiral3d');
   const [show3DCover, setShow3DCover] = useState<boolean>(false);
 
-  // Chapter Navigation State
+  // PDF Document State (All 600+ Real PDF Pages)
+  const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [pdfTotalPages, setPdfTotalPages] = useState<number>(book.pageCount || 600);
+  const [currentPdfPage, setCurrentPdfPage] = useState<number>(1);
+  const [pageInputValue, setPageInputValue] = useState<string>('1');
+  const [isPdfLoading, setIsPdfLoading] = useState<boolean>(true);
+  const [isPageRendering, setIsPageRendering] = useState<boolean>(false);
+  const [pdfLoadError, setPdfLoadError] = useState<string | null>(null);
+  const [zoomScale, setZoomScale] = useState<number>(1.0);
+
+  // Canvases for Left and Right Real PDF Pages
+  const leftCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rightCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const leftRenderTaskRef = useRef<any>(null);
+  const rightRenderTaskRef = useRef<any>(null);
+
+  // Chapter Navigation State (for E-Reader Mode)
   const chapters: BookChapter[] = useMemo(() => {
     return book.chapters && book.chapters.length > 0 ? book.chapters : [
       {
@@ -90,8 +112,6 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   });
 
   const currentChapter = chapters[currentChapterIdx] || chapters[0];
-  const nextChapter = chapters[currentChapterIdx + 1] || null;
-  const prevChapter = chapters[currentChapterIdx - 1] || null;
   const totalChapters = chapters.length;
 
   // 3D Spiral Settings (DearFlip style)
@@ -99,15 +119,11 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   const [isFlipping, setIsFlipping] = useState<boolean>(false);
   const [flipDirection, setFlipDirection] = useState<'next' | 'prev'>('next');
   const [soundOn, setSoundOn] = useState<boolean>(true);
+  const [isTheaterMode, setIsTheaterMode] = useState<boolean>(false);
 
-  // E-Reader Appearance Controls
-  const [readerTheme, setReaderTheme] = useState<ReaderTheme>('dark');
-  const [readerFont, setReaderFont] = useState<ReaderFont>('serif');
-  const [fontSize, setFontSize] = useState<number>(17);
+  // E-Reader Controls
   const [showToc, setShowToc] = useState<boolean>(false);
   const [tocSearch, setTocSearch] = useState<string>('');
-
-  // Bookmarking & Progress
   const [bookmarkedChapters, setBookmarkedChapters] = useState<string[]>([]);
   const [completedChapters, setCompletedChapters] = useState<string[]>([]);
 
@@ -120,6 +136,9 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
   const pdfFileName = book.originalFileName || '';
   const resolvedPdfUrl = book.pdfUrl || (pdfFileName ? `${basePath}/vault_storage/${encodeURIComponent(pdfFileName)}` : '');
 
+  // Book Primary Vibrant Color
+  const themeColor = book.coverColor || '#10B981';
+
   // User store hook
   let storeSetLastActive: any = null;
   let storeAddXP: any = null;
@@ -131,70 +150,249 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     // outside provider
   }
 
-  // Load reading progress
+  // 1. Initialize PDF.js Engine & Load Real PDF Document
   useEffect(() => {
-    const bookmarks = getBookmarkedChapters(book.id);
-    setBookmarkedChapters(bookmarks);
+    let isCancelled = false;
 
-    const savedProgress = getReadingProgress(book.id);
-    if (savedProgress) {
-      if (savedProgress.completedChapterIds) {
-        setCompletedChapters(savedProgress.completedChapterIds);
+    async function loadPdfDocument() {
+      if (!resolvedPdfUrl) {
+        setIsPdfLoading(false);
+        return;
       }
-      if (!initialChapterId && savedProgress.lastChapterId) {
-        const idx = chapters.findIndex(c => c.id === savedProgress.lastChapterId);
-        if (idx >= 0) setCurrentChapterIdx(idx);
+
+      setIsPdfLoading(true);
+      setPdfLoadError(null);
+
+      try {
+        if (typeof window !== 'undefined') {
+          // Set Worker Source (Same origin to prevent CORS restriction)
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `${window.location.origin}${basePath}/pdfjs/pdf.worker.min.js`;
+        }
+
+        const loadingTask = pdfjsLib.getDocument({
+          url: resolvedPdfUrl,
+          cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+          cMapPacked: true,
+        });
+
+        const doc = await loadingTask.promise;
+        if (!isCancelled) {
+          setPdfDoc(doc);
+          setPdfTotalPages(doc.numPages);
+          setIsPdfLoading(false);
+        }
+      } catch (err: any) {
+        console.warn('PDF.js loading failed, falling back to embedded mode:', err);
+        if (!isCancelled) {
+          setPdfLoadError(err?.message || 'Could not load PDF document.');
+          setIsPdfLoading(false);
+        }
       }
     }
-  }, [book.id, initialChapterId, chapters]);
 
-  // Set last active
+    loadPdfDocument();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [resolvedPdfUrl, basePath]);
+
+  // 2. Render Real PDF Pages on Left & Right 3D Canvases
+  const renderPageToCanvas = useCallback(async (
+    doc: any,
+    pageNum: number,
+    canvas: HTMLCanvasElement | null,
+    renderTaskRef: React.MutableRefObject<any>
+  ) => {
+    if (!doc || !canvas || pageNum < 1 || pageNum > doc.numPages) {
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      return;
+    }
+
+    try {
+      // Cancel any ongoing render task on this canvas
+      if (renderTaskRef.current) {
+        try {
+          renderTaskRef.current.cancel();
+        } catch {
+          // ignore cancel error
+        }
+        renderTaskRef.current = null;
+      }
+
+      const page = await doc.getPage(pageNum);
+      const pixelRatio = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1.5, 2.0) : 1.5;
+      const baseScale = 1.25 * zoomScale * pixelRatio;
+      const viewport = page.getViewport({ scale: baseScale });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const renderTask = page.render({
+          canvasContext: ctx,
+          viewport: viewport
+        });
+        renderTaskRef.current = renderTask;
+        await renderTask.promise;
+        renderTaskRef.current = null;
+      }
+    } catch (err: any) {
+      if (err?.name !== 'RenderingCancelledException') {
+        console.error(`Error rendering page ${pageNum}:`, err);
+      }
+    }
+  }, [zoomScale]);
+
+  // Re-render canvases whenever currentPdfPage, pdfDoc, or zoom changes
   useEffect(() => {
-    if (storeSetLastActive && currentChapter) {
-      storeSetLastActive({
-        type: 'library_chapter',
-        id: `${book.id}-${currentChapter.id}`,
-        title: book.title,
-        subtitle: `Chapter ${currentChapter.number}: ${currentChapter.title}`,
-        bookId: book.id
+    if (!pdfDoc || displayMode !== 'spiral3d' || show3DCover) return;
+
+    setIsPageRendering(true);
+
+    if (currentPdfPage === 1) {
+      // Page 1 is on Right, Left page is Front Flap/Inside Cover
+      if (leftCanvasRef.current) {
+        const ctx = leftCanvasRef.current.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, leftCanvasRef.current.width, leftCanvasRef.current.height);
+      }
+      renderPageToCanvas(pdfDoc, 1, rightCanvasRef.current, rightRenderTaskRef).finally(() => {
+        setIsPageRendering(false);
+      });
+    } else {
+      const leftPageNum = currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1;
+      const rightPageNum = leftPageNum + 1;
+
+      Promise.all([
+        renderPageToCanvas(pdfDoc, leftPageNum, leftCanvasRef.current, leftRenderTaskRef),
+        renderPageToCanvas(pdfDoc, rightPageNum, rightCanvasRef.current, rightRenderTaskRef)
+      ]).finally(() => {
+        setIsPageRendering(false);
       });
     }
-  }, [book.id, book.title, currentChapter, storeSetLastActive]);
 
-  // High-Quality Page Turn Handlers with Smooth Physics
-  const handleNextChapter = () => {
-    if (currentChapterIdx < totalChapters - 1 && !isFlipping) {
+    setPageInputValue(currentPdfPage.toString());
+  }, [pdfDoc, currentPdfPage, displayMode, show3DCover, renderPageToCanvas]);
+
+  // Page Turn Actions (3D Flip Animation Across Real PDF Pages)
+  const handleNextPage = () => {
+    if (isFlipping) return;
+    const step = currentPdfPage === 1 ? 1 : 2;
+    const targetPage = Math.min(pdfTotalPages, currentPdfPage + step);
+
+    if (targetPage > currentPdfPage) {
       setFlipDirection('next');
       setIsFlipping(true);
       if (soundOn) playPageFlipSound();
 
       setTimeout(() => {
-        setCurrentChapterIdx(prev => prev + 1);
+        setCurrentPdfPage(targetPage);
+        setPageInputValue(targetPage.toString());
         setIsFlipping(false);
-        if (onAddXP) onAddXP(15);
-        if (storeAddXP) storeAddXP(15);
-      }, 480);
+        if (onAddXP) onAddXP(10);
+        if (storeAddXP) storeAddXP(10);
+      }, 420);
     }
   };
 
-  const handlePrevChapter = () => {
-    if (currentChapterIdx > 0 && !isFlipping) {
+  const handlePrevPage = () => {
+    if (isFlipping) return;
+    const step = currentPdfPage <= 2 ? 1 : 2;
+    const targetPage = Math.max(1, currentPdfPage - step);
+
+    if (targetPage < currentPdfPage) {
       setFlipDirection('prev');
       setIsFlipping(true);
       if (soundOn) playPageFlipSound();
 
       setTimeout(() => {
-        setCurrentChapterIdx(prev => prev - 1);
+        setCurrentPdfPage(targetPage);
+        setPageInputValue(targetPage.toString());
         setIsFlipping(false);
-      }, 480);
+      }, 420);
     }
   };
 
-  const handleJumpToChapter = (idx: number) => {
+  const handleJumpToPage = (p: number) => {
+    const valid = Math.max(1, Math.min(pdfTotalPages, p));
     if (soundOn) playPageFlipSound();
-    setCurrentChapterIdx(idx);
-    setShowToc(false);
+    setCurrentPdfPage(valid);
+    setPageInputValue(valid.toString());
+    setShow3DCover(false);
   };
+
+  const handlePageInputSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = parseInt(pageInputValue, 10);
+    if (!isNaN(parsed)) {
+      handleJumpToPage(parsed);
+    }
+  };
+
+  // Chapter Navigation Actions (for E-Reader Mode)
+  const handleNextChapter = () => {
+    if (currentChapterIdx < totalChapters - 1) {
+      setCurrentChapterIdx(prev => prev + 1);
+      if (soundOn) playPageFlipSound();
+      if (onAddXP) onAddXP(15);
+      if (storeAddXP) storeAddXP(15);
+    }
+  };
+
+  const handlePrevChapter = () => {
+    if (currentChapterIdx > 0) {
+      setCurrentChapterIdx(prev => prev - 1);
+      if (soundOn) playPageFlipSound();
+    }
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (displayMode === 'spiral3d') {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault();
+          handleNextPage();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          handlePrevPage();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          handleJumpToPage(1);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          handleJumpToPage(pdfTotalPages);
+        }
+      } else if (displayMode === 'ereader') {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          handleNextChapter();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          handlePrevChapter();
+        }
+      }
+
+      if (e.key === 'Escape') {
+        setShowToc(false);
+        if (isTheaterMode) setIsTheaterMode(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
 
   // Text-to-Speech
   const handleToggleSpeech = () => {
@@ -235,12 +433,12 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
     (ch.summary && ch.summary.toLowerCase().includes(tocSearch.toLowerCase()))
   );
 
-  // Book Primary Vibrant Color
-  const themeColor = book.coverColor || '#10B981';
-
   return (
-    <div className="relative min-h-[94vh] bg-gradient-to-b from-[#02110B] via-[#041D14] to-[#010906] text-emerald-50 flex flex-col justify-between overflow-hidden antialiased">
-      
+    <div 
+      className={`relative min-h-[94vh] bg-gradient-to-b from-[#02110B] via-[#041D14] to-[#010906] text-emerald-50 flex flex-col justify-between overflow-hidden antialiased ${
+        isTheaterMode ? 'fixed inset-0 z-50 p-2 sm:p-4' : ''
+      }`}
+    >
       {/* Dynamic Ambient Color Backlight */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div 
@@ -248,8 +446,6 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
           style={{ backgroundColor: themeColor }}
         />
         <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-mint-400/10 rounded-full blur-[160px]" />
-        
-        {/* Subtle Cybernetic Grid */}
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#10B981_1px,transparent_1px)] [background-size:24px_24px]" />
       </div>
 
@@ -268,7 +464,6 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              {/* Miniature Vibrant 3D Spine Thumbnail */}
               <div 
                 className="w-7 h-9 rounded-md shadow-md flex items-center justify-center text-white text-[9px] font-bold shrink-0 border border-white/20"
                 style={{ background: `linear-gradient(135deg, ${themeColor} 0%, #061A11 120%)` }}
@@ -291,6 +486,9 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   <span className="text-xs font-semibold text-emerald-300/80 hidden sm:inline">
                     {book.author}
                   </span>
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 font-bold hidden md:inline">
+                    📖 {pdfTotalPages} Pages Unlocked
+                  </span>
                 </div>
                 <h2 className="text-xs sm:text-sm font-extrabold text-white truncate max-w-xs sm:max-w-md pt-0.5 tracking-tight">
                   {book.title}
@@ -304,14 +502,14 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
             <button
               onClick={() => { setDisplayMode('spiral3d'); setShow3DCover(false); }}
               className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 font-bold transition-all ${
-                displayMode === 'spiral3d' && !show3DCover
+                displayMode === 'spiral3d'
                   ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 scale-[1.02]'
                   : 'text-emerald-400 hover:text-white'
               }`}
-              title="DearFlip-style 3D Spiral Book with realistic page curl and vivid hardcover"
+              title="DearFlip-style 3D Spiral Book rendering all 600+ real PDF pages"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>3D Spiral Book</span>
+              <span>3D Spiral Book ({pdfTotalPages}p)</span>
             </button>
 
             <button
@@ -321,7 +519,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 scale-[1.02]'
                   : 'text-emerald-400 hover:text-white'
               }`}
-              title="Clean, fast chapter reading with crisp typography"
+              title="Chapter summary and study notes mode"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Chapter E-Reader</span>
@@ -361,6 +559,29 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
               </button>
             )}
 
+            {/* Zoom Controls */}
+            {displayMode === 'spiral3d' && !show3DCover && (
+              <div className="flex items-center bg-emerald-950/80 border border-emerald-800/80 rounded-xl p-0.5 text-xs hidden sm:flex">
+                <button
+                  onClick={() => setZoomScale(prev => Math.max(0.75, prev - 0.15))}
+                  className="p-1.5 text-emerald-400 hover:text-emerald-200"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-[10px] font-mono px-1.5 text-emerald-300 font-bold">
+                  {Math.round(zoomScale * 100)}%
+                </span>
+                <button
+                  onClick={() => setZoomScale(prev => Math.min(1.6, prev + 0.15))}
+                  className="p-1.5 text-emerald-400 hover:text-emerald-200"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
             {/* Table of Contents Drawer Toggle */}
             <button
               onClick={() => setShowToc(!showToc)}
@@ -368,20 +589,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
               title="Table of Contents"
             >
               <List className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">TOC ({totalChapters})</span>
-            </button>
-
-            {/* Text to Speech */}
-            <button
-              onClick={handleToggleSpeech}
-              className={`p-1.5 rounded-xl border transition-all ${
-                isSpeaking 
-                  ? 'bg-emerald-500 text-black border-emerald-400 shadow-md animate-pulse' 
-                  : 'bg-emerald-950/80 border-emerald-800 text-emerald-400 hover:text-emerald-200'
-              }`}
-              title={isSpeaking ? 'Pause Audio Read-Along' : 'Listen with Audio Read-Along'}
-            >
-              {isSpeaking ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              <span className="hidden md:inline">TOC</span>
             </button>
 
             {/* Sound FX Toggle */}
@@ -401,17 +609,13 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
               {soundOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
             </button>
 
-            {/* Bookmark Chapter */}
+            {/* Theater Mode */}
             <button
-              onClick={handleToggleBookmark}
-              className={`p-1.5 rounded-xl border transition-all ${
-                isBookmarked 
-                  ? 'bg-amber-500/20 border-amber-500 text-amber-400' 
-                  : 'bg-emerald-950/80 border-emerald-800 text-emerald-400 hover:text-emerald-200'
-              }`}
-              title="Bookmark Chapter"
+              onClick={() => setIsTheaterMode(!isTheaterMode)}
+              className="p-1.5 rounded-xl border border-emerald-800 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 transition-all"
+              title={isTheaterMode ? 'Exit Fullscreen' : 'Enter Fullscreen'}
             >
-              <Bookmark className="w-3.5 h-3.5 fill-current" />
+              {isTheaterMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
 
             {/* Raw PDF Download */}
@@ -421,7 +625,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-2.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-mono font-extrabold flex items-center gap-1 transition-all shadow-sm"
-                title="Open or Download Original PDF"
+                title="Open or Download Original Complete PDF"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Raw PDF</span>
@@ -435,19 +639,19 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
       <main className="relative z-10 flex-1 flex flex-col justify-between overflow-hidden">
         
         {/* ============================================================ */}
-        {/* MODE A: 3D SPIRAL BOOK (DearFlip Style with Rich Colors & Crisp Text) */}
+        {/* MODE A: 3D SPIRAL BOOK (DearFlip Style with REAL PDF PAGES)  */}
         {/* ============================================================ */}
         {displayMode === 'spiral3d' && (
-          <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 my-auto overflow-hidden">
+          <div className="flex-1 flex flex-col items-center justify-center p-2 sm:p-4 my-auto overflow-hidden">
             
-            {/* Top Toolbar: Spiral Style & Quick Status */}
-            <div className="flex items-center gap-3 mb-4 bg-emerald-950/90 border border-emerald-800/80 rounded-2xl px-4 py-2 text-xs font-mono shadow-md backdrop-blur-md">
-              <span className="text-emerald-400 font-bold">Spiral Coil:</span>
+            {/* Top Toolbar: Coil Selection & Real PDF Status */}
+            <div className="flex items-center gap-3 mb-3 bg-emerald-950/90 border border-emerald-800/80 rounded-2xl px-4 py-1.5 text-xs font-mono shadow-md backdrop-blur-md">
+              <span className="text-emerald-400 font-bold">Spiral Ring:</span>
               {(['emerald', 'chrome', 'gold', 'obsidian'] as SpiralTheme[]).map((theme) => (
                 <button
                   key={theme}
                   onClick={() => setSpiralTheme(theme)}
-                  className={`px-2.5 py-1 rounded-lg capitalize transition-all ${
+                  className={`px-2 py-0.5 rounded capitalize transition-all ${
                     spiralTheme === theme 
                       ? 'bg-emerald-500 text-black font-extrabold shadow-sm' 
                       : 'text-emerald-400 hover:text-white'
@@ -457,8 +661,17 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                 </button>
               ))}
               <span className="text-emerald-700">|</span>
-              <span className="text-emerald-300 font-semibold">
-                Chapter {currentChapter.number} of {totalChapters}
+              <span className="text-emerald-300 font-bold flex items-center gap-1.5">
+                {isPdfLoading ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin text-emerald-400" />
+                    <span>Loading Document...</span>
+                  </>
+                ) : (
+                  <span>
+                    Spread: {currentPdfPage === 1 ? '1' : `${currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1}-${(currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1) + 1}`} of {pdfTotalPages}
+                  </span>
+                )}
               </span>
             </div>
 
@@ -484,7 +697,6 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   }}
                   onClick={() => setShow3DCover(false)}
                 >
-                  {/* Ornate Gold Foil Debossed Frame */}
                   <div className="absolute inset-4 border-2 border-amber-300/30 rounded-2xl pointer-events-none" />
                   <div className="absolute inset-6 border border-amber-300/20 rounded-xl pointer-events-none" />
 
@@ -497,7 +709,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   {/* Top Cover Header */}
                   <div className="relative z-10 space-y-2 text-center pt-2">
                     <span className="text-[10px] sm:text-xs font-mono tracking-widest text-amber-300 font-extrabold uppercase">
-                      DataVeda Master Literature Vault
+                      DataVeda Master Vault • {pdfTotalPages} Pages
                     </span>
                     <div className="w-12 h-0.5 bg-amber-400/60 mx-auto" />
                   </div>
@@ -530,7 +742,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                 </motion.div>
               ) : (
                 /* -------------------------------------------------------- */
-                /* 3D DUAL-PAGE SPREAD VIEW (High-Contrast, Crisp, Zero Blur)*/
+                /* 3D DUAL-PAGE SPREAD VIEW (Rendering Real PDF Pages)      */
                 /* -------------------------------------------------------- */
                 <div 
                   className="relative flex items-center z-10"
@@ -545,7 +757,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                       background: `linear-gradient(135deg, ${themeColor} 0%, #03140D 100%)`,
                     }}
                   >
-                    {/* Gilded Silk Bookmark Ribbon Hanging Below */}
+                    {/* Gilded Silk Bookmark Ribbon */}
                     <div 
                       className="absolute left-1/2 -bottom-10 w-4 h-14 -translate-x-1/2 rounded-b-md shadow-2xl z-0"
                       style={{
@@ -556,10 +768,10 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     />
                   </div>
 
-                  {/* ================= LEFT PAGE ================= */}
+                  {/* ================= LEFT PAGE CANVAS ================= */}
                   <div 
-                    onClick={handlePrevChapter}
-                    className="relative w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.38] bg-white text-slate-900 rounded-l-2xl sm:rounded-l-3xl p-6 sm:p-9 flex flex-col justify-between shadow-[inset_-20px_0_35px_rgba(0,0,0,0.08),-15px_15px_30px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer group z-10"
+                    onClick={handlePrevPage}
+                    className="relative w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.414] bg-white text-slate-900 rounded-l-2xl sm:rounded-l-3xl shadow-[inset_-20px_0_35px_rgba(0,0,0,0.08),-15px_15px_30px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer group z-10 flex flex-col justify-between"
                     style={{
                       WebkitFontSmoothing: 'antialiased',
                       MozOsxFontSmoothing: 'grayscale',
@@ -571,60 +783,51 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     {/* Center Spine Curvature Drop-shadow */}
                     <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-black/15 via-black/5 to-transparent pointer-events-none z-20" />
                     
-                    {/* Decorative Top Accent Ribbon in Book Cover Color */}
+                    {/* Decorative Top Accent Ribbon */}
                     <div 
-                      className="absolute top-0 left-0 right-0 h-2 z-20"
+                      className="absolute top-0 left-0 right-0 h-1.5 z-20"
                       style={{ backgroundColor: themeColor }}
                     />
 
-                    {/* Page Header */}
-                    <div className="space-y-3 z-10 pt-1">
-                      <div className="flex items-center justify-between text-[11px] font-mono font-bold text-slate-500 border-b border-slate-200 pb-2">
-                        <span 
-                          className="px-2 py-0.5 rounded text-[10px] uppercase font-extrabold"
-                          style={{ backgroundColor: `${themeColor}20`, color: themeColor }}
+                    {/* Turn Indicator on Hover */}
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-md">
+                      <ChevronLeft className="w-5 h-5" />
+                    </div>
+
+                    {currentPdfPage === 1 ? (
+                      // Front Inner Flap / Title Plate
+                      <div className="w-full h-full bg-gradient-to-br from-[#0c2419] to-[#04150e] flex flex-col items-center justify-center p-8 text-center text-white relative">
+                        <div 
+                          className="w-16 h-16 rounded-2xl border border-white/20 flex items-center justify-center mb-4 shadow-xl"
+                          style={{ backgroundColor: `${themeColor}30` }}
                         >
-                          Chapter {currentChapter.number}
+                          <BookOpen className="w-8 h-8 text-emerald-300" />
+                        </div>
+                        <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase font-bold">
+                          {book.track.toUpperCase()}
                         </span>
-                        <span>⏱️ {currentChapter.readingTime || '15 min read'}</span>
-                      </div>
-
-                      <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
-                        {currentChapter.title}
-                      </h2>
-
-                      {currentChapter.summary && (
-                        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-serif italic border-l-3 border-emerald-500 pl-3">
-                          {currentChapter.summary}
+                        <h2 className="text-lg sm:text-xl font-extrabold text-white mt-1 mb-2">
+                          {book.title}
+                        </h2>
+                        <p className="text-xs text-emerald-200/80 font-serif italic mb-6">
+                          {book.author}
                         </p>
-                      )}
-                    </div>
-
-                    {/* Senior Staff Core Rule Callout */}
-                    <div 
-                      className="p-4 rounded-2xl border space-y-1.5 z-10 my-auto shadow-sm"
-                      style={{ 
-                        backgroundColor: `${themeColor}08`, 
-                        borderColor: `${themeColor}30` 
-                      }}
-                    >
-                      <span 
-                        className="text-[10px] font-mono font-extrabold uppercase flex items-center gap-1.5"
-                        style={{ color: themeColor }}
-                      >
-                        <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                        Senior Staff Core Rule
-                      </span>
-                      <p className="text-xs sm:text-sm text-slate-800 font-serif leading-relaxed">
-                        {currentChapter.seniorTip || 'Always declare the business grain before dimensioning tables to prevent fact explosion.'}
-                      </p>
-                    </div>
-
-                    {/* Left Page Footer */}
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-2 border-t border-slate-200 z-10">
-                      <span className="font-semibold text-slate-600 truncate max-w-[200px]">{book.title}</span>
-                      <span>Page {currentChapter.number * 2 - 1}</span>
-                    </div>
+                        <span className="text-[10px] font-mono text-emerald-300 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/60 font-bold">
+                          Turn Right to Begin (Page 1) →
+                        </span>
+                      </div>
+                    ) : (
+                      // Real Left PDF Page Canvas
+                      <div className="w-full h-full relative flex items-center justify-center bg-white">
+                        <canvas 
+                          ref={leftCanvasRef} 
+                          className="w-full h-full object-contain"
+                        />
+                        <div className="absolute bottom-2 left-4 text-[10px] font-mono text-slate-500 bg-white/90 px-2 py-0.5 rounded shadow-sm z-20 border border-slate-200 font-bold">
+                          Page {currentPdfPage % 2 === 0 ? currentPdfPage : currentPdfPage - 1}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* ================= 3D SPIRAL SPINE ================= */}
@@ -634,10 +837,10 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     isSinglePage={false} 
                   />
 
-                  {/* ================= RIGHT PAGE ================= */}
+                  {/* ================= RIGHT PAGE CANVAS ================= */}
                   <div 
-                    onClick={handleNextChapter}
-                    className="relative w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.38] bg-white text-slate-900 rounded-r-2xl sm:rounded-r-3xl p-6 sm:p-9 flex flex-col justify-between shadow-[inset_20px_0_35px_rgba(0,0,0,0.08),15px_15px_30px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer group z-10"
+                    onClick={handleNextPage}
+                    className="relative w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.414] bg-white text-slate-900 rounded-r-2xl sm:rounded-r-3xl shadow-[inset_20px_0_35px_rgba(0,0,0,0.08),15px_15px_30px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer group z-10 flex flex-col justify-between"
                     style={{
                       WebkitFontSmoothing: 'antialiased',
                       MozOsxFontSmoothing: 'grayscale',
@@ -651,42 +854,24 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
                     {/* Decorative Top Accent Ribbon */}
                     <div 
-                      className="absolute top-0 left-0 right-0 h-2 z-20"
+                      className="absolute top-0 left-0 right-0 h-1.5 z-20"
                       style={{ backgroundColor: themeColor }}
                     />
 
-                    {/* Right Page Body Content & Code Snippet */}
-                    <div className="space-y-4 z-10 pt-1">
-                      {/* Anti-Pattern Warning */}
-                      <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200 space-y-1.5 shadow-sm">
-                        <span className="text-[10px] font-mono font-bold text-amber-800 uppercase flex items-center gap-1.5">
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                          Production Anti-Pattern to Avoid
-                        </span>
-                        <p className="text-xs text-amber-950 font-serif leading-relaxed">
-                          {currentChapter.antiPattern || 'Direct fact-to-fact table joins without conformed dimension bridges.'}
-                        </p>
-                      </div>
-
-                      {/* Architecture DDL Snippet */}
-                      <div className="p-4 rounded-2xl bg-slate-900 text-emerald-300 font-mono text-[11px] space-y-1 shadow-md border border-slate-800">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Production Spec</span>
-                        <pre className="overflow-x-auto text-[11px] leading-relaxed text-emerald-400">
-                          <code>{`// Core Architecture Pattern:\nCREATE OR REPLACE TABLE dim_customer (\n  customer_sk BIGINT PRIMARY KEY,\n  customer_id STRING,\n  valid_from TIMESTAMP,\n  valid_to TIMESTAMP,\n  is_current BOOLEAN\n) PARTITION BY DATE(valid_from);`}</code>
-                        </pre>
-                      </div>
+                    {/* Turn Indicator on Hover */}
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-md">
+                      <ChevronRight className="w-5 h-5" />
                     </div>
 
-                    {/* Right Page Footer */}
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-2 border-t border-slate-200 z-10">
-                      <span>Page {currentChapter.number * 2}</span>
-                      <span className="text-emerald-700 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                        {currentChapterIdx < totalChapters - 1 ? (
-                          <><span>Turn Page</span> <ChevronRight className="w-3.5 h-3.5" /></>
-                        ) : (
-                          <span>Finish Volume 🎉</span>
-                        )}
-                      </span>
+                    {/* Real Right PDF Page Canvas */}
+                    <div className="w-full h-full relative flex items-center justify-center bg-white">
+                      <canvas 
+                        ref={rightCanvasRef} 
+                        className="w-full h-full object-contain"
+                      />
+                      <div className="absolute bottom-2 right-4 text-[10px] font-mono text-slate-500 bg-white/90 px-2 py-0.5 rounded shadow-sm z-20 border border-slate-200 font-bold">
+                        Page {currentPdfPage === 1 ? 1 : (currentPdfPage % 2 === 0 ? currentPdfPage + 1 : currentPdfPage)}
+                      </div>
                     </div>
                   </div>
 
@@ -709,8 +894,8 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     }}
                     exit={{ opacity: 0 }}
                     transition={{
-                      duration: 0.48,
-                      ease: [0.22, 1, 0.36, 1], // Smooth natural spring curve
+                      duration: 0.42,
+                      ease: [0.22, 1, 0.36, 1],
                     }}
                     style={{
                       transformOrigin: flipDirection === 'next' ? 'left center' : 'right center',
@@ -719,18 +904,18 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                     }}
                     className={`absolute top-0 bottom-0 ${
                       flipDirection === 'next' ? 'left-1/2' : 'right-1/2'
-                    } w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.38] bg-white shadow-2xl z-40 pointer-events-none rounded-r-2xl sm:rounded-r-3xl overflow-hidden border-r border-slate-300`}
+                    } w-[340px] sm:w-[460px] md:w-[530px] aspect-[1/1.414] bg-white shadow-2xl z-40 pointer-events-none rounded-r-2xl sm:rounded-r-3xl overflow-hidden border-r border-slate-300`}
                   >
-                    {/* Realistic Sweeping Curvature Highlight & Shadow */}
                     <div className="w-full h-full p-8 flex flex-col justify-between relative bg-gradient-to-r from-slate-100 via-white to-slate-200">
-                      <div className="space-y-3 opacity-60">
-                        <div className="h-4 bg-slate-300 rounded w-1/3" />
-                        <div className="h-6 bg-slate-400 rounded w-3/4" />
-                        <div className="h-3 bg-slate-200 rounded w-full" />
-                        <div className="h-3 bg-slate-200 rounded w-5/6" />
+                      <div className="space-y-4 opacity-40">
+                        <div className="h-4 bg-slate-400 rounded w-1/4" />
+                        <div className="h-8 bg-slate-500 rounded w-4/5" />
+                        <div className="space-y-2 pt-4">
+                          <div className="h-2.5 bg-slate-300 rounded w-full" />
+                          <div className="h-2.5 bg-slate-300 rounded w-11/12" />
+                          <div className="h-2.5 bg-slate-300 rounded w-5/6" />
+                        </div>
                       </div>
-                      
-                      {/* Traveling Specular Glint */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-black/20 pointer-events-none" />
                     </div>
                   </motion.div>
@@ -739,31 +924,95 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
 
             </div>
 
-            {/* Bottom 3D Spiral Navigation Bar */}
-            <div className="flex items-center gap-4 mt-6 z-20">
-              <button
-                onClick={handlePrevChapter}
-                disabled={currentChapterIdx === 0 || isFlipping}
-                className="px-4 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-md"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Prev Chapter</span>
-              </button>
+            {/* Bottom 3D Spiral Navigation Bar (Scrubber & Jump) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-4 w-full max-w-4xl px-2 z-20">
+              
+              {/* Left: Quick Jump / First / Prev buttons */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => handleJumpToPage(1)}
+                  disabled={currentPdfPage <= 1 || isFlipping}
+                  className="p-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold transition-all"
+                  title="First Page (Home)"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </button>
 
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-emerald-300 bg-emerald-950/80 px-4 py-2 rounded-xl border border-emerald-800 font-bold shadow-inner">
-                  {currentChapterIdx + 1} / {totalChapters}
-                </span>
+                <button
+                  onClick={() => handleJumpToPage(Math.max(1, currentPdfPage - 10))}
+                  disabled={currentPdfPage <= 1 || isFlipping}
+                  className="px-2.5 py-1 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold transition-all hidden sm:inline"
+                  title="Back 10 Pages"
+                >
+                  -10
+                </button>
+
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPdfPage <= 1 || isFlipping}
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-md"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Prev</span>
+                </button>
               </div>
 
-              <button
-                onClick={handleNextChapter}
-                disabled={currentChapterIdx === totalChapters - 1 || isFlipping}
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-black text-xs font-mono font-extrabold flex items-center gap-1.5 transition-all shadow-lg shadow-emerald-500/25"
-              >
-                <span>Next Chapter</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              {/* Center: Real Range Scrubber & Direct Page Jump Input */}
+              <div className="flex items-center gap-3">
+                <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1.5 text-xs font-mono">
+                  <span className="text-emerald-500 font-bold hidden sm:inline">Page</span>
+                  <input
+                    type="text"
+                    value={pageInputValue}
+                    onChange={(e) => setPageInputValue(e.target.value)}
+                    className="w-14 text-center py-1 rounded-lg bg-emerald-950 border border-emerald-800 text-emerald-200 focus:outline-none focus:border-emerald-400 font-extrabold"
+                  />
+                  <span className="text-emerald-400 font-bold">/ {pdfTotalPages}</span>
+                </form>
+
+                {/* Range Scrubber (Drag across all 600+ pages!) */}
+                <div className="hidden md:flex items-center gap-2 w-44 lg:w-64">
+                  <input
+                    type="range"
+                    min={1}
+                    max={pdfTotalPages}
+                    value={currentPdfPage}
+                    onChange={(e) => handleJumpToPage(parseInt(e.target.value, 10))}
+                    className="w-full h-1.5 bg-emerald-950 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+              </div>
+
+              {/* Right: Next / +10 / Last buttons */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPdfPage >= pdfTotalPages || isFlipping}
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-black text-xs font-mono font-extrabold flex items-center gap-1.5 transition-all shadow-lg shadow-emerald-500/25"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => handleJumpToPage(Math.min(pdfTotalPages, currentPdfPage + 10))}
+                  disabled={currentPdfPage >= pdfTotalPages || isFlipping}
+                  className="px-2.5 py-1 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold transition-all hidden sm:inline"
+                  title="Forward 10 Pages"
+                >
+                  +10
+                </button>
+
+                <button
+                  onClick={() => handleJumpToPage(pdfTotalPages)}
+                  disabled={currentPdfPage >= pdfTotalPages || isFlipping}
+                  className="p-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 disabled:opacity-40 border border-emerald-800 text-emerald-300 text-xs font-mono font-bold transition-all"
+                  title="Last Page (End)"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </button>
+              </div>
+
             </div>
           </div>
         )}
@@ -897,8 +1146,8 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                 <span>Previous Chapter</span>
               </button>
 
-              <span className="text-xs font-mono text-emerald-400">
-                {currentChapterIdx + 1} / {totalChapters}
+              <span className="text-xs font-mono text-emerald-400 font-bold">
+                Chapter {currentChapterIdx + 1} / {totalChapters}
               </span>
 
               <button
@@ -919,7 +1168,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
         {displayMode === 'pdf' && resolvedPdfUrl && (
           <div className="flex-1 w-full h-[85vh] p-2 sm:p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2 px-2 text-xs font-mono text-emerald-400">
-              <span>Native PDF Document Viewer (All Pages Active)</span>
+              <span className="font-bold">Native PDF Document Viewer (All {pdfTotalPages} Pages Active)</span>
               <a
                 href={resolvedPdfUrl}
                 target="_blank"
@@ -960,7 +1209,7 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white font-mono">Table of Contents</h3>
-                    <p className="text-[10px] text-emerald-400 font-mono">{totalChapters} Chapters Unlocked</p>
+                    <p className="text-[10px] text-emerald-400 font-mono">{pdfTotalPages} Pages • {totalChapters} Chapters</p>
                   </div>
                 </div>
                 <button
@@ -992,7 +1241,10 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
                   return (
                     <button
                       key={ch.id}
-                      onClick={() => handleJumpToChapter(originalIdx)}
+                      onClick={() => {
+                        setCurrentChapterIdx(originalIdx);
+                        setShowToc(false);
+                      }}
                       className={`w-full text-left p-3 rounded-2xl border text-xs transition-all flex items-start gap-2.5 ${
                         isCurrent
                           ? 'bg-emerald-500 text-black border-emerald-400 font-bold shadow-md'
@@ -1016,10 +1268,9 @@ export const Crazy3DBookReader: React.FC<Crazy3DBookReaderProps> = ({
               </div>
             </div>
 
-            {/* Bottom info */}
             <div className="pt-3 border-t border-emerald-800 text-[11px] font-mono text-emerald-400 flex items-center justify-between">
               <span>DataVeda Reader</span>
-              <span className="text-emerald-300 font-bold">100% Free</span>
+              <span className="text-emerald-300 font-bold">100% Unlocked</span>
             </div>
           </motion.div>
         )}
