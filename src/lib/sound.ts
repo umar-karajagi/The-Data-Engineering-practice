@@ -136,3 +136,45 @@ export function playClickTick() {
   osc.start(now);
   osc.stop(now + 0.035);
 }
+
+// 5. Realistic Paper Page Flip Sound (Subtle paper rustle via shaped filtered noise)
+export function playPageFlipSound() {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const duration = 0.14;
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = buffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+      // Shaped exponential pink/white noise simulating paper contact
+      const decay = Math.exp(-i / (bufferSize * 0.35));
+      output[i] = (Math.random() * 2 - 1) * decay;
+    }
+
+    const whiteNoise = ctx.createBufferSource();
+    whiteNoise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1400, now);
+    filter.frequency.exponentialRampToValueAtTime(700, now + duration);
+    filter.Q.setValueAtTime(2.0, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.09, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    whiteNoise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    whiteNoise.start(now);
+  } catch {
+    // Graceful fallback if Web Audio is restricted
+  }
+}

@@ -8,6 +8,9 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGithubActions ? '/The-Data-Engineering-practice' : '',
+  },
 };
 
 module.exports = nextConfig;

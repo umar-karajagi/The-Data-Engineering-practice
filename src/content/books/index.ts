@@ -360,14 +360,17 @@ Data engineering bridges software applications and downstream intelligence. The 
   }
 ];
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const FOUNDATIONAL_BOOKS: BookReference[] = RAW_FOUNDATIONAL_BOOKS.map(book => {
   const vaultInfo = VAULT_PDF_MAP[book.id];
   if (vaultInfo) {
     const enhanced = getEnhancedPdfMetadata(vaultInfo.fileName, 0);
     return {
       ...book,
-      formatType: 'book' as const,
+      formatType: 'pdf' as const,
       originalFileName: vaultInfo.fileName,
+      pdfUrl: `${basePath}/vault_storage/${encodeURIComponent(vaultInfo.fileName)}`,
       fileSizeFormatted: vaultInfo.fileSizeFormatted,
       conceptCards: (enhanced.conceptCards && enhanced.conceptCards.length > 0) ? enhanced.conceptCards : book.conceptCards,
       quizQuestions: (enhanced.quizQuestions && enhanced.quizQuestions.length > 0) ? enhanced.quizQuestions : book.quizQuestions,
