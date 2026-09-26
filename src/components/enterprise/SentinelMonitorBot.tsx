@@ -31,7 +31,7 @@ interface LogEntry {
 }
 
 export const SentinelMonitorBot: React.FC = () => {
-  const { environment, currentUser, allUsers, isPro } = useAuth();
+  const { environment, currentUser, allUsers, isPro, isSuperAdmin } = useAuth();
   
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [heartbeatCount, setHeartbeatCount] = useState<number>(1420);
@@ -140,6 +140,11 @@ export const SentinelMonitorBot: React.FC = () => {
       }
     }, 600);
   };
+
+  // Only display Sentinel Watchdog pill if user is Founder Super-Admin or in local DEV mode
+  if (!isSuperAdmin && environment === 'PROD') {
+    return null;
+  }
 
   return (
     <>

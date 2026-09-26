@@ -27,7 +27,8 @@ import {
   User,
   LogOut,
   ShieldCheck,
-  Lock
+  Lock,
+  Zap
 } from 'lucide-react';
 
 interface DataVedaNavbarProps {
@@ -50,7 +51,7 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
   onOpenQaTracker
 }) => {
   const { user } = useUserStore();
-  const { currentUser, isAuthenticated, isPro, isAdmin, environment, logout } = useAuth();
+  const { currentUser, isAuthenticated, isPro, isAdmin, isSuperAdmin, environment, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -79,51 +80,92 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex flex-col justify-center border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md text-slate-900 dark:text-slate-50 font-sans transition-colors duration-200">
       
-      {/* 1. Top Enterprise Release & Environment Banner */}
-      <section className="bg-slate-950 text-white py-1 px-4 text-center text-xs tracking-tight border-b border-slate-800 flex items-center justify-between">
-        <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
-          
-          {/* Left: Environment Indicator */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onOpenQaTracker}
-              className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border transition-colors cursor-pointer flex items-center gap-1 ${getEnvBadgeColor()}`}
-              title="Click to switch environment or open MNC Testing Tracker"
-            >
-              <Cpu className="w-3 h-3" />
-              <span>ENV: [{environment}]</span>
-            </button>
-            <span className="text-[11px] text-slate-400 hidden sm:inline">
-              MNC Pipeline: DEV → TESTING → PROD
-            </span>
+      {/* 1. Top Banner: Founder Super-Admin vs Customer/Student Separation */}
+      {isSuperAdmin ? (
+        /* FOUNDER SUPER ADMIN PORTAL (Visible ONLY to Umar Karajagi) */
+        <section className="bg-slate-950 text-white py-1 px-4 text-center text-xs tracking-tight border-b border-emerald-500/40 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
+            
+            {/* Left: Environment Indicator & Founder Identity */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onOpenQaTracker}
+                className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border transition-colors cursor-pointer flex items-center gap-1 ${getEnvBadgeColor()}`}
+                title="MNC Environment Stage: Click to switch or inspect test runner"
+              >
+                <Cpu className="w-3 h-3" />
+                <span>ENV: [{environment}]</span>
+              </button>
+              <span className="text-[11px] text-emerald-400 font-bold hidden sm:inline flex items-center gap-1">
+                <span>👑 Founder Super-Admin: Umar Karajagi</span>
+              </span>
+              <span className="text-[10px] text-slate-500 hidden md:inline">
+                (MNC Pipeline: DEV → TESTING → PROD)
+              </span>
+            </div>
+
+            {/* Center: Founder Access Status */}
+            <p className="text-[11px] font-medium text-slate-300 truncate hidden md:block">
+              Founder Authority: Full Access Granting & Customer DB Active
+            </p>
+
+            {/* Right: DB Console & QA Quick Action */}
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={onOpenDatabaseInspector}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-[11px] font-bold text-emerald-300 hover:bg-emerald-500/30 transition-colors cursor-pointer"
+                title="Open User Database to grant or revoke user access"
+              >
+                <Database className="w-3 h-3 text-emerald-400" />
+                <span>Grant Access (User DB)</span>
+              </button>
+              <span className="text-slate-700">|</span>
+              <button
+                onClick={onOpenQaTracker}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-300 hover:text-white transition-colors cursor-pointer"
+                title="Open MNC QA Testing Tracker"
+              >
+                <span>QA Tracker</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold">16/16 PASS</span>
+              </button>
+            </div>
+
           </div>
+        </section>
+      ) : (
+        /* CLEAN CUSTOMER & STUDENT BANNER (Zero internal dev/admin tools exposed) */
+        <section className="bg-slate-950 text-white py-1.5 px-4 text-center text-xs tracking-tight border-b border-slate-800 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
+            
+            {/* Left: Learning Curriculum Badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-emerald-400">
+                ⚡ DataForge Master Engineering DAG 150
+              </span>
+              <span className="text-slate-600 hidden sm:inline">•</span>
+              <span className="text-[11px] text-slate-400 hidden sm:inline">
+                Zero-Prerequisite Career Acceleration
+              </span>
+            </div>
 
-          {/* Center: Mission / Coupon Note */}
-          <p className="text-[11px] font-medium text-slate-300 truncate hidden md:block">
-            🚀 DataForge Enterprise • Use code <code className="text-amber-400 font-mono font-bold">DATAFORGE50</code> for 50% off Vault Access
-          </p>
+            {/* Center: Mission / Coupon Note */}
+            <p className="text-[11px] font-medium text-slate-300 truncate">
+              🚀 Use code <code className="text-amber-400 font-mono font-bold">DATAFORGE50</code> for 50% off • Starting at ₹499/mo (Instant UPI)
+            </p>
 
-          {/* Right: DB Console & QA Quick Action */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onOpenDatabaseInspector}
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <Database className="w-3 h-3 text-brand-blue" />
-              <span>User DB Console</span>
-            </button>
-            <span className="text-slate-700">|</span>
-            <button
-              onClick={onOpenQaTracker}
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <span>QA Tracker</span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold">16/16 PASS</span>
-            </button>
+            {/* Right: Direct Customer Action */}
+            <div className="hidden sm:flex items-center gap-3">
+              <button
+                onClick={() => handleLinkClick('pricing')}
+                className="text-[11px] font-bold text-brand-blue hover:text-blue-400 transition-colors cursor-pointer"
+              >
+                View Plans & Pricing →
+              </button>
+            </div>
+
           </div>
-
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 2. Main Navbar */}
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
@@ -313,29 +355,61 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => { setIsUserDropdownOpen(false); onOpenDatabaseInspector?.(); }}
-                    className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
-                  >
-                    <Database className="w-3.5 h-3.5 text-brand-blue" />
-                    <span>User Database Inspector</span>
-                  </button>
+                  {isSuperAdmin ? (
+                    <>
+                      <button
+                        onClick={() => { setIsUserDropdownOpen(false); onOpenDatabaseInspector?.(); }}
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer font-medium"
+                      >
+                        <Database className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Grant User Access (DB)</span>
+                      </button>
 
-                  <button
-                    onClick={() => { setIsUserDropdownOpen(false); onOpenQaTracker?.(); }}
-                    className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
-                  >
-                    <Cpu className="w-3.5 h-3.5 text-purple-400" />
-                    <span>MNC QA Testing Tracker</span>
-                  </button>
+                      <button
+                        onClick={() => { setIsUserDropdownOpen(false); onOpenQaTracker?.(); }}
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer font-medium"
+                      >
+                        <Cpu className="w-3.5 h-3.5 text-purple-400" />
+                        <span>MNC QA Testing Tracker</span>
+                      </button>
 
-                  <button
-                    onClick={() => { setIsUserDropdownOpen(false); onOpenAuthModal?.(); }}
-                    className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
-                  >
-                    <User className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Switch Account Persona</span>
-                  </button>
+                      <button
+                        onClick={() => { setIsUserDropdownOpen(false); onOpenAuthModal?.(); }}
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      >
+                        <User className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Switch Persona (Testing)</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => { setIsUserDropdownOpen(false); handleLinkClick('tracks'); }}
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      >
+                        <Compass className="w-3.5 h-3.5 text-brand-blue" />
+                        <span>My Learning Tracks</span>
+                      </button>
+
+                      <button
+                        onClick={() => { setIsUserDropdownOpen(false); handleLinkClick('practice'); }}
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      >
+                        <Terminal className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Practice Coding Problems</span>
+                      </button>
+
+                      {!isPro && (
+                        <button
+                          onClick={() => { setIsUserDropdownOpen(false); handleLinkClick('pricing'); }}
+                          className="w-full text-left px-2.5 py-2 rounded-xl text-brand-blue dark:text-blue-400 hover:bg-brand-blue/10 flex items-center gap-2 cursor-pointer font-semibold"
+                        >
+                          <Zap className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Upgrade to Pro Membership</span>
+                        </button>
+                      )}
+                    </>
+                  )}
 
                   <div className="border-t border-slate-100 dark:border-slate-800/80 mt-1 pt-1">
                     <button
@@ -424,20 +498,24 @@ export const DataVedaNavbar: React.FC<DataVedaNavbarProps> = ({
           >
             Pricing & Pro Membership
           </button>
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex gap-2">
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); onOpenDatabaseInspector?.(); }}
-              className="flex-1 py-2 text-center text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-800"
-            >
-              User DB Console
-            </button>
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); onOpenQaTracker?.(); }}
-              className="flex-1 py-2 text-center text-xs font-bold rounded-lg bg-brand-blue text-white"
-            >
-              QA Tracker
-            </button>
-          </div>
+          
+          {/* Mobile Admin Controls for Umar Only */}
+          {isSuperAdmin && (
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex gap-2">
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onOpenDatabaseInspector?.(); }}
+                className="flex-1 py-2 text-center text-xs font-bold rounded-lg border border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+              >
+                Grant Access (DB)
+              </button>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onOpenQaTracker?.(); }}
+                className="flex-1 py-2 text-center text-xs font-bold rounded-lg bg-brand-blue text-white"
+              >
+                QA Tracker
+              </button>
+            </div>
+          )}
         </div>
       )}
 

@@ -45,7 +45,7 @@ export const QaTestingTracker: React.FC<QaTestingTrackerProps> = ({
   isOpen,
   onClose
 }) => {
-  const { environment, setEnvironment } = useAuth();
+  const { environment, setEnvironment, isSuperAdmin } = useAuth();
 
   const [activeTab, setActiveTab] = useState<'tracker' | 'pipeline' | 'domain'>('tracker');
   const [isRunningTests, setIsRunningTests] = useState<boolean>(false);
@@ -202,6 +202,33 @@ export const QaTestingTracker: React.FC<QaTestingTrackerProps> = ({
   const [tests, setTests] = useState<TestCase[]>(INITIAL_TESTS);
 
   if (!isOpen) return null;
+
+  // Non-Super-Admin Security Gate
+  if (!isSuperAdmin) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+        <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-amber-500/30 rounded-3xl p-6 shadow-2xl text-center">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-500 flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-black text-slate-900 dark:text-slate-50">
+            Access Restricted: QA & Release Controls
+          </h3>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            The MNC Release Pipeline and Automated Quality Assurance Tracker are internal engineering tools restricted to Platform Founder <strong>Umar Karajagi</strong>. Regular customers experience a clean storefront.
+          </p>
+          <div className="mt-6">
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold hover:bg-slate-800 transition-colors"
+            >
+              Back to Learning
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleRunAllTests = () => {
     setIsRunningTests(true);
@@ -513,20 +540,24 @@ export const QaTestingTracker: React.FC<QaTestingTrackerProps> = ({
                   QA Staging (TESTING)
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Automated smoke tests, DRM penetration tests, payment sandbox, and performance benchmarking.
+                  Dedicated test environment where QA engineers test the website using automated Selenium, Playwright, and Cypress suites before production sign-off.
                 </p>
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-[11px] text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>100% automated regression tests</span>
+                    <span>Automated Selenium browser test runner</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>DRM keystroke interception tests</span>
+                    <span>16/16 Full regression suite pass requirement</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Canary user preview group</span>
+                    <span>DRM zero-download penetration verification</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>QA engineer sign-off gate before live release</span>
                   </div>
                 </div>
               </div>
@@ -542,27 +573,31 @@ export const QaTestingTracker: React.FC<QaTestingTrackerProps> = ({
                     STAGE 03
                   </span>
                   {environment === 'PROD' && (
-                    <span className="text-[10px] font-bold text-emerald-500">Active Target</span>
+                    <span className="text-[10px] font-bold text-emerald-500">Live Production Target</span>
                   )}
                 </div>
                 <h4 className="text-base font-bold text-slate-900 dark:text-slate-50 mt-3">
-                  Production (PROD)
+                  Production (PROD / main)
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  High-availability custom domain pointing. Cloudflare Edge CDN, locked DRM, and Stripe production.
+                  The live platform deployed on custom domain/main. All developer consoles and QA trackers are completely hidden from students; customers experience a spotless, fast learning portal.
                 </p>
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-[11px] text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Global CDN Edge Distribution</span>
+                    <span>Student-facing UI: 100% clean, 0 debug bars</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Automatic HTTPS & SSL certificate</span>
+                    <span>Founder (Umar Karajagi) exclusive access authority</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Live Revenue Gateway active</span>
+                    <span>Global CDN Edge Distribution & Sub-50ms render</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>Live UPI & Razorpay/Stripe payments armed</span>
                   </div>
                 </div>
               </div>

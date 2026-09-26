@@ -37,9 +37,12 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
   const { 
     allUsers, 
     currentUser, 
+    isSuperAdmin,
     databaseStats, 
     updateUserPlan, 
     updateUserRole, 
+    grantAccessByEmail,
+    revokeAccess,
     exportDatabaseJson, 
     resetDatabaseToDefaults,
     requestPasswordReset
@@ -50,6 +53,11 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
   const [planFilter, setPlanFilter] = useState<string>('all');
   const [copiedJson, setCopiedJson] = useState<boolean>(false);
   const [actionSuccessMessage, setActionSuccessMessage] = useState<string | null>(null);
+
+  // Instant Grant Access by Email State (Founder Authority)
+  const [grantEmailInput, setGrantEmailInput] = useState<string>('');
+  const [grantPlanInput, setGrantPlanInput] = useState<SubscriptionPlan>('lifetime_vault');
+  const [grantRoleInput, setGrantRoleInput] = useState<UserRole>('pro_member');
 
   const filteredUsers = useMemo(() => {
     return allUsers.filter(u => {
@@ -66,6 +74,66 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
   }, [allUsers, searchTerm, roleFilter, planFilter]);
 
   if (!isOpen) return null;
+
+  // Non-Super-Admin Security Gate
+  if (!isSuperAdmin) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+        <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-rose-500/30 rounded-3xl p-6 shadow-2xl text-center">
+          <div className="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-black text-slate-900 dark:text-slate-50">
+            Access Restricted: Founder Authority Required
+          </h3>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Only Platform Founder <strong>Umar Karajagi</strong> has administrative permission to inspect customer accounts or grant commercial platform access. All other accounts are strictly customer accounts.
+          </p>
+          <div className="mt-6">
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold hover:bg-slate-800 transition-colors"
+            >
+              Return to DataForge
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleInstantGrant = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!grantEmailInput.trim()) return;
+    const res = grantAccessByEmail(grantEmailInput, grantPlanInput, grantRoleInput);
+    if (res.success) {
+      setActionSuccessMessage(res.message);
+      setGrantEmailInput('');
+      setTimeout(() => setActionSuccessMessage(null), 5000);
+    }
+  };
+
+  const handleQuickGrantPro = (userId: string, email: string) => {
+    const res = grantAccessByEmail(email, 'pro_annual', 'pro_member');
+    if (res.success) {
+      setActionSuccessMessage(`Granted Pro Annual access to ${email}!`);
+      setTimeout(() => setActionSuccessMessage(null), 4000);
+    }
+  };
+
+  const handleQuickGrantLifetime = (userId: string, email: string) => {
+    const res = grantAccessByEmail(email, 'lifetime_vault', 'pro_member');
+    if (res.success) {
+      setActionSuccessMessage(`Granted Lifetime VIP Vault access to ${email}!`);
+      setTimeout(() => setActionSuccessMessage(null), 4000);
+    }
+  };
+
+  const handleQuickRevoke = (userId: string) => {
+    const res = revokeAccess(userId);
+    setActionSuccessMessage(res.message);
+    setTimeout(() => setActionSuccessMessage(null), 4000);
+  };
 
   const handleExportJson = () => {
     const jsonStr = exportDatabaseJson();
@@ -140,14 +208,14 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-black text-slate-900 dark:text-slate-50 tracking-tight">
-                  DataForge User Database & Revenue Console
+                  DataForge Founder Control Center • User DB & Access Console
                 </h2>
-                <span className="px-2 py-0.5 rounded bg-brand-blue/15 text-brand-blue text-[10px] font-mono font-bold">
-                  v2.4 Relational
+                <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/30">
+                  👑 Founder: Umar Karajagi
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Live multi-user registry, authentication audit log & monetization manager
+                Exclusive authority to grant/revoke customer access, manage roles, and inspect live revenue
               </p>
             </div>
           </div>
@@ -185,6 +253,46 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
             <span>{actionSuccessMessage}</span>
           </div>
         )}
+
+        {/* Founder Instant Grant Access Bar (Exclusive to Umar Karajagi) */}
+        <div className="p-4 bg-emerald-500/5 dark:bg-emerald-950/20 border-b border-emerald-500/20">
+          <form onSubmit={handleInstantGrant} className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+              <Sparkles className="w-4 h-4 text-emerald-500" />
+              <span>Grant Access to Any User:</span>
+            </div>
+
+            <div className="flex-1 min-w-[220px]">
+              <input
+                type="email"
+                required
+                value={grantEmailInput}
+                onChange={(e) => setGrantEmailInput(e.target.value)}
+                placeholder="Enter customer email (e.g. zaid@example.com)..."
+                className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+              />
+            </div>
+
+            <select
+              value={grantPlanInput}
+              onChange={(e) => setGrantPlanInput(e.target.value as SubscriptionPlan)}
+              className="px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 focus:outline-none font-medium"
+            >
+              <option value="lifetime_vault">👑 Lifetime Vault (Full VIP Access)</option>
+              <option value="pro_annual">⚡ Pro Annual ($199 / ₹1,499)</option>
+              <option value="pro_monthly">🔷 Pro Monthly ($29 / ₹499)</option>
+              <option value="free_preview">🎓 Free Preview (Revoke to Student)</option>
+            </select>
+
+            <button
+              type="submit"
+              className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 flex items-center gap-1.5 cursor-pointer shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Grant Full Access</span>
+            </button>
+          </form>
+        </div>
 
         {/* Top Metric Cards */}
         <div className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
@@ -344,6 +452,35 @@ export const UserDatabaseInspector: React.FC<UserDatabaseInspectorProps> = ({
 
                     <td className="py-3 pr-3 text-right">
                       <div className="inline-flex items-center gap-1.5">
+                        {/* 1-Click Quick Grant Actions for Umar */}
+                        {u.plan !== 'lifetime_vault' && (
+                          <button
+                            onClick={() => handleQuickGrantLifetime(u.id, u.email)}
+                            className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 transition-colors border border-emerald-500/30 cursor-pointer"
+                            title="1-Click Grant Lifetime VIP"
+                          >
+                            👑 VIP
+                          </button>
+                        )}
+                        {u.plan === 'free_preview' && (
+                          <button
+                            onClick={() => handleQuickGrantPro(u.id, u.email)}
+                            className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/25 transition-colors border border-indigo-500/30 cursor-pointer"
+                            title="1-Click Grant Pro Annual"
+                          >
+                            ⚡ Pro
+                          </button>
+                        )}
+                        {u.role !== 'super_admin' && u.plan !== 'free_preview' && (
+                          <button
+                            onClick={() => handleQuickRevoke(u.id)}
+                            className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 hover:bg-rose-500/25 transition-colors border border-rose-500/30 cursor-pointer"
+                            title="Revoke access back to Free Student"
+                          >
+                            🛑 Revoke
+                          </button>
+                        )}
+
                         <select
                           value={u.plan}
                           onChange={(e) => handlePlanChange(u.id, e.target.value as SubscriptionPlan)}

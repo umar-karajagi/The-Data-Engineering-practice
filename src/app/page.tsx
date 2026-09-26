@@ -33,7 +33,7 @@ type ActiveTab =
 
 function DataVedaApp() {
   const { user, addXP } = useUserStore();
-  const { currentUser, isPro } = useAuth();
+  const { currentUser, isPro, isSuperAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [activeVideoModal, setActiveVideoModal] = useState<CuratedVideo | null>(null);
 
@@ -56,8 +56,12 @@ function DataVedaApp() {
         onNavigateTab={handleNavigateTab}
         onOpenHeroVideo={() => setActiveVideoModal(HERO_MASTERCLASS_VIDEO)}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenDatabaseInspector={() => setIsDatabaseInspectorOpen(true)}
-        onOpenQaTracker={() => setIsQaTrackerOpen(true)}
+        onOpenDatabaseInspector={() => {
+          if (isSuperAdmin) setIsDatabaseInspectorOpen(true);
+        }}
+        onOpenQaTracker={() => {
+          if (isSuperAdmin) setIsQaTrackerOpen(true);
+        }}
       />
 
       {/* 2. Main Page Views */}

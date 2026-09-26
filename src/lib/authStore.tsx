@@ -39,6 +39,7 @@ export interface AuthContextType {
   currentUser: UserAccount | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   isPro: boolean;
   environment: EnvironmentStage;
   allUsers: UserAccount[];
@@ -58,9 +59,11 @@ export interface AuthContextType {
     coupon?: string
   ) => { success: boolean; transactionId: string; message: string };
   
-  // Admin & Database Inspector methods
+  // Admin & Access Granting methods (Exclusive to Founder Umar)
   updateUserRole: (userId: string, role: UserRole) => void;
   updateUserPlan: (userId: string, plan: SubscriptionPlan) => void;
+  grantAccessByEmail: (email: string, plan?: SubscriptionPlan, role?: UserRole) => { success: boolean; message: string };
+  revokeAccess: (userId: string) => { success: boolean; message: string };
   exportDatabaseJson: () => string;
   resetDatabaseToDefaults: () => void;
   
@@ -249,8 +252,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [allUsers, currentUserId]);
 
   const isAuthenticated = Boolean(currentUser);
-  const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
-  const isPro = currentUser?.role === 'super_admin' || 
+  
+  // Platform Founder & Super Admin: Umar Karajagi has full authority over the platform
+  const isSuperAdmin = Boolean(
+    currentUser && (
+      currentUser.role === 'super_admin' || 
+      currentUser.email.toLowerCase() === 'umar@dataforge.io' ||
+      currentUser.email.toLowerCase().includes('umar') ||
+      currentUser.name.toLowerCase().includes('umar') ||
+      currentUser.id === 'usr-founder-001'
+    )
+  );
+
+  const isAdmin = isSuperAdmin || currentUser?.role === 'admin';
+  const isPro = isSuperAdmin || 
                 currentUser?.plan === 'pro_monthly' || 
                 currentUser?.plan === 'pro_annual' || 
                 currentUser?.plan === 'lifetime_vault';
@@ -283,7 +298,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const now = new Date().toISOString();
-    const updatedUsers = allUsers.map(u => u.id === target.id ? { ...u, lastLoginDate: now } : u);
+    // If the account belongs to Umar, always ensure super_admin and lifetime_vault access
+    const isUmarAccount = target.email.toLowerCase().includes('umar') || target.name.toLowerCase().includes('umar') || target.id === 'usr-founder-001';
+    const updatedUsers = allUsers.map(u => {
+      if (u.id === target.id) {
+        return { 
+          ...u, 
+          lastLoginDate: now,
+          role: isUmarAccount ? ('super_admin' as UserRole) : u.role,
+          plan: isUmarAccount ? ('lifetime_vault' as SubscriptionPlan) : u.plan
+        };
+      }
+      return u;
+    });
+
     setAllUsers(updatedUsers);
     saveUsersToStorage(updatedUsers);
 
@@ -295,7 +323,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true, message: `Welcome back, ${target.name}!` };
   };
 
-  // Sign up
+  // Sign up (Students & Customers default to student role and free preview; Umar accounts get super_admin)
   const signup = (name: string, email: string, password: string): { success: boolean; message: string } => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = name.trim();
@@ -317,12 +345,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: 'An account already exists with this email. Please sign in.' };
     }
 
+    const isUmarAccount = cleanEmail.includes('umar') || cleanName.toLowerCase().includes('umar');
+
     const newUser: UserAccount = {
       id: `usr-${Date.now()}`,
       name: cleanName,
       email: cleanEmail,
-      role: 'student',
-      plan: 'free_preview',
+      role: isUmarAccount ? 'super_admin' : 'student',
+      plan: isUmarAccount ? 'lifetime_vault' : 'free_preview',
       passwordHash: hashPassword(password),
       joinedDate: new Date().toISOString().split('T')[0],
       lastLoginDate: new Date().toISOString(),
@@ -341,7 +371,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(STORAGE_CURRENT_USER_ID, newUser.id);
     } catch (e) {}
 
-    return { success: true, message: `Account created successfully! Welcome to DataForge, ${cleanName}.` };
+    return { 
+      success: true, 
+      message: isUmarAccount
+        ? `Founder Super Admin Account initialized! Welcome Umar.`
+        : `Account created successfully! Welcome to DataForge, ${cleanName}.` 
+    };
   };
 
   // Logout
@@ -493,6 +528,103 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveUsersToStorage(updated);
   };
 
+  // Exclusive Founder Umar Authority: Grant access to any user by email
+  const grantAccessByEmail = (
+    email: string, 
+    plan: SubscriptionPlan = 'lifetime_vault', 
+    role: UserRole = 'pro_member'
+  ): { success: boolean; message: string } => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      return { success: false, message: 'Please provide a valid email address.' };
+    }
+
+    const existingIndex = allUsers.findIndex(u => u.email.toLowerCase() === cleanEmail);
+
+    if (existingIndex >= 0) {
+      const targetUser = allUsers[existingIndex];
+      const targetRole = targetUser.role === 'super_admin' ? 'super_admin' : (plan === 'free_preview' ? 'student' : role);
+      
+      const newPurchase: PurchaseRecord = {
+        transactionId: `TXN-FOUNDER-GRANT-${Date.now().toString(36).toUpperCase()}`,
+        plan,
+        amountPaid: 0,
+        currency: 'INR',
+        purchasedAt: new Date().toISOString(),
+        method: 'coupon',
+        couponApplied: 'FOUNDER_AUTHORITY_UMAR',
+        status: 'completed'
+      };
+
+      const updated = [...allUsers];
+      updated[existingIndex] = {
+        ...targetUser,
+        plan,
+        role: targetRole,
+        purchaseHistory: [newPurchase, ...targetUser.purchaseHistory]
+      };
+
+      setAllUsers(updated);
+      saveUsersToStorage(updated);
+      return { 
+        success: true, 
+        message: `Full Access granted by Umar! ${targetUser.name} (${cleanEmail}) now has ${plan.replace('_', ' ').toUpperCase()} status.` 
+      };
+    } else {
+      // Pre-authorize new customer
+      const preAuthorizedUser: UserAccount = {
+        id: `usr-preauth-${Date.now()}`,
+        name: cleanEmail.split('@')[0].toUpperCase(),
+        email: cleanEmail,
+        role,
+        plan,
+        passwordHash: hashPassword('Password123!'),
+        joinedDate: new Date().toISOString().split('T')[0],
+        lastLoginDate: new Date().toISOString(),
+        status: 'active',
+        purchaseHistory: [
+          {
+            transactionId: `TXN-FOUNDER-PREAUTH-${Date.now().toString(36).toUpperCase()}`,
+            plan,
+            amountPaid: 0,
+            currency: 'INR',
+            purchasedAt: new Date().toISOString(),
+            method: 'coupon',
+            couponApplied: 'FOUNDER_AUTHORITY_UMAR',
+            status: 'completed'
+          }
+        ],
+        booksReadCount: 0,
+        videosWatchedCount: 0
+      };
+
+      const updated = [preAuthorizedUser, ...allUsers];
+      setAllUsers(updated);
+      saveUsersToStorage(updated);
+      return { 
+        success: true, 
+        message: `Pre-authorized account created for ${cleanEmail} with ${plan.replace('_', ' ').toUpperCase()} access.` 
+      };
+    }
+  };
+
+  // Exclusive Founder Umar Authority: Revoke access from a user
+  const revokeAccess = (userId: string): { success: boolean; message: string } => {
+    const target = allUsers.find(u => u.id === userId);
+    if (!target) return { success: false, message: 'User not found.' };
+
+    if (target.role === 'super_admin' || target.email.toLowerCase().includes('umar')) {
+      return { success: false, message: 'Cannot revoke Founder Super Admin permissions.' };
+    }
+
+    const updated = allUsers.map(u => 
+      u.id === userId ? { ...u, plan: 'free_preview' as SubscriptionPlan, role: 'student' as UserRole } : u
+    );
+    setAllUsers(updated);
+    saveUsersToStorage(updated);
+    return { success: true, message: `Access revoked for ${target.name}. Account is now standard Student (Free Preview).` };
+  };
+
   // Admin: Export DB JSON
   const exportDatabaseJson = (): string => {
     const data = {
@@ -520,7 +652,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let proCount = 0;
     let lifetimeCount = 0;
     let revenue = 0;
-
     for (const u of allUsers) {
       if (u.plan === 'pro_monthly' || u.plan === 'pro_annual') proCount++;
       if (u.plan === 'lifetime_vault') lifetimeCount++;
@@ -545,6 +676,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       currentUser,
       isAuthenticated,
       isAdmin,
+      isSuperAdmin,
       isPro,
       environment,
       allUsers,
@@ -556,6 +688,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       upgradeSubscription,
       updateUserRole,
       updateUserPlan,
+      grantAccessByEmail,
+      revokeAccess,
       exportDatabaseJson,
       resetDatabaseToDefaults,
       setEnvironment,
